@@ -10,6 +10,6 @@ export interface User {
   lastName: string;
   imageUrl: string;
   userRole: string;
-  token: string;
   dateOfBirth: string;
+  token: string;
 }
