@@ -1,1 +1,1 @@
-export type LocaleType = "en" | "de" | "kh";
+export type LocaleType = "en" | "de" | "km";
