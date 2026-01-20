@@ -9,3 +9,8 @@
   --background: black;
   --foreground: white;
 }
+
+@theme {
+  --font-family-sans: var(--font-inter), var(--font-geist), system-ui,
+    sans-serif;
+}

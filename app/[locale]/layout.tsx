@@ -8,6 +8,20 @@ import { ReactNode } from "react";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
+import { Inter, Geist } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
@@ -34,8 +48,12 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={`${inter.variable} ${geist.variable}`}
+    >
+      <body className="font-sans">
         <ThemeProvider attribute={"class"} defaultTheme="system" enableSystem>
           <NextIntlClientProvider locale={locale} messages={messages}>
             {children}
