@@ -1,7 +1,7 @@
 "use client";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useTranslations } from "next-intl";
-import { ThemeToggle } from "../components/ThemeToggle";
 
 export default function HomePage() {
   const t = useTranslations("HomePage");
