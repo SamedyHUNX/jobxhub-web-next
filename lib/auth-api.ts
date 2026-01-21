@@ -1,5 +1,6 @@
 import axios from "axios";
-import { AuthResponse, SignInFormData } from "@/types";
+import { AuthResponse, SignInFormData, User } from "@/types";
+import { get } from "http";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,6 +29,16 @@ export const authApi = {
       headers: {
         "Accept-Language": locale,
         "Content-Type": "multipart/form-data",
+      },
+    });
+    return data;
+  },
+
+  // Get user info
+  getProfile: async (token: string) => {
+    const { data } = await api.get<User>("/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
     });
     return data;
