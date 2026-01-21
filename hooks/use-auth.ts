@@ -18,6 +18,9 @@ export function useAuth() {
   const signInMutation = useMutation({
     mutationFn: (data: SignInFormData) => authApi.signIn(data),
     onSuccess: ({ data }: AuthResponse) => {
+      if (!data.users || data.users.length === 0) {
+        throw new Error("Invalid authentication response");
+      }
       const user = data.users[0];
       dispatch(setAuth({ token: user.token, user }));
       localStorage.setItem("access_token", user.token);
@@ -35,7 +38,7 @@ export function useAuth() {
       locale: string;
     }) => authApi.signUp(formData, locale),
     onSuccess: () => {
-      router.push("/auth/signin");
+      router.push(`/${locale}/signin`);
     },
   });
 
