@@ -13,3 +13,27 @@ export interface User {
   dateOfBirth: string;
   token: string;
 }
+
+export interface AuthRequest {
+  email: string;
+  password: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface AuthResponse {
+  status: string;
+  code: number;
+  message: string;
+  data: UsersData;
+}
+
+export interface UsersData {
+  users: User[];
+}
+
+export interface SignInFormData {
+  email: string;
+  password: string;
+}
