@@ -16,7 +16,13 @@ export function useAuth() {
 
   // Sign in mutation
   const signInMutation = useMutation({
-    mutationFn: (data: SignInFormData) => authApi.signIn(data),
+    mutationFn: async (credentials: SignInFormData) => {
+      const response = await authApi.signIn(credentials);
+      if (!response.data.users || response.data.users.length === 0) {
+        throw new Error("Invalid authentication response");
+      }
+      return response;
+    },
     onSuccess: ({ data }: AuthResponse) => {
       if (!data.users || data.users.length === 0) {
         throw new Error("Invalid authentication response");
@@ -38,7 +44,7 @@ export function useAuth() {
       locale: string;
     }) => authApi.signUp(formData, locale),
     onSuccess: () => {
-      router.push(`/${locale}/signin`);
+      router.push(`/${locale}/sign-in`);
     },
   });
 
