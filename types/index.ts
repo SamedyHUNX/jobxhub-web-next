@@ -33,6 +33,8 @@ export interface UsersData {
   users: User[];
 }
 
+export type SignInResponse = UsersData;
+
 export interface SignInFormData {
   email: string;
   password: string;

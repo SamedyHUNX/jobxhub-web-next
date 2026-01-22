@@ -1,6 +1,24 @@
 {
-  "HomePage": {
+  "home": {
     "title": "Welcome to JobXHub",
     "description": "This is the home page"
+  },
+  "auth": {
+    "email": "Email",
+    "emailPlaceholder": "user@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "dontHaveAnAccount": "Don't have an account?"
+  },
+  "validations": {
+    "invalidEmail": "Please enter a valid email",
+    "passwordRequired": "Please enter the password"
+  },
+  "apiSuccess": {},
+  "apiError": {
+    "invalidCredentials": "Invalid email or password"
   }
 }

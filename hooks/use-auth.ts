@@ -1,8 +1,9 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { selectIsAuthenticated, setAuth } from "@/stores/slices/auth.slice";
-import { AuthResponse, SignInFormData } from "@/types";
+import { AuthResponse, SignInFormData, UsersData } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Axios, AxiosError } from "axios";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -18,16 +19,20 @@ export function useAuth() {
   const signInMutation = useMutation({
     mutationFn: async (credentials: SignInFormData) => {
       const response = await authApi.signIn(credentials);
-      if (!response.data.users || response.data.users.length === 0) {
+      const data: AuthResponse = response;
+
+      if (!data.data.users || data.data.users.length === 0) {
         throw new Error("Invalid authentication response");
       }
-      return response;
+
+      return data;
     },
-    onSuccess: ({ data }: AuthResponse) => {
-      if (!data.users || data.users.length === 0) {
+    onSuccess: (data: AuthResponse) => {
+      if (!data.data.users || data.data.users.length === 0) {
         throw new Error("Invalid authentication response");
       }
-      const user = data.users[0];
+
+      const user = data.data.users[0];
       dispatch(setAuth({ token: user.token, user }));
       localStorage.setItem("access_token", user.token);
       router.push(`/${locale}`);
@@ -58,14 +63,14 @@ export function useAuth() {
     // Sign in
     signIn: signInMutation.mutate,
     isSigningIn: signInMutation.isPending,
-    signInError: signInMutation.error,
+    signInError: signInMutation.error as AxiosError,
     signInSuccess: signInMutation.isSuccess,
     signInData: signInMutation.data,
 
     // Sign up
     signUp: signUpMutation.mutate,
     isSigningUp: signUpMutation.isPending,
-    signUpError: signUpMutation.error,
+    signUpError: signUpMutation.error as AxiosError,
     signUpSuccess: signUpMutation.isSuccess,
     signUpData: signUpMutation.data,
   };

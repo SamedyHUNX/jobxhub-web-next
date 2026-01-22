@@ -6,9 +6,12 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 import { Inter, Geist } from "next/font/google";
+import { ReduxProvider } from "@/providers/ReduxProvider";
+import ReactQueryProvider from "@/providers/QueryClientProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -48,16 +51,21 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <html
-      lang={locale}
-      suppressHydrationWarning
-      className={`${inter.variable} ${geist.variable}`}
-    >
+    <html lang={locale} suppressHydrationWarning>
       <body className="font-sans">
-        <ThemeProvider attribute={"class"} defaultTheme="system" enableSystem>
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            {children}
-          </NextIntlClientProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ReactQueryProvider>
+            <ReduxProvider>
+              <NextIntlClientProvider locale={locale} messages={messages}>
+                <Toaster richColors theme="light" /> {children}
+              </NextIntlClientProvider>
+            </ReduxProvider>
+          </ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>
