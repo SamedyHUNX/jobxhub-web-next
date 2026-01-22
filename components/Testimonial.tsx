@@ -12,7 +12,9 @@ export default function Testimonial({
 }) {
   return (
     <div className="z-10 relative lg:mt-4 lg:mb-16">
-      <blockquote className="auth-blockquote">{quote}</blockquote>
+      <blockquote className="auth-blockquote font-geist font-sans">
+        {quote}
+      </blockquote>
       <div className="flex items-center justify-between">
         <div>
           <cite className="auth-testimonial-author">{`- ${author}.`}</cite>

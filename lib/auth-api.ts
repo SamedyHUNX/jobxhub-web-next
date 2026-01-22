@@ -1,6 +1,5 @@
 import axios from "axios";
 import { AuthResponse, SignInFormData, User } from "@/types";
-import { get } from "http";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,7 +27,6 @@ export const authApi = {
     const { data } = await api.post<AuthResponse>("/auth/signup", formData, {
       headers: {
         "Accept-Language": locale,
-        "Content-Type": "multipart/form-data",
       },
     });
     return data;
