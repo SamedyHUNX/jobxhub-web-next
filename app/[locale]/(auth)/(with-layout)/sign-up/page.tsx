@@ -1,5 +1,6 @@
 "use client";
 
+import BrandLogo from "@/components/BrandLogo";
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
