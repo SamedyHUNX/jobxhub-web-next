@@ -11,10 +11,10 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <main className="auth-layout">
       {/* Left side - Form Content */}
-      <section className="flex flex-1 items-center justify-center px-2 sm:px-4 lg:px-2 py-12 scrollbar-hide-default">
+      <section className="auth-left-section">
         <BrandLogo className="auth-logo" />
 
-        <div className="pb-6 lg:pb-8 flex-1">{children}</div>
+        <div className="flex-1 w-full">{children}</div>
       </section>
 
       <section className="auth-right-section">
