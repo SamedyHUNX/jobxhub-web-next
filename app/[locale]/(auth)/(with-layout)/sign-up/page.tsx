@@ -47,7 +47,6 @@ export default function SignUpPage() {
         ...value,
         phoneNumber: `${value.countryCode}${value.phoneNumber}`,
       };
-      console.log(formData);
       signUp({ formData, locale });
     },
     validators: {

@@ -31,9 +31,25 @@ export const authApi = {
     locale: string
   ): Promise<AuthResponse> => {
     assertApiUrl();
-    const { data } = await api.post<AuthResponse>("/auth/signup", formData, {
+
+    // Create FormData instance
+    const form = new FormData();
+
+    // Append all fields to FormData
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        if (value instanceof File) {
+          form.append(key, value);
+        } else {
+          form.append(key, String(value));
+        }
+      }
+    });
+
+    const { data } = await api.post<AuthResponse>("/auth/signup", form, {
       headers: {
         "Accept-Language": locale,
+        "Content-Type": "multipart/form-data",
       },
     });
     return data;

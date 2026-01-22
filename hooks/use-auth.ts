@@ -1,14 +1,9 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { selectIsAuthenticated, setAuth } from "@/stores/slices/auth.slice";
-import {
-  AuthResponse,
-  SignInFormData,
-  SignUpFormData,
-  UsersData,
-} from "@/types";
+import { AuthResponse, SignInFormData, SignUpFormData } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
