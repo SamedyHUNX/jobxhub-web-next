@@ -3,11 +3,16 @@
 import BrandLogo from "@/components/BrandLogo";
 import { ReactNode } from "react";
 import Testimonial from "@/components/Testimonial";
-import { useAppSelector } from "@/stores/hooks";
 import DashboardPreview from "./_DashboardPreview";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useAppSelector } from "@/stores/hooks";
+import { redirect } from "next/navigation";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
+  const { token } = useAppSelector((state) => state.auth);
+
+  if (token) redirect("/");
+
   return (
     <main className="auth-layout">
       {/* Left side - Form Content */}

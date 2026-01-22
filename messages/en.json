@@ -7,9 +7,18 @@
     "email": "Email",
     "emailPlaceholder": "user@example.com",
     "password": "Password",
-    "passwordPlaceholder": "Enter your password"
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "dontHaveAnAccount": "Don't have an account?"
   },
-  "validations": {},
+  "validations": {
+    "invalidEmail": "Please enter a valid email",
+    "passwordRequired": "Please enter the password"
+  },
   "apiSuccess": {},
-  "apiError": {}
+  "apiError": {
+    "invalidCredentials": "Invalid email or password"
+  }
 }

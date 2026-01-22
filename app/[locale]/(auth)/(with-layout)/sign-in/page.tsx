@@ -9,6 +9,7 @@ import { SignInFormData } from "@/types";
 import { createSignInSchema } from "@/schemas";
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/LoadingSwap";
+import { extractErrorMessage } from "@/lib/utils";
 
 export default function SignInPage() {
   // Translations
@@ -16,6 +17,7 @@ export default function SignInPage() {
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
   const successT = (key: string) => t(`apiSuccess.${key}`);
+  const errorT = (key: string) => t(`apiError.${key}`);
 
   const { signIn, isSigningIn, signInError, signInSuccess } = useAuth();
 
@@ -44,7 +46,7 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (signInError) {
-      toast.error(validationT(signInError.code));
+      toast.error(extractErrorMessage(signInError, errorT));
     } else if (signInSuccess) {
       toast.success(successT("0"));
     }
@@ -122,7 +124,7 @@ export default function SignInPage() {
                   htmlFor={field.name}
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
-                  {authT("passwordLabel")}
+                  {authT("password")}
                 </label>
                 <input
                   id={field.name}
@@ -162,9 +164,7 @@ export default function SignInPage() {
           disabled={isSigningIn}
           className="yellow-btn w-full mt-5"
         >
-          <LoadingSwap isLoading={isSigningIn}>
-            {authT("buttonText")}
-          </LoadingSwap>
+          <LoadingSwap isLoading={isSigningIn}>{authT("signIn")}</LoadingSwap>
         </Button>
 
         <div className="text-center">
