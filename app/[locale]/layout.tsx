@@ -55,7 +55,12 @@ export default async function LocaleLayout({
       className={`${inter.variable} ${geist.variable}`}
     >
       <body className="font-sans">
-        <ThemeProvider attribute={"class"} defaultTheme="system" enableSystem>
+        <ThemeProvider
+          attribute={"class"}
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <ReduxProvider>
             <NextIntlClientProvider locale={locale} messages={messages}>
               {children}
