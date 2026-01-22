@@ -2,19 +2,18 @@
 
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "@tanstack/react-form";
-import { zodValidator } from "@tanstack/zod-form-adapter";
-import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { SignInFormData } from "@/types";
 import { createSignInSchema } from "@/schemas";
 import { Button } from "@/components/ui/button";
+import { LoadingSwap } from "@/components/LoadingSwap";
 
 export default function SignInPage() {
   // Translations
   const t = useTranslations();
-  const signInT = (key: string) => t(`signIn.${key}`);
+  const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
   const successT = (key: string) => t(`apiSuccess.${key}`);
 
@@ -35,12 +34,17 @@ export default function SignInPage() {
     onSubmit: async ({ value }) => {
       signIn(value as SignInFormData);
     },
-    validatorAdapter: zodValidator(),
+    validators: {
+      onSubmit: ({ value }) => {
+        const result = signInSchema.safeParse(value);
+        return result.success ? undefined : result.error.format();
+      },
+    },
   });
 
   useEffect(() => {
     if (signInError) {
-      toast.error(validationT(signInError.message));
+      toast.error(validationT(signInError.code));
     } else if (signInSuccess) {
       toast.success(successT("0"));
     }
@@ -61,7 +65,12 @@ export default function SignInPage() {
           <form.Field
             name="email"
             validators={{
-              onChange: signInSchema.shape.email,
+              onChange: ({ value }) => {
+                const result = signInSchema.shape.email.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.errors[0].message;
+              },
             }}
           >
             {(field) => (
@@ -70,7 +79,7 @@ export default function SignInPage() {
                   htmlFor={field.name}
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
-                  {signInT("emailLabel")}
+                  {authT("email")}
                 </label>
                 <input
                   id={field.name}
@@ -79,7 +88,7 @@ export default function SignInPage() {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder={signInT("emailPlaceholder")}
+                  placeholder={authT("emailPlaceholder")}
                   className={`w-full px-3 py-2 rounded-md bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:border-blue-500 focus:ring-blue-500 ${
                     field.state.meta.errors.length > 0
                       ? "border-red-500 dark:border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -99,7 +108,12 @@ export default function SignInPage() {
           <form.Field
             name="password"
             validators={{
-              onChange: signInSchema.shape.password,
+              onChange: ({ value }) => {
+                const result = signInSchema.shape.password.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.errors[0].message;
+              },
             }}
           >
             {(field) => (
@@ -108,7 +122,7 @@ export default function SignInPage() {
                   htmlFor={field.name}
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
-                  {signInT("passwordLabel")}
+                  {authT("passwordLabel")}
                 </label>
                 <input
                   id={field.name}
@@ -117,7 +131,7 @@ export default function SignInPage() {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder={signInT("passwordPlaceholder")}
+                  placeholder={authT("passwordPlaceholder")}
                   className={`w-full px-3 py-2 rounded-md bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:border-blue-500 focus:ring-blue-500 ${
                     field.state.meta.errors.length > 0
                       ? "border-red-500 dark:border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -138,7 +152,7 @@ export default function SignInPage() {
               href="/auth/forgot-password"
               className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
-              {signInT("forgotPassword")}
+              {authT("forgotPassword")}
             </a>
           </div>
         </div>
@@ -148,17 +162,19 @@ export default function SignInPage() {
           disabled={isSigningIn}
           className="yellow-btn w-full mt-5"
         >
-          {isSigningIn ? "Loading..." : signInT("buttonText")}
+          <LoadingSwap isLoading={isSigningIn}>
+            {authT("buttonText")}
+          </LoadingSwap>
         </Button>
 
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {signInT("dontHaveAnAccount")}{" "}
+            {authT("dontHaveAnAccount")}{" "}
             <a
               href="/auth/signup"
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
-              {signInT("signUp")}
+              {authT("signUp")}
             </a>
           </p>
         </div>

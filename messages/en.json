@@ -1,6 +1,15 @@
 {
-  "HomePage": {
+  "home": {
     "title": "Welcome to JobXHub",
     "description": "This is the home page"
-  }
+  },
+  "auth": {
+    "email": "Email",
+    "emailPlaceholder": "user@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password"
+  },
+  "validations": {},
+  "apiSuccess": {},
+  "apiError": {}
 }
