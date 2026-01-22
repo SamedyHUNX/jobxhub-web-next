@@ -9,6 +9,7 @@ import { extractErrorMessage } from "@/lib/utils";
 import { createSignUpSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 
@@ -304,12 +305,12 @@ export default function SignUpPage() {
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("alreadyHaveAccount")}{" "}
-            <a
+            <Link
               href="/sign-in"
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signIn")}
-            </a>
+            </Link>
           </p>
         </div>
       </form>

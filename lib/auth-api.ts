@@ -56,11 +56,9 @@ export const authApi = {
   },
 
   // Get user info
-  getProfile: async (token: string) => {
+  getProfile: async () => {
     const { data } = await api.get<User>("/auth/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      withCredentials: true,
     });
     return data;
   },

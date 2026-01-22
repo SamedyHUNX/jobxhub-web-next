@@ -9,12 +9,12 @@ import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/Navbar";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
-  const { token } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const router = useRouter();
 
   useEffect(() => {
-    if (token) router.replace("/");
-  }, [token, router]);
+    if (user) router.replace("/");
+  }, [user, router]);
 
   return (
     <main className="auth-layout">

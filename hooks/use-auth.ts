@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { user, token, isInitialized } = useAppSelector((state) => state.auth);
+  const { user, isInitialized } = useAppSelector((state) => state.auth);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -33,8 +33,13 @@ export function useAuth() {
       }
 
       const user = data.data.users[0];
-      dispatch(setAuth({ token: user.token, user }));
-      localStorage.setItem("access_token", user.token);
+
+      // Keep user info in memory (Redux)
+      dispatch(setAuth({ user }));
+
+      // The token is already stored in the HttpOnly cookie by the backend
+
+      // Redirect after login
       router.push(`/${locale}`);
     },
   });
@@ -64,7 +69,6 @@ export function useAuth() {
   return {
     // State
     user,
-    token,
     isAuthenticated,
     isInitialized,
 
