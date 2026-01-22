@@ -1,14 +1,9 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { selectIsAuthenticated, setAuth } from "@/stores/slices/auth.slice";
-import {
-  AuthResponse,
-  SignInFormData,
-  SignUpFormData,
-  UsersData,
-} from "@/types";
+import { AuthResponse, SignInFormData, SignUpFormData } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -58,6 +53,14 @@ export function useAuth() {
     },
   });
 
+  // Verify email mutation
+  const verifyEmailMutation = useMutation({
+    mutationFn: (token: string) => authApi.verifyEmail(token),
+    onSuccess: () => {
+      router.push("/sign-in");
+    },
+  });
+
   return {
     // State
     user,
@@ -78,5 +81,12 @@ export function useAuth() {
     signUpError: signUpMutation.error as AxiosError,
     signUpSuccess: signUpMutation.isSuccess,
     signUpData: signUpMutation.data,
+
+    // Verify email
+    verifyEmail: verifyEmailMutation.mutate,
+    isVerifyingEmail: verifyEmailMutation.isPending,
+    verifyEmailError: verifyEmailMutation.error as AxiosError,
+    verifyEmailSuccess: verifyEmailMutation.isSuccess,
+    verifyEmailData: verifyEmailMutation.data,
   };
 }

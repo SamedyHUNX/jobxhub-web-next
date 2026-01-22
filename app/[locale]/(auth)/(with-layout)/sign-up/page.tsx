@@ -4,6 +4,7 @@ import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { countries } from "@/lib/constants";
 import { extractErrorMessage } from "@/lib/utils";
 import { createSignUpSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
@@ -35,12 +36,18 @@ export default function SignUpPage() {
       lastName: "",
       email: "",
       password: "",
+      countryCode: "+61", // Default to Australia
       phoneNumber: "",
       dateOfBirth: "",
-      image: null,
+      image: null as File | null,
     },
     onSubmit: async ({ value }) => {
-      signUp({ formData: value, locale });
+      // Combine country code with phone number
+      const formData = {
+        ...value,
+        phoneNumber: `${value.countryCode}${value.phoneNumber}`,
+      };
+      signUp({ formData, locale });
     },
     validators: {
       onSubmit: ({ value }) => {
@@ -227,19 +234,46 @@ export default function SignUpPage() {
               }}
             />
 
-            <FormField
-              form={form}
-              name="phoneNumber"
-              label={authT("phoneNumber")}
-              type="tel"
-              placeholder={authT("phoneNumberPlaceholder")}
-              validator={(value) => {
-                const result = signUpSchema.shape.phoneNumber.safeParse(value);
-                return result.success
-                  ? undefined
-                  : result.error.errors[0].message;
-              }}
-            />
+            {/* Phone Number with Country Code */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {authT("phoneNumber")}
+              </label>
+              {/* Phone Number Input */}
+              <div className="flex gap-3 w-full">
+                <form.Field name="countryCode">
+                  {(field: any) => (
+                    <select
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="w-32 h-10.5 px-3 mt-2 bg-white dark:bg-gray-800 border border-gray-300 dark:text-gray-300  dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent outline-none text-sm"
+                    >
+                      {countries.map((country) => (
+                        <option key={country.code} value={country.code}>
+                          {country.flag} {country.code}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </form.Field>
+                <div className="flex-1 h-10.5">
+                  <FormField
+                    form={form}
+                    name="phoneNumber"
+                    type="tel"
+                    placeholder="123456789"
+                    validator={(value) => {
+                      const result =
+                        signUpSchema.shape.phoneNumber.safeParse(value);
+                      return result.success
+                        ? undefined
+                        : result.error.errors[0].message;
+                    }}
+                    hideLabel
+                  />
+                </div>
+              </div>
+            </div>
 
             <FormField
               form={form}
