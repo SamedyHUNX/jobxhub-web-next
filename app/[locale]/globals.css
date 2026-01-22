@@ -97,7 +97,15 @@
   }
 
   .auth-dashboard-preview {
-    @apply border-6 border-gray-800 dark:border-gray-200 left-0 hidden w-[1024px] h-auto max-w-none lg:block rounded-xl shadow-2xl;
+    @apply border-6   left-0 hidden w-5xl h-auto max-w-none lg:block rounded-xl shadow-2xl;
+  }
+
+  :root .auth-dashboard-preview {
+    @apply border-gray-200;
+  }
+
+  .dark .auth-dashboard-preview {
+    @apply border-gray-900;
   }
 
   .form-title {
