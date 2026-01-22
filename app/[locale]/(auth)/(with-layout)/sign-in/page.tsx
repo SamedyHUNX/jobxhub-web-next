@@ -50,7 +50,7 @@ export default function SignInPage() {
     } else if (signInSuccess) {
       toast.success(successT("0"));
     }
-  }, [signInError, signInSuccess, validationT, successT]);
+  }, [signInError, signInSuccess, errorT, successT]);
 
   return (
     <div className="mx-auto max-w-lg space-y-8">

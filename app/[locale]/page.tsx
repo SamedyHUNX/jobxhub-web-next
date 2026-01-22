@@ -2,15 +2,23 @@
 
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAppSelector } from "@/stores/hooks";
-import { useTranslations } from "next-intl";
-import { redirect } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function HomePage() {
-  const t = useTranslations("HomePage");
-
+  const t = useTranslations("home");
   const { token } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+  const locale = useLocale();
 
-  if (!token) redirect("/sign-in");
+  useEffect(() => {
+    if (!token) {
+      router.push(`/${locale}/sign-in`);
+    }
+  }, [token, router, locale]);
+
+  if (!token) return null;
 
   return (
     <div>
