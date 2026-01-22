@@ -1,7 +1,12 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { selectIsAuthenticated, setAuth } from "@/stores/slices/auth.slice";
-import { AuthResponse, SignInFormData, UsersData } from "@/types";
+import {
+  AuthResponse,
+  SignInFormData,
+  SignUpFormData,
+  UsersData,
+} from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Axios, AxiosError } from "axios";
 import { useLocale } from "next-intl";
@@ -45,7 +50,7 @@ export function useAuth() {
       formData,
       locale,
     }: {
-      formData: FormData;
+      formData: SignUpFormData;
       locale: string;
     }) => authApi.signUp(formData, locale),
     onSuccess: () => {

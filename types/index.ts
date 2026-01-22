@@ -39,3 +39,14 @@ export interface SignInFormData {
   email: string;
   password: string;
 }
+
+export interface SignUpFormData {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  image: File | null;
+}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthResponse, SignInFormData, User } from "@/types";
+import { AuthResponse, SignInFormData, SignUpFormData, User } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -26,7 +26,10 @@ export const authApi = {
   },
 
   // Signup
-  signUp: async (formData: FormData, locale: string): Promise<AuthResponse> => {
+  signUp: async (
+    formData: SignUpFormData,
+    locale: string
+  ): Promise<AuthResponse> => {
     assertApiUrl();
     const { data } = await api.post<AuthResponse>("/auth/signup", formData, {
       headers: {

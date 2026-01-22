@@ -16,8 +16,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <main className="auth-layout">
       {/* Left side - Form Content */}
-      <section className="auth-left-section">
-        <BrandLogo className="auth-logo" />
+      <section className="auth-left-section [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <BrandLogo className="mb-5 mt-10" />
 
         <div className="flex-1 w-full">{children}</div>
       </section>
