@@ -1,17 +1,20 @@
 "use client";
 
 import BrandLogo from "@/components/BrandLogo";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Testimonial from "@/components/Testimonial";
 import DashboardPreview from "./_DashboardPreview";
 import { useAppSelector } from "@/stores/hooks";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/Navbar";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   const { token } = useAppSelector((state) => state.auth);
+  const router = useRouter();
 
-  if (token) redirect("/");
+  useEffect(() => {
+    if (token) router.replace("/");
+  }, [token, router]);
 
   return (
     <main className="auth-layout">
