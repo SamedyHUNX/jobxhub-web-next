@@ -4,10 +4,8 @@ import BrandLogo from "@/components/BrandLogo";
 import { ReactNode } from "react";
 import Testimonial from "@/components/Testimonial";
 import DashboardPreview from "./_DashboardPreview";
-import ThemeToggle from "@/components/ThemeToggle";
 import { useAppSelector } from "@/stores/hooks";
 import { redirect } from "next/navigation";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { NavBar } from "@/components/Navbar";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
