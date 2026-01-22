@@ -7,6 +7,8 @@ import DashboardPreview from "./_DashboardPreview";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAppSelector } from "@/stores/hooks";
 import { redirect } from "next/navigation";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { NavBar } from "@/components/Navbar";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   const { token } = useAppSelector((state) => state.auth);
@@ -23,7 +25,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       </section>
 
       <section className="auth-right-section">
-        <ThemeToggle />
+        <NavBar />
         <Testimonial
           quote="JobXHub made connecting with the right opportunities effortless. The platform is intuitive and efficient, helping me find roles that truly match my skills."
           author="Samedy H"
