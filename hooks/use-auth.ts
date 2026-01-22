@@ -70,7 +70,7 @@ export function useAuth() {
     // Sign up
     signUp: signUpMutation.mutate,
     isSigningUp: signUpMutation.isPending,
-    signUpError: signUpMutation.error,
+    signUpError: signUpMutation.error as AxiosError,
     signUpSuccess: signUpMutation.isSuccess,
     signUpData: signUpMutation.data,
   };
