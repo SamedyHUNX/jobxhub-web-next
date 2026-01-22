@@ -9,6 +9,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 import { Inter, Geist } from "next/font/google";
+import { ReduxProvider } from "@/providers/ReduxProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -55,9 +56,11 @@ export default async function LocaleLayout({
     >
       <body className="font-sans">
         <ThemeProvider attribute={"class"} defaultTheme="system" enableSystem>
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            {children}
-          </NextIntlClientProvider>
+          <ReduxProvider>
+            <NextIntlClientProvider locale={locale} messages={messages}>
+              {children}
+            </NextIntlClientProvider>
+          </ReduxProvider>
         </ThemeProvider>
       </body>
     </html>
