@@ -36,7 +36,12 @@
     "emailSentWarning1": "The link will expire in 15 minutes",
     "emailSentWarning2": "Didn't receive the email? Check your spam folder",
     "emailSentWarning3": "Click the link in the email to complete your password reset",
-    "resend": "Resend a reset link"
+    "resend": "Resend a reset link",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmNewPassword": "Confirm New Password",
+    "confirmNewPasswordPlaceholder": "Enter your confirm new password",
+    "resetPassword": "Reset Password"
   },
   "validations": {
     "invalidEmail": "Please enter a valid email",
@@ -47,7 +52,10 @@
     "usernameRequired": "Enter a username",
     "passwordMinLength": "Password must be at least 8 characters long",
     "dateOfBirthRequired": "Please enter your date of birth",
-    "phoneNumberRequired": "Please enter your phone number"
+    "phoneNumberRequired": "Please enter your phone number",
+    "confirmPasswordRequired": "Please enter your confirm password",
+    "passwordNumber": "Required at least 1 number",
+    "passwordUppercase": "Required at least 1 uppercase letter"
   },
   "apiSuccess": {},
   "apiError": {

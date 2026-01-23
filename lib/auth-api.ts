@@ -91,4 +91,18 @@ export const authApi = {
     );
     return data;
   },
+
+  // Reset password
+  resetPassword: async (
+    token: string,
+    newPassword: string,
+    confirmNewPassword: string
+  ): Promise<AuthResponse> => {
+    const { data } = await api.post<AuthResponse>("/auth/reset-password", {
+      token,
+      newPassword,
+      confirmNewPassword,
+    });
+    return data;
+  },
 };

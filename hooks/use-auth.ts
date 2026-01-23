@@ -1,7 +1,12 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { selectIsAuthenticated, setAuth } from "@/stores/slices/auth.slice";
-import { AuthResponse, SignInFormData, SignUpFormData } from "@/types";
+import {
+  AuthResponse,
+  ResetPasswordFormData,
+  SignInFormData,
+  SignUpFormData,
+} from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale } from "next-intl";
@@ -68,6 +73,19 @@ export function useAuth() {
     },
   });
 
+  // Reset password mutation
+  const resetPasswordMutation = useMutation({
+    mutationFn: ({
+      token,
+      newPassword,
+      confirmNewPassword,
+    }: { token: string } & ResetPasswordFormData) =>
+      authApi.resetPassword(token, newPassword, confirmNewPassword),
+    onSuccess: () => {
+      router.push("/sign-in");
+    },
+  });
+
   return {
     // State
     user,
@@ -101,5 +119,11 @@ export function useAuth() {
     forgotPasswordError: forgotPasswordMutation.error as AxiosError,
     forgotPasswordSuccess: forgotPasswordMutation.isSuccess,
     forgotPasswordData: forgotPasswordMutation.data,
+
+    // Reset password
+    resetPassword: resetPasswordMutation.mutate,
+    isResettingPassword: resetPasswordMutation.isPending,
+    resetPasswordError: resetPasswordMutation.error as AxiosError,
+    resetPasswordSuccess: resetPasswordMutation.isSuccess,
   };
 }
