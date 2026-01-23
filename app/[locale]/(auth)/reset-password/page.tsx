@@ -39,12 +39,10 @@ export default function ResetPasswordPage() {
 
   // Initialize TanStack Form
   const form = useForm({
-    defaultValues: {
-      newPassword: "",
-      confirmNewPassword: "",
-    },
-    onSubmit: async ({ value: { newPassword, confirmNewPassword } }) => {
-      resetPassword({ token, newPassword, confirmNewPassword });
+    defaultValues: { newPassword: "", confirmNewPassword: "" },
+    onSubmit: async ({ value }) => {
+      console.log("data being sent", value);
+      resetPassword({ token, ...value });
     },
     validators: {
       onSubmit: ({ value }) => {
@@ -65,10 +63,10 @@ export default function ResetPasswordPage() {
   return (
     <div className="mx-auto space-y-8 px-4">
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
           e.stopPropagation();
-          form.handleSubmit();
+          await form.handleSubmit();
         }}
         className="space-y-6 w-full"
       >

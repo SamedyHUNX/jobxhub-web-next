@@ -55,7 +55,9 @@
     "phoneNumberRequired": "Please enter your phone number",
     "confirmPasswordRequired": "Please enter your confirm password",
     "passwordNumber": "Required at least 1 number",
-    "passwordUppercase": "Required at least 1 uppercase letter"
+    "passwordLowercase": "Required at least 1 lowercase letter",
+    "passwordUppercase": "Required at least 1 uppercase letter",
+    "passwordMustMatch": "Passwords must match"
   },
   "apiSuccess": {},
   "apiError": {
