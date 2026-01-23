@@ -113,9 +113,14 @@ export default function ResetPasswordPage() {
             type="password"
             placeholder={authT("confirmNewPasswordPlaceholder")}
             validator={(value) => {
+              const newPassword = form.getFieldValue("newPassword");
               const schema = z
                 .string()
-                .min(1, validationT("confirmPasswordRequired"));
+                .min(1, validationT("confirmPasswordRequired"))
+                .refine((val) => val === newPassword, {
+                  message: validationT("passwordMustMatch"),
+                });
+
               const result = schema.safeParse(value);
               return result.success
                 ? undefined
