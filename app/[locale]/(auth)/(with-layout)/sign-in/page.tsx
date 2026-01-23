@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { extractErrorMessage } from "@/lib/utils";
 import { FormField } from "@/components/FormField";
+import Link from "next/link";
 
 export default function SignInPage() {
   // Translations
@@ -20,7 +21,8 @@ export default function SignInPage() {
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
 
-  const { signIn, isSigningIn, signInError, signInSuccess } = useAuth();
+  const { signIn, isSigningIn, signInError, signInSuccess } =
+    useAuth();
 
   // Define schema
   const signInSchema = useMemo(
@@ -95,12 +97,12 @@ export default function SignInPage() {
           />
 
           <div className="flex items-center justify-between pt-1">
-            <a
+            <Link
               href="/auth/forgot-password"
               className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("forgotPassword")}
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -115,12 +117,12 @@ export default function SignInPage() {
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("dontHaveAnAccount")}{" "}
-            <a
+            <Link
               href="/sign-up"
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signUp")}
-            </a>
+            </Link>
           </p>
         </div>
       </form>

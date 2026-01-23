@@ -22,12 +22,17 @@
     "phoneNumber": "Phone Number",
     "phoneNumberPlaceholder": "Example: 123123123",
     "dateOfBirth": "Date of Birth",
-    "alreadyHaveAccount": "Already have an account?"
+    "dateOfBirthPlaceholder": "DD/MM/YYYY",
+    "alreadyHaveAccount": "Already have an account?",
+    "verifyEmailTitle": "Verifying Your Email Address...",
+    "verifyEmailDescription": "Please wait while we verify your email address.",
+    "havingTrouble": "Having trouble?",
+    "contactSupport": "Contact Support"
   },
   "validations": {
     "invalidEmail": "Please enter a valid email",
     "passwordRequired": "Please enter the password",
-    "imageRequired": "Please upload a profile photo",
+    "imageRequired": "Please upload a profile photo (Must be less than 5MB)",
     "firstNameRequired": "Enter your first name",
     "lastNameRequired": "Enter your last name",
     "usernameRequired": "Enter a username",

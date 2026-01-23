@@ -1,20 +1,15 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { selectIsAuthenticated, setAuth } from "@/stores/slices/auth.slice";
-import {
-  AuthResponse,
-  SignInFormData,
-  SignUpFormData,
-  UsersData,
-} from "@/types";
+import { AuthResponse, SignInFormData, SignUpFormData } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { user, token, isInitialized } = useAppSelector((state) => state.auth);
+  const { user, isInitialized } = useAppSelector((state) => state.auth);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -23,24 +18,18 @@ export function useAuth() {
   // Sign in mutation
   const signInMutation = useMutation({
     mutationFn: async (credentials: SignInFormData) => {
-      const response = await authApi.signIn(credentials);
-      const data: AuthResponse = response;
-
-      if (!data.data.users || data.data.users.length === 0) {
-        throw new Error("Invalid authentication response");
-      }
-
-      return data;
+      // Just authenticate - we don't care about the user object in the response
+      await authApi.signIn(credentials);
     },
-    onSuccess: (data: AuthResponse) => {
-      if (!data.data.users || data.data.users.length === 0) {
-        throw new Error("Invalid authentication response");
-      }
+    onSuccess: async () => {
+      // Trigger profile fetch which will set Redux auth
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
 
-      const user = data.data.users[0];
-      dispatch(setAuth({ token: user.token, user }));
-      localStorage.setItem("access_token", user.token);
+      // Redirect after login
       router.push(`/${locale}`);
+    },
+    onError: (error) => {
+      console.error("Sign in failed:", error);
     },
   });
 
@@ -58,10 +47,30 @@ export function useAuth() {
     },
   });
 
+  // Verify email mutation
+  const verifyEmailMutation = useMutation({
+    mutationFn: (token: string) => authApi.verifyEmail(token),
+    onSuccess: () => {
+      router.push("/sign-in");
+    },
+  });
+
+  // Forgot password mutation
+  const forgotPasswordMutation = useMutation({
+    mutationFn: ({ email, locale }: { email: string; locale: string }) =>
+      authApi.forgotPassword(email, locale),
+    onSuccess: (data) => {
+      router.push(
+        `/forgot-password/email-sent?email=${encodeURIComponent(
+          data.user.email
+        )}`
+      );
+    },
+  });
+
   return {
     // State
     user,
-    token,
     isAuthenticated,
     isInitialized,
 
@@ -78,5 +87,12 @@ export function useAuth() {
     signUpError: signUpMutation.error as AxiosError,
     signUpSuccess: signUpMutation.isSuccess,
     signUpData: signUpMutation.data,
+
+    // Verify email
+    verifyEmail: verifyEmailMutation.mutate,
+    isVerifyingEmail: verifyEmailMutation.isPending,
+    verifyEmailError: verifyEmailMutation.error as AxiosError,
+    verifyEmailSuccess: verifyEmailMutation.isSuccess,
+    verifyEmailData: verifyEmailMutation.data,
   };
 }

@@ -1,9 +1,10 @@
 interface FormFieldProps {
   form: any;
   name: string;
-  label: string;
+  label?: string;
   type?: string;
   placeholder?: string;
+  hideLabel?: boolean;
   validator: (value: any) => string | undefined;
 }
 
@@ -14,6 +15,7 @@ export function FormField({
   type = "text",
   placeholder,
   validator,
+  hideLabel = false,
 }: FormFieldProps) {
   return (
     <form.Field
@@ -28,7 +30,7 @@ export function FormField({
             htmlFor={field.name}
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            {label}
+            {!hideLabel && label}
           </label>
           <input
             id={field.name}
