@@ -1,0 +1,47 @@
+{
+  "home": {
+    "title": "Welcome to JobXHub",
+    "description": "This is the home page"
+  },
+  "auth": {
+    "email": "Email",
+    "emailPlaceholder": "user@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "dontHaveAnAccount": "Don't have an account?",
+    "uploadPhoto": "Upload a photo",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "Example: John",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Example: Doe",
+    "username": "Username (Display Name)",
+    "usernamePlaceholder": "Example: johndoe",
+    "phoneNumber": "Phone Number",
+    "phoneNumberPlaceholder": "Example: 123123123",
+    "dateOfBirth": "Date of Birth",
+    "dateOfBirthPlaceholder": "DD/MM/YYYY",
+    "alreadyHaveAccount": "Already have an account?",
+    "verifyEmailTitle": "Verifying Your Email Address...",
+    "verifyEmailDescription": "Please wait while we verify your email address.",
+    "havingTrouble": "Having trouble?",
+    "contactSupport": "Contact Support"
+  },
+  "validations": {
+    "invalidEmail": "Please enter a valid email",
+    "passwordRequired": "Please enter the password",
+    "imageRequired": "Please upload a profile photo (Must be less than 5MB)",
+    "firstNameRequired": "Enter your first name",
+    "lastNameRequired": "Enter your last name",
+    "usernameRequired": "Enter a username",
+    "passwordMinLength": "Password must be at least 8 characters long",
+    "dateOfBirthRequired": "Please enter your date of birth",
+    "phoneNumberRequired": "Please enter your phone number"
+  },
+  "apiSuccess": {},
+  "apiError": {
+    "invalidCredentials": "Invalid email or password"
+  }
+}
