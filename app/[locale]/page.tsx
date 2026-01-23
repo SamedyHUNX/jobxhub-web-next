@@ -8,17 +8,17 @@ import { useEffect } from "react";
 
 export default function HomePage() {
   const t = useTranslations("home");
-  const { token } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const locale = useLocale();
 
   useEffect(() => {
-    if (!token) {
+    if (!user) {
       router.push(`/${locale}/sign-in`);
     }
-  }, [token, router, locale]);
+  }, [user, router, locale]);
 
-  if (!token) return null;
+  if (!user) return null;
 
   return (
     <div>

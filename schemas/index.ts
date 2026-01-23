@@ -25,3 +25,13 @@ export const createSignUpSchema = (t: (key: string) => string) => {
     image: z.any().refine((file) => file instanceof File, t("imageRequired")),
   });
 };
+
+/**
+ * Forgot Password Schema
+ */
+export const forgotPasswordSchema = (t: (key: string) => string) => {
+  return z.object({
+    email: z.string().email(t("invalidEmail")),
+  });
+};
+

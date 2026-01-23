@@ -4,13 +4,11 @@ import { RootState } from "@/stores/stores";
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   isInitialized: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
-  token: null,
   isInitialized: false,
 };
 
@@ -18,14 +16,12 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<{ token: string; user: User }>) => {
-      state.token = action.payload.token;
+    setAuth: (state, action: PayloadAction<{ user: User }>) => {
       state.user = action.payload.user;
       state.isInitialized = true;
     },
     clearAuth: (state) => {
       state.user = null;
-      state.token = null;
       state.isInitialized = true;
     },
     markInitialized: (state) => {
@@ -36,6 +32,6 @@ const authSlice = createSlice({
 
 export const { setAuth, clearAuth, markInitialized } = authSlice.actions;
 
-export const selectIsAuthenticated = (state: RootState) => !!state.auth.token;
+export const selectIsAuthenticated = (state: RootState) => !!state.auth.user;
 
 export default authSlice.reducer;
