@@ -18,29 +18,18 @@ export function useAuth() {
   // Sign in mutation
   const signInMutation = useMutation({
     mutationFn: async (credentials: SignInFormData) => {
-      const response = await authApi.signIn(credentials);
-      const data: AuthResponse = response;
-
-      if (!data.data.users || data.data.users.length === 0) {
-        throw new Error("Invalid authentication response");
-      }
-
-      return data;
+      // Just authenticate - we don't care about the user object in the response
+      await authApi.signIn(credentials);
     },
-    onSuccess: (data: AuthResponse) => {
-      if (!data.data.users || data.data.users.length === 0) {
-        throw new Error("Invalid authentication response");
-      }
-
-      const user = data.data.users[0];
-
-      // Keep user info in memory (Redux)
-      dispatch(setAuth({ user }));
-
-      // The token is already stored in the HttpOnly cookie by the backend
+    onSuccess: async () => {
+      // Trigger profile fetch which will set Redux auth
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
 
       // Redirect after login
       router.push(`/${locale}`);
+    },
+    onError: (error) => {
+      console.error("Sign in failed:", error);
     },
   });
 

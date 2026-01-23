@@ -21,7 +21,8 @@ export default function SignInPage() {
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
 
-  const { signIn, isSigningIn, signInError, signInSuccess } = useAuth();
+  const { signIn, isSigningIn, signInError, signInSuccess } =
+    useAuth();
 
   // Define schema
   const signInSchema = useMemo(

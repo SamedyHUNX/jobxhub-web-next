@@ -6,6 +6,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const api = axios.create({
   baseURL: API_URL,
   timeout: 30000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -57,9 +58,7 @@ export const authApi = {
 
   // Get user info
   getProfile: async () => {
-    const { data } = await api.get<User>("/auth/me", {
-      withCredentials: true,
-    });
+    const { data } = await api.get<User>("/auth/me");
     return data;
   },
 
