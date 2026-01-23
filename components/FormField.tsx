@@ -59,28 +59,3 @@ export function FormField({
     </form.Field>
   );
 }
-
-// Usage in your sign-in form:
-// <FormField
-//   form={form}
-//   name="email"
-//   label={authT("email")}
-//   type="email"
-//   placeholder={authT("emailPlaceholder")}
-//   validator={(value) => {
-//     const result = signInSchema.shape.email.safeParse(value);
-//     return result.success ? undefined : result.error.errors[0].message;
-//   }}
-// />
-//
-// <FormField
-//   form={form}
-//   name="password"
-//   label={authT("password")}
-//   type="password"
-//   placeholder={authT("passwordPlaceholder")}
-//   validator={(value) => {
-//     const result = signInSchema.shape.password.safeParse(value);
-//     return result.success ? undefined : result.error.errors[0].message;
-//   }}
-// />
