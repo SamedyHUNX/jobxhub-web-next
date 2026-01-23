@@ -52,7 +52,7 @@ export default function SignInPage() {
     if (signInError) {
       toast.error(extractErrorMessage(signInError, errorT));
     } else if (signInSuccess) {
-      toast.success(successT("0"));
+      toast.success(successT("signInSuccess"));
     }
   }, [signInError, signInSuccess, errorT, successT]);
 

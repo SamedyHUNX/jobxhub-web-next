@@ -59,7 +59,13 @@
     "passwordUppercase": "Required at least 1 uppercase letter",
     "passwordMustMatch": "Passwords must match"
   },
-  "apiSuccess": {},
+  "apiSuccess": {
+    "signInSuccess": "Signed in successfully",
+    "signUpSuccess": "Please check your inbox to verify your email",
+    "verifyEmailSuccess": "Your account has been verified. Please sign in",
+    "forgotPasswordSuccess": "A reset email has been sent to your email",
+    "resetPasswordSuccess": "Your password has been reset successfully"
+  },
   "apiError": {
     "invalidCredentials": "Invalid email or password"
   }

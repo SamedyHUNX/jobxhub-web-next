@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
     if (forgotPasswordError) {
       toast.error(extractErrorMessage(forgotPasswordError, errorT));
     } else if (forgotPasswordSuccess) {
-      toast.success(successT("0"));
+      toast.success(successT("forgotPasswordSuccess"));
     }
   }, [forgotPasswordError, forgotPasswordSuccess, errorT, successT]);
 

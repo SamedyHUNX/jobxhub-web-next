@@ -62,7 +62,7 @@ export default function SignUpPage() {
     if (signUpError) {
       toast.error(extractErrorMessage(signUpError, errorT));
     } else if (signUpSuccess) {
-      toast.success(successT("0"));
+      toast.success(successT("signUpSuccess"));
     }
   }, [signUpError, signUpSuccess, errorT, successT]);
 

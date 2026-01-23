@@ -54,7 +54,6 @@ export default function ResetPasswordPage() {
   const form = useForm({
     defaultValues: { newPassword: "", confirmNewPassword: "" },
     onSubmit: async ({ value }) => {
-      console.log("data being sent", value);
       resetPassword({ token, ...value });
     },
     validators: {
@@ -69,7 +68,7 @@ export default function ResetPasswordPage() {
     if (resetPasswordError) {
       toast.error(extractErrorMessage(resetPasswordError, errorT));
     } else if (resetPasswordSuccess) {
-      toast.success(successT("0"));
+      toast.success(successT("resetPasswordSuccess"));
     }
   }, [resetPasswordError, resetPasswordSuccess, errorT, successT]);
 
