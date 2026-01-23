@@ -1,22 +1,30 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function EmailSentPage() {
   // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
   const router = useRouter();
+  const locale = useLocale();
 
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const decodedEmail = email ? decodeURIComponent(email) : "";
 
   // Force return to the forgotPassword page
+  useEffect(() => {
+    if (!email) {
+      router.push(`/${locale}/forgot-password`);
+    }
+  }, [email, router]);
+
   if (!email) {
-    router.push("/forgot-password");
+    return null; // Prevent rendering while redirecting
   }
 
   return (
@@ -40,11 +48,13 @@ export default function EmailSentPage() {
         </div>
         <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           {authT("emailSent")}
-        </h2>
+        </h2>{" "}
         <p className="mt-4 text-base text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-          {authT("emailSentDesc1")}{" "}
-          <h5 className="text-gray-900 dark:text-white">{decodedEmail}</h5>
-          {authT("emailSentDesc2")}
+          {authT("emailSentDesc1")} +{" "}
+          <span className="font-semibold text-gray-900 dark:text-white">
+            {decodedEmail}
+          </span>
+          {authT("emailSentDesc2")}+{" "}
         </p>
       </div>
 
@@ -78,7 +88,7 @@ export default function EmailSentPage() {
 
         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 space-y-3">
           <button
-            onClick={() => router.push("/forgot-password")}
+            onClick={() => router.push(`/${locale}/forgot-password`)}
             className="w-full text-sm font-medium text-blue-500 hover:text-blue-400 transition-colors"
           >
             {authT("resend")}
@@ -86,7 +96,7 @@ export default function EmailSentPage() {
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
             {authT("rememberPassword")}{" "}
             <Link
-              href="/sign-in"
+              href={`/${locale}/forgot-password`}
               className="font-medium text-blue-500 hover:text-blue-400 transition-colors"
             >
               {authT("signIn")}

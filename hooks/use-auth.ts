@@ -82,7 +82,7 @@ export function useAuth() {
     }: { token: string } & ResetPasswordFormData) =>
       authApi.resetPassword(token, newPassword, confirmNewPassword),
     onSuccess: () => {
-      router.push("/sign-in");
+      router.push(`/${locale}/sign-in`);
     },
   });
 

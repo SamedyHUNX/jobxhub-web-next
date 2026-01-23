@@ -7,8 +7,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { extractErrorMessage } from "@/lib/utils";
 import { createResetPasswordSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
-import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -20,9 +20,22 @@ export default function ResetPasswordPage() {
   const validationT = (key: string) => t(`validations.${key}`);
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
+  const router = useRouter();
+  const locale = useLocale();
 
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") as string;
+  const token = searchParams.get("token");
+
+  // Redirect if no token provided
+  useEffect(() => {
+    if (!token) {
+      router.push(`/${locale}/reset-password`);
+    }
+  }, [token, router]);
+
+  if (!token) {
+    return null;
+  }
 
   const {
     resetPassword,

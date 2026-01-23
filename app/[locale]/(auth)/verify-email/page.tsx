@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/hooks/use-auth";
 import { extractErrorMessage } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -14,6 +14,7 @@ export default function VerifyEmailPage() {
   const authT = (key: string) => t(`auth.${key}`);
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
+  const locale = useLocale();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,12 +26,12 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     if (!token) {
       // Force navigate to signin
-      router.push("/sign-in");
+      router.push(`/${locale}/sign-in`);
       return;
     }
 
     verifyEmail(token);
-  }, [token]);
+  }, [token, verifyEmail, router, locale]);
 
   // Handle error with toast
   useEffect(() => {
@@ -38,11 +39,8 @@ export default function VerifyEmailPage() {
       toast.error(extractErrorMessage(verifyEmailError, errorT));
     } else if (verifyEmailSuccess) {
       toast.success(successT("verifyEmailSuccess"));
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
     }
-  }, [verifyEmailError, verifyEmailSuccess, router]);
+  }, [verifyEmailError, verifyEmailSuccess]);
 
   return (
     <div className="space-y-8 max-w-lg mx-auto mt-[15%] min-h-screen">

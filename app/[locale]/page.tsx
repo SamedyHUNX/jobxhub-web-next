@@ -8,17 +8,18 @@ import { useEffect } from "react";
 
 export default function HomePage() {
   const t = useTranslations("home");
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, isInitialized } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const locale = useLocale();
 
   useEffect(() => {
+    if (!isInitialized) return;
     if (!user) {
       router.push(`/${locale}/sign-in`);
     }
-  }, [user, router, locale]);
+  }, [user, router, locale, isInitialized]);
 
-  if (!user) return null;
+  if (!user || !isInitialized) return null;
 
   return (
     <div>

@@ -53,4 +53,5 @@ export const createResetPasswordSchema = (t: (key: string) => string) => {
       message: t("passwordMustMatch"),
       path: ["confirmNewPassword"],
     });
+  return baseSchema;
 };
