@@ -21,8 +21,7 @@ export default function SignInPage() {
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
 
-  const { signIn, isSigningIn, signInError, signInSuccess } =
-    useAuth();
+  const { signIn, isSigningIn, signInError, signInSuccess } = useAuth();
 
   // Define schema
   const signInSchema = useMemo(
@@ -98,7 +97,7 @@ export default function SignInPage() {
 
           <div className="flex items-center justify-between pt-1">
             <Link
-              href="/auth/forgot-password"
+              href="/forgot-password"
               className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("forgotPassword")}

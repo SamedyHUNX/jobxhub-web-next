@@ -59,10 +59,10 @@ export function useAuth() {
   const forgotPasswordMutation = useMutation({
     mutationFn: ({ email, locale }: { email: string; locale: string }) =>
       authApi.forgotPassword(email, locale),
-    onSuccess: (data) => {
+    onSuccess: (_, variables) => {
       router.push(
         `/forgot-password/email-sent?email=${encodeURIComponent(
-          data.user.email
+          variables.email
         )}`
       );
     },
@@ -94,5 +94,12 @@ export function useAuth() {
     verifyEmailError: verifyEmailMutation.error as AxiosError,
     verifyEmailSuccess: verifyEmailMutation.isSuccess,
     verifyEmailData: verifyEmailMutation.data,
+
+    // Forgot password
+    forgotPassword: forgotPasswordMutation.mutate,
+    isRequestingForgotPassword: forgotPasswordMutation.isPending,
+    forgotPasswordError: forgotPasswordMutation.error as AxiosError,
+    forgotPasswordSuccess: forgotPasswordMutation.isSuccess,
+    forgotPasswordData: forgotPasswordMutation.data,
   };
 }
