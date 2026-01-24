@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "@tanstack/react-form";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { SignInFormData } from "@/types";
@@ -12,6 +12,7 @@ import { LoadingSwap } from "@/components/LoadingSwap";
 import { extractErrorMessage } from "@/lib/utils";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   // Translations
@@ -20,6 +21,10 @@ export default function SignInPage() {
   const validationT = (key: string) => t(`validations.${key}`);
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
+
+  const router = useRouter();
+
+  const locale = useLocale();
 
   const { signIn, isSigningIn, signInError, signInSuccess } = useAuth();
 
@@ -50,7 +55,7 @@ export default function SignInPage() {
     if (signInError) {
       toast.error(extractErrorMessage(signInError, errorT));
     } else if (signInSuccess) {
-      toast.success(successT("0"));
+      toast.success(successT("signInSuccess"));
     }
   }, [signInError, signInSuccess, errorT, successT]);
 
@@ -97,7 +102,7 @@ export default function SignInPage() {
 
           <div className="flex items-center justify-between pt-1">
             <Link
-              href="/forgot-password"
+              href={`/${locale}/forgot-password`}
               className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("forgotPassword")}
@@ -117,7 +122,7 @@ export default function SignInPage() {
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("dontHaveAnAccount")}{" "}
             <Link
-              href="/sign-up"
+              href={`/${locale}/sign-up`}
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signUp")}

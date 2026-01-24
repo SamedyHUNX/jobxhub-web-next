@@ -39,14 +39,12 @@ export default function ForgotPasswordPage() {
       email: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("value being sent:", value);
-      console.log("locale being sent:", locale);
       forgotPassword({ email: value.email, locale });
     },
     validators: {
       onSubmit: ({ value }) => {
         const result = forgotPasswordFormSchema.safeParse(value);
-        return result.success ? undefined : result;
+        return result.success ? undefined : result.error.format();
       },
     },
   });
@@ -55,7 +53,7 @@ export default function ForgotPasswordPage() {
     if (forgotPasswordError) {
       toast.error(extractErrorMessage(forgotPasswordError, errorT));
     } else if (forgotPasswordSuccess) {
-      toast.success(successT("0"));
+      toast.success(successT("forgotPasswordSuccess"));
     }
   }, [forgotPasswordError, forgotPasswordSuccess, errorT, successT]);
 

@@ -50,3 +50,8 @@ export interface SignUpFormData {
   dateOfBirth: string;
   image: File | null;
 }
+
+export type ResetPasswordFormData = {
+  newPassword: string;
+  confirmNewPassword: string;
+};

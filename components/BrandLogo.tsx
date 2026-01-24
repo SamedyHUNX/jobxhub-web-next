@@ -11,7 +11,7 @@ export default function BrandLogo({ className }: { className?: string }) {
         <Image
           src={brandLogo}
           alt="JobXHub"
-          width={140}
+          width={230}
           height={32}
           className="w-9 h-9"
         />

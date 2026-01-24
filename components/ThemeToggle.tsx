@@ -28,7 +28,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(nextTheme.name)}
-      className="h-8 w-8 flex items-center justify-center rounded-md hover:text-yellow-500  transition-colors"
+      className="h-8 w-8 flex items-center justify-center rounded-md text-yellow-400  transition-colors"
       aria-label={`Switch to ${nextTheme.label} mode`}
       title={`Current: ${theme} - Switch to ${nextTheme.label}`}
     >
