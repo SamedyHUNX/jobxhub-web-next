@@ -1,25 +1,12 @@
 "use client";
 
 import BrandLogo from "@/components/BrandLogo";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import Testimonial from "@/components/Testimonial";
 import DashboardPreview from "./_DashboardPreview";
-import { useAppSelector } from "@/stores/hooks";
-import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/Navbar";
-import { useLocale } from "next-intl";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
-  const { user } = useAppSelector((state) => state.auth);
-  const router = useRouter();
-  const locale = useLocale();
-
-  useEffect(() => {
-    if (user) {
-      router.replace(`/${locale}/`);
-    }
-  }, [user, router]);
-
   return (
     <main className="auth-layout">
       {/* Left side - Form Content */}

@@ -26,7 +26,7 @@ export function useAuth() {
       await queryClient.refetchQueries({ queryKey: ["profile"] });
 
       // Redux state should be ready
-      // router.push(`/${locale}`);
+      router.push(`/${locale}`);
     },
     onError: (error) => {
       console.error("Sign in failed:", error);

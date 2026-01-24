@@ -12,6 +12,7 @@ import "./globals.css";
 import { Inter, Geist } from "next/font/google";
 import { ReduxProvider } from "@/providers/ReduxProvider";
 import ReactQueryProvider from "@/providers/QueryClientProvider";
+import AuthGuard from "@/components/guards/AuthGuard";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -62,7 +63,8 @@ export default async function LocaleLayout({
           <ReactQueryProvider>
             <ReduxProvider>
               <NextIntlClientProvider locale={locale} messages={messages}>
-                <Toaster richColors theme="light" /> {children}
+                <Toaster richColors theme="light" />
+                <AuthGuard>{children}</AuthGuard>
               </NextIntlClientProvider>
             </ReduxProvider>
           </ReactQueryProvider>
