@@ -2,6 +2,8 @@
 
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
+import { SidebarUserButton } from "@/components/sidebar/SidebarUserButton";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import {
   BrainCircuitIcon,
@@ -15,9 +17,11 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
   const { profile: currentUser } = useProfile();
   const isSuperAdmin = currentUser?.userRole === "SUPER-ADMIN";
   const sidebarT = useTranslations("sidebar");
+  const isMobile = useIsMobile();
 
   return (
     <AppSidebar
+      showNavBar={!isMobile}
       content={
         <SidebarNavMenuGroup
           className="mt-auto"
@@ -49,7 +53,7 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
           }
         />
       }
-      //   footerButton={<SidebarUserButton />}
+      footerButton={<SidebarUserButton />}
     >
       {children}
     </AppSidebar>

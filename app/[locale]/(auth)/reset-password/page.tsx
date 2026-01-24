@@ -26,17 +26,6 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  // Redirect if no token provided
-  useEffect(() => {
-    if (!token) {
-      router.push(`/${locale}/reset-password`);
-    }
-  }, [token, router]);
-
-  if (!token) {
-    return null;
-  }
-
   const {
     resetPassword,
     isResettingPassword,
@@ -49,6 +38,10 @@ export default function ResetPasswordPage() {
     () => createResetPasswordSchema(validationT),
     [validationT]
   );
+
+  if (!token) {
+    return null;
+  }
 
   // Initialize TanStack Form
   const form = useForm({
@@ -71,6 +64,13 @@ export default function ResetPasswordPage() {
       toast.success(successT("resetPasswordSuccess"));
     }
   }, [resetPasswordError, resetPasswordSuccess, errorT, successT]);
+
+  // Redirect if no token provided
+  useEffect(() => {
+    if (!token) {
+      router.push(`/${locale}/reset-password`);
+    }
+  }, [token, router, locale]);
 
   return (
     <div className="mx-auto space-y-8 px-4">

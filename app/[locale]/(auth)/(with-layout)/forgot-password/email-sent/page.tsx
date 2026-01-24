@@ -96,7 +96,7 @@ export default function EmailSentPage() {
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
             {authT("rememberPassword")}{" "}
             <Link
-              href={`/${locale}/forgot-password`}
+              href={`/${locale}/sign-in`}
               className="font-medium text-blue-500 hover:text-blue-400 transition-colors"
             >
               {authT("signIn")}

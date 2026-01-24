@@ -6,7 +6,8 @@
   "sidebar": {
     "findJobs": "Find Jobs",
     "aiSearch": "AI Search",
-    "employerDashboard": "Employer Dashboard"
+    "employerDashboard": "Employer Dashboard",
+    "superAdminDashboard": "Super-Admin Dashboard"
   },
   "auth": {
     "email": "Email",
