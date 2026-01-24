@@ -3,6 +3,11 @@
     "title": "Welcome to JobXHub",
     "description": "This is the home page"
   },
+  "sidebar": {
+    "findJobs": "Find Jobs",
+    "aiSearch": "AI Search",
+    "employerDashboard": "Employer Dashboard"
+  },
   "auth": {
     "email": "Email",
     "emailPlaceholder": "user@example.com",
