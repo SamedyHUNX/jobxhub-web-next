@@ -31,6 +31,8 @@ const apiErrorMapping = (
   "Token has been invalidated. Please sign in again.": t("invalidatedToken"),
   "Too many requests": t("tooManyRequest"),
   "Passwords must match": t("passwordsMustMatch"),
+  "Account temporarily locked due to multiple failed login attempts. Please try again later or reset your password.":
+    t("temporaryLocked"),
 });
 
 export function extractErrorMessage(

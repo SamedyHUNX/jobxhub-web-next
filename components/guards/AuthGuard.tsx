@@ -15,7 +15,7 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isInitialized) return;
 
-    // Define routes that should be accessible without authentication
+    // Routes that should be accessible WITHOUT authentication
     const publicAuthRoutes = [
       `/${locale}/sign-in`,
       `/${locale}/sign-up`,
@@ -29,9 +29,14 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
       pathname.startsWith(route)
     );
 
-    // Only redirect if user is not authenticated AND not on a public auth route
+    // Redirect to sign-in if not authenticated AND not already on a public route
     if (!user && !isPublicAuthRoute) {
       router.replace(`/${locale}/sign-in`);
+    }
+
+    // Redirect authenticated users AWAY from auth pages to homepage
+    if (user && isPublicAuthRoute) {
+      router.replace(`/${locale}`);
     }
   }, [user, isInitialized, router, locale, pathname]);
 
@@ -40,6 +45,6 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
     return <PageLoader />;
   }
 
-  // If authenticated, render children
+  // Render children (works for both authenticated and public routes)
   return <>{children}</>;
 }
