@@ -67,6 +67,23 @@
     "resetPasswordSuccess": "Your password has been reset successfully"
   },
   "apiError": {
-    "invalidCredentials": "Invalid email or password"
+    "invalidCredentials": "Invalid email or password",
+    "allFieldsRequired": "All fields are required",
+    "profileImageRequired": "Profile image is required",
+    "emailExists": "Email already exists",
+    "usernameExist": "Username already taken",
+    "signUpFailed": "Failed to complete signup. Please try again",
+    "invalidToken": "Invalid token",
+    "verifyTokenExpired": "Verification token has expired. Please request a new verification email",
+    "invalidOrExpiredToken": "Invalid or expired verification token",
+    "verifyEmailFailed": "Failed to verify email. Please try again",
+    "emailOrPasswordRequired": "Email and password are required",
+    "accountBanned": "Account has been banned",
+    "accountNotVerified": "Account is not verified. Please check your inbox to verify",
+    "invalidPayload": "Invalid payload",
+    "invalidatedToken": "Token has been invalidated. Please sign in again.",
+    "userNotFound": "User not found",
+    "tooManyRequests": "Too many requests",
+    "passwordsMustMatch": "Passwords must match"
   }
 }

@@ -1,12 +1,6 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import { selectIsAuthenticated, setAuth } from "@/stores/slices/auth.slice";
-import {
-  AuthResponse,
-  ResetPasswordFormData,
-  SignInFormData,
-  SignUpFormData,
-} from "@/types";
+import { ResetPasswordFormData, SignInFormData, SignUpFormData } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale } from "next-intl";
@@ -15,7 +9,6 @@ import { useRouter } from "next/navigation";
 export function useAuth() {
   const dispatch = useAppDispatch();
   const { user, isInitialized } = useAppSelector((state) => state.auth);
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const queryClient = useQueryClient();
   const router = useRouter();
   const locale = useLocale();
@@ -23,15 +16,17 @@ export function useAuth() {
   // Sign in mutation
   const signInMutation = useMutation({
     mutationFn: async (credentials: SignInFormData) => {
-      // Just authenticate - we don't care about the user object in the response
       await authApi.signIn(credentials);
     },
     onSuccess: async () => {
-      // Trigger profile fetch which will set Redux auth
+      // Invalidate and WAIT for the profile to be refetched
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
 
-      // Redirect after login
-      router.push(`/${locale}`);
+      // Ensure the profile query has completed and Redux is updated
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
+
+      // Redux state should be ready
+      // router.push(`/${locale}`);
     },
     onError: (error) => {
       console.error("Sign in failed:", error);
@@ -89,7 +84,6 @@ export function useAuth() {
   return {
     // State
     user,
-    isAuthenticated,
     isInitialized,
 
     // Sign in

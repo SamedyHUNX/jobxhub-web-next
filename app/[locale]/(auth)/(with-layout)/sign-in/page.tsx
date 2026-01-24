@@ -12,6 +12,7 @@ import { LoadingSwap } from "@/components/LoadingSwap";
 import { extractErrorMessage } from "@/lib/utils";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   // Translations
@@ -20,6 +21,8 @@ export default function SignInPage() {
   const validationT = (key: string) => t(`validations.${key}`);
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
+
+  const router = useRouter();
 
   const locale = useLocale();
 

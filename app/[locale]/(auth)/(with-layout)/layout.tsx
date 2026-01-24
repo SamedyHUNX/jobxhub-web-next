@@ -15,7 +15,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   const locale = useLocale();
 
   useEffect(() => {
-    if (user) router.replace(`/${locale}/`);
+    if (user) {
+      router.replace(`/${locale}/`);
+    }
   }, [user, router]);
 
   return (
@@ -33,7 +35,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <section className="auth-right-section">
         <NavBar />
         <Testimonial
-          quote="JobXHub’s AI analyzed my resume and instantly connected me with roles that actually matched my skills. The platform feels smart, intuitive, and incredibly efficient—job searching finally felt tailored to me."
+          quote="JobXHub’s AI analyzed my resume and instantly connected me with roles that actually matched my skills. The platform feels smart, intuitive, and incredibly efficient job searching finally felt tailored to me."
           author="Samedy H"
           occupation="Software Developer"
         />
