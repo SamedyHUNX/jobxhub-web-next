@@ -28,7 +28,7 @@ export default function Testimonial({
               key={star}
               width={20}
               height={20}
-              className="w-5 h-5"
+              className="w-5 h-5 text-yellow-400"
             />
           ))}
         </div>

@@ -78,7 +78,7 @@ export default function VerifyEmailPage() {
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
           {authT("havingTrouble")}{" "}
           <Link
-            href="/support"
+            href={`/${locale}/support`}
             className="font-medium text-blue-500 hover:text-blue-400 transition-colors"
           >
             {authT("contactSupport")}

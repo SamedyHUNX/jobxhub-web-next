@@ -53,7 +53,7 @@ export default function SignUpPage() {
     validators: {
       onSubmit: ({ value }) => {
         const result = signUpSchema.safeParse(value);
-        return result.success ? undefined : result.error.format;
+        return result.success ? undefined : result.error.format();
       },
     },
   });
@@ -306,7 +306,7 @@ export default function SignUpPage() {
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("alreadyHaveAccount")}{" "}
             <Link
-              href="/sign-in"
+              href={`/${locale}/sign-in`}
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signIn")}

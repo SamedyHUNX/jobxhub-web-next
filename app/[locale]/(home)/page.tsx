@@ -1,3 +1,3 @@
 export default function JobSeekerPage() {
-  return <h1>Job Seeker Page</h1>;
+  return <h1>Homepage</h1>;
 }

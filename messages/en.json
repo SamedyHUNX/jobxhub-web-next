@@ -6,7 +6,8 @@
   "sidebar": {
     "findJobs": "Find Jobs",
     "aiSearch": "AI Search",
-    "employerDashboard": "Employer Dashboard"
+    "employerDashboard": "Employer Dashboard",
+    "superAdminDashboard": "Super-Admin Dashboard"
   },
   "auth": {
     "email": "Email",
@@ -89,6 +90,7 @@
     "invalidatedToken": "Token has been invalidated. Please sign in again.",
     "userNotFound": "User not found",
     "tooManyRequests": "Too many requests",
-    "passwordsMustMatch": "Passwords must match"
+    "passwordsMustMatch": "Passwords must match",
+    "temporaryLocked": "Account temporarily locked due to multiple failed login attempts. Please try again later or reset your password."
   }
 }

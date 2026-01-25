@@ -22,7 +22,7 @@ export const authApi = {
   // Sign In
   signIn: async (credentials: SignInFormData): Promise<AuthResponse> => {
     assertApiUrl();
-    const { data } = await api.post<AuthResponse>("/auth/signin", credentials);
+    const { data } = await api.post<AuthResponse>("/auth/sign-in", credentials);
     return data;
   },
 
@@ -47,10 +47,9 @@ export const authApi = {
       }
     });
 
-    const { data } = await api.post<AuthResponse>("/auth/signup", form, {
+    const { data } = await api.post<AuthResponse>("/auth/sign-up", form, {
       headers: {
         "Accept-Language": locale,
-        "Content-Type": "multipart/form-data",
       },
     });
     return data;
@@ -104,5 +103,10 @@ export const authApi = {
       confirmNewPassword,
     });
     return data;
+  },
+
+  // Sign Out
+  signOut: async () => {
+    await api.post("/auth/sign-out");
   },
 };
