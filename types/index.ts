@@ -55,3 +55,19 @@ export type ResetPasswordFormData = {
   newPassword: string;
   confirmNewPassword: string;
 };
+
+// Organizations
+export interface Organization {
+  id: string;
+  orgName: string;
+  imageUrl: string;
+  slug: string;
+  isVerified: boolean;
+  isBanned: boolean;
+  membersCount: number;
+  pendingInvitationsCount: number;
+  adminDeleteEnabled: boolean;
+  jobsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
