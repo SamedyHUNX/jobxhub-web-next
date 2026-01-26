@@ -79,8 +79,8 @@ export default function CreateNewOrgPage() {
 
   return (
     <div className="min-h-[calc(100vh-68px)] bg-[#fdfbf7] dark:bg-black flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-white rounded-3xl w-[95%] max-w-2xl p-12 border border-gray-300">
-        <h1 className="text-4xl font-bold mb-12 text-black tracking-tighter">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl p-12 border border-gray-300 dark:border-gray-700">
+        <h1 className="text-4xl font-bold mb-12 text-black dark:text-white tracking-tighter">
           {newOrgT("newPageTitle")}
         </h1>
 
@@ -184,6 +184,7 @@ export default function CreateNewOrgPage() {
           <FormField
             form={form}
             name="orgName"
+            placeholder="For example: Microsoft Corporation"
             label={newOrgT("orgName")}
             validator={(value) => {
               const result =
@@ -203,6 +204,7 @@ export default function CreateNewOrgPage() {
             form={form}
             name="slug"
             label={newOrgT("slugName")}
+            placeholder="Auto-generated"
             validator={(value) => {
               const result =
                 createOrganizationFormSchema.shape.slug.safeParse(value);

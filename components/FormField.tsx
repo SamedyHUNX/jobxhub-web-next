@@ -90,7 +90,7 @@ export function FormField({
         <div className="space-y-2">
           <label
             htmlFor={name}
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 dark:text-white"
           >
             {label}
           </label>
