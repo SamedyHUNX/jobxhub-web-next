@@ -49,6 +49,13 @@
     "confirmNewPasswordPlaceholder": "Enter your confirm new password",
     "resetPassword": "Reset Password"
   },
+  "organizations": {
+    "newPageTitle": "Create New Organization",
+    "uploadPhoto": "Upload the organization logo",
+    "orgName": "Organization name",
+    "slugName": "Your org's unique identifier (visible to others)",
+    "create": "Create"
+  },
   "validations": {
     "invalidEmail": "Please enter a valid email",
     "passwordRequired": "Please enter the password",
@@ -63,7 +70,9 @@
     "passwordNumber": "Required at least 1 number",
     "passwordLowercase": "Required at least 1 lowercase letter",
     "passwordUppercase": "Required at least 1 uppercase letter",
-    "passwordMustMatch": "Passwords must match"
+    "passwordMustMatch": "Passwords must match",
+    "orgNameRequired": "Please provide the organization name",
+    "slugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)"
   },
   "apiSuccess": {
     "signInSuccess": "Signed in successfully",

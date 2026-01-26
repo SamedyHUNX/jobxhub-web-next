@@ -71,3 +71,8 @@ export interface Organization {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface OrgsResponse {
+  message: string;
+  data: Organization[];
+}

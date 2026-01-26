@@ -259,6 +259,7 @@ export default function SignUpPage() {
                 </form.Field>
                 <div className="flex-1 h-10.5">
                   <FormField
+                    label=""
                     form={form}
                     name="phoneNumber"
                     type="tel"
@@ -270,7 +271,6 @@ export default function SignUpPage() {
                         ? undefined
                         : result.error.errors[0].message;
                     }}
-                    hideLabel
                   />
                 </div>
               </div>

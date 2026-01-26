@@ -55,3 +55,20 @@ export const createResetPasswordSchema = (t: (key: string) => string) => {
     });
   return baseSchema;
 };
+
+/**
+ * Create Organization Schema
+ */
+export const createOrganizationSchema = (t: (key: string) => string) => {
+  return z.object({
+    orgName: z.string().min(1, t("orgNameRequired")),
+    slug: z.string().min(1, t("slugRequired")),
+    image: z.any().refine((file) => file instanceof File, t("imageRequired")),
+  });
+};
+
+export type CreateOrgFormData = {
+  orgName: string;
+  slug: string;
+  image: File | null;
+};
