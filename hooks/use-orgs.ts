@@ -1,10 +1,14 @@
 import { orgsApi } from "@/lib/orgs-api";
 import { CreateOrgFormData } from "@/schemas";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import { setSelectedOrganization } from "@/stores/slices/organizations.slice";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  clearSelection,
+  setSelectedOrganization,
+} from "@/stores/slices/organizations.slice";
+import { Organization } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 interface UseOrgsParams {
   search?: string;
@@ -18,20 +22,19 @@ export function useOrgs(params?: UseOrgsParams) {
     (state) => state.organizations.selectedOrgId
   );
 
-  // Restore selected org from localStorage on mount
-  //   useEffect(() => {
-  //     if (!selectedOrganization) {
-  //       const stored = localStorage.getItem("selectedOrganization");
-  //       if (stored) {
-  //         try {
-  //           const org = JSON.parse(stored);
-  //           dispatch(setSelectedOrganization(org));
-  //         } catch (e) {
-  //           localStorage.removeItem("selectedOrganization");
-  //         }
-  //       }
-  //     }
-  //   }, [dispatch, selectedOrganization]);
+  // Fetch organizations with filters using useQuery
+  const {
+    data: organizationsData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["organizations", params],
+    queryFn: () => orgsApi.findAll(params?.search, params?.isVerified),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const organizations = organizationsData?.data.organizations || [];
 
   // Create organization mutation
   const createOrganizationMutation = useMutation({
@@ -43,11 +46,58 @@ export function useOrgs(params?: UseOrgsParams) {
     },
   });
 
+  // Fetch organizations by user
+  const fetchOrgsByUserId = (userId: string) =>
+    useQuery({
+      queryKey: ["organizations", "user", userId],
+      queryFn: () => orgsApi.findByUser(userId),
+      enabled: !!userId,
+      select: (data) => data.data.organizations,
+    });
+
+  // Fetch single organization
+  const fetchOrgByOrgId = (id: string) =>
+    useQuery({
+      queryKey: ["organization", id],
+      queryFn: () => orgsApi.findOne(id),
+      enabled: !!id,
+      select: (data) => data.data.organizations[0],
+    });
+
+  // Select organization
+  const selectOrganization = useCallback(
+    (orgOrId: string | Organization) => {
+      if (typeof orgOrId === "string") {
+        const org = organizations.find((o: Organization) => o.id === orgOrId);
+        if (org) {
+          dispatch(setSelectedOrganization(org));
+          localStorage.setItem("selectedOrganization", JSON.stringify(org));
+        }
+      } else {
+        dispatch(setSelectedOrganization(orgOrId));
+        localStorage.setItem("selectedOrganization", JSON.stringify(orgOrId));
+      }
+    },
+    [dispatch, organizations]
+  );
+
+  // Clear selected organization
+  const clearSelectedOrganization = useCallback(() => {
+    dispatch(clearSelection());
+    localStorage.removeItem("selectedOrganization");
+  }, [dispatch]);
+
   return {
     // Mutations
     createOrganization: createOrganizationMutation.mutate,
     isCreating: createOrganizationMutation.isPending,
     createSuccess: createOrganizationMutation.isSuccess,
     createError: createOrganizationMutation.error as AxiosError,
+
+    fetchOrgByOrgId,
+    fetchOrgsByUserId,
+
+    selectOrganization,
+    clearSelectedOrganization,
   };
 }

@@ -56,6 +56,35 @@
     "slugName": "Your org's unique identifier (visible to others)",
     "create": "Create"
   },
+  "orgList": {
+    "createOrganization": "Create organization",
+    "securedBy": "Secured by",
+    "nevermind": "Nevermind",
+    "contactSupport": "Contact Support",
+    "chooseAccount": {
+      "title": "Select your organization",
+      "subTitle": ""
+    },
+    "memberCount": {
+      "singular": "member",
+      "plural": "members"
+    },
+    "badges": {
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "banned": "Banned"
+    },
+    "errors": {
+      "unverified": {
+        "title": "Organization not verified",
+        "message": "The organization has not been verified by admin team yet. Please wait for an hour. Or contact support."
+      },
+      "banned": {
+        "title": "Organization banned",
+        "message": "The organization has been banned. Please contact the support team."
+      }
+    }
+  },
   "validations": {
     "invalidEmail": "Please enter a valid email",
     "passwordRequired": "Please enter the password",
@@ -79,7 +108,8 @@
     "signUpSuccess": "Please check your inbox to verify your email",
     "verifyEmailSuccess": "Your account has been verified. Please sign in",
     "forgotPasswordSuccess": "A reset email has been sent to your email",
-    "resetPasswordSuccess": "Your password has been reset successfully"
+    "resetPasswordSuccess": "Your password has been reset successfully",
+    "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team"
   },
   "apiError": {
     "invalidCredentials": "Invalid email or password",
@@ -100,6 +130,9 @@
     "userNotFound": "User not found",
     "tooManyRequests": "Too many requests",
     "passwordsMustMatch": "Passwords must match",
-    "temporaryLocked": "Account temporarily locked due to multiple failed login attempts. Please try again later or reset your password."
+    "temporaryLocked": "Account temporarily locked due to multiple failed login attempts. Please try again later or reset your password.",
+    "accountDisabled": "Account has been disabled. Please contact support team",
+    "tooManyRequest": "Too many request. Please try again in 1 hour",
+    "unauthorized": "You are not authorized to do this action"
   }
 }

@@ -7,9 +7,6 @@ const api = axios.create({
   baseURL: API_URL,
   timeout: 30000,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 function assertApiUrl() {
@@ -22,7 +19,15 @@ export const authApi = {
   // Sign In
   signIn: async (credentials: SignInFormData): Promise<AuthResponse> => {
     assertApiUrl();
-    const { data } = await api.post<AuthResponse>("/auth/sign-in", credentials);
+    const { data } = await api.post<AuthResponse>(
+      "/auth/sign-in",
+      credentials,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return data;
   },
 
@@ -46,6 +51,10 @@ export const authApi = {
         }
       }
     });
+
+    // for (const [key, value] of form.entries()) {
+    //   console.log(key, value);
+    // }
 
     const { data } = await api.post<AuthResponse>("/auth/sign-up", form, {
       headers: {

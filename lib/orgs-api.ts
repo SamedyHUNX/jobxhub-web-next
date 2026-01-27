@@ -20,12 +20,36 @@ function assertApiUrl() {
 }
 
 export const orgsApi = {
+  // Get all orgs with optional filtering
+  findAll: async (search?: string, isVerified?: boolean) => {
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (isVerified !== undefined)
+      params.append("isVerified", String(isVerified));
+
+    const { data } = await api.get(`/organizations?${params.toString()}`);
+    return data;
+  },
+
+  // Create an Organization
   create: async (formData: CreateOrgFormData): Promise<OrgsResponse> => {
     assertApiUrl();
     const { data } = await api.post<OrgsResponse>(
       "/organizations/create",
       formData
     );
+    return data;
+  },
+
+  // Get organizations by userId
+  findByUser: async (userId: string) => {
+    const { data } = await api.get(`/organizations/user/${userId}`);
+    return data;
+  },
+
+  // Get a single organization by ID
+  findOne: async (orgId: string) => {
+    const { data } = await api.get(`/organizations/org/${orgId}`);
     return data;
   },
 };

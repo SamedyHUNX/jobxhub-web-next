@@ -67,6 +67,7 @@ export interface Organization {
   membersCount: number;
   pendingInvitationsCount: number;
   adminDeleteEnabled: boolean;
+  createdBy: string;
   jobsCount: number;
   createdAt: string;
   updatedAt: string;

@@ -10,7 +10,7 @@ import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 
 export default function CreateNewOrgPage() {
@@ -218,7 +218,7 @@ export default function CreateNewOrgPage() {
           <Button
             type="submit"
             disabled={isCreating}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+            className="yellow-btn w-full font-semibold py-3 px-4 rounded-xl"
           >
             <LoadingSwap isLoading={isCreating}>
               {newOrgT("create")}
