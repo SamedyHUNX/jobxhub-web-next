@@ -3,7 +3,7 @@
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
 import { SidebarUserButton } from "@/components/sidebar/SidebarUserButton";
-import { ClipboardListIcon } from "lucide-react";
+import { ClipboardListIcon, CheckIcon, FilePlusIcon } from "lucide-react";
 import { useLocale } from "next-intl";
 import { ReactNode } from "react";
 
@@ -22,9 +22,14 @@ export default function EmployerOrgsDashboardLayout({
             className="mt-auto"
             items={[
               {
-                href: `/${locale}/`,
-                icon: <ClipboardListIcon />,
-                label: "Homepage",
+                href: `/${locale}/employer/orgs/select`,
+                icon: <CheckIcon />,
+                label: "Organization Selection",
+              },
+              {
+                href: `/${locale}/employer/orgs/new`,
+                icon: <FilePlusIcon />,
+                label: "Create Organization",
               },
             ]}
           />

@@ -1,3 +1,3 @@
 export default function EmployerOrgsDashboardPage() {
-  return null;
+  return <h1>Employer Dashboard</h1>;
 }

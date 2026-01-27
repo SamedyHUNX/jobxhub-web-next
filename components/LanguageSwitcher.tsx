@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Check, Globe } from "lucide-react";
+import { Check } from "lucide-react";
 import { routing } from "@/i18n/routing";
 
 const languages = [
