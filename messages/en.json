@@ -58,6 +58,7 @@
   },
   "orgList": {
     "createOrganization": "Create organization",
+    "loading": "Loading...",
     "securedBy": "Secured by",
     "nevermind": "Nevermind",
     "contactSupport": "Contact Support",
@@ -68,6 +69,10 @@
     "memberCount": {
       "singular": "member",
       "plural": "members"
+    },
+    "jobCount": {
+      "singular": "job",
+      "plural": "jobs"
     },
     "badges": {
       "verified": "Verified",
