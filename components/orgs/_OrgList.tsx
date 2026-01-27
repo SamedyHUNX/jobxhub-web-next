@@ -200,19 +200,21 @@ export default function OrgsList({
   }
 
   return (
-    <div className="min-h-[calc(100vh-68px)] bg-[#fdfbf7] dark:bg-black flex items-center justify-center px-8 w-full">
-      <div className="w-[95%] bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-300">
+    <div className="min-h-[calc(100vh-68px)] bg-[#fdfbf7] dark:bg-black flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl border border-gray-300 dark:border-gray-700 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex flex-col items-center justify-center text-center px-8 py-12 border-b border-gray-200 shrink-0">
+        <div className="flex flex-col items-center justify-center text-center px-8 py-12 border-b border-gray-200 dark:border-gray-700 shrink-0">
           <BrandLogo />
-          <h1 className="text-4xl font-bold text-black my-3 tracking-tighter">
+          <h1 className="text-4xl font-bold text-black dark:text-white my-3 tracking-tighter">
             {translations.title}
           </h1>
-          <p className="text-gray-500 text-lg">{translations.subTitle}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">
+            {translations.subTitle}
+          </p>
         </div>
 
         {/* Account List - Scrollable */}
-        <div className="divide-y divide-gray-200 overflow-y-auto flex-1 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto flex-1 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {/* Modal with Transparent Background */}
           {modalState.isOpen && (
             <CustomDialog
@@ -228,11 +230,12 @@ export default function OrgsList({
               buttonText={translations.contactSupport}
             />
           )}
+
           {/* Personal Account */}
           {!hidePersonal && currentUser && (
             <div
               onClick={handleSelectPersonal}
-              className="flex items-center gap-4 px-8 py-6 hover:bg-gray-50 transition-colors cursor-pointer group"
+              className="flex items-center gap-4 px-8 py-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer group"
             >
               <div className="shrink-0">
                 <img
@@ -242,12 +245,12 @@ export default function OrgsList({
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-lg font-semibold text-black tracking-tighter">
+                <div className="text-lg font-semibold text-black dark:text-white tracking-tighter">
                   {currentUser.username}
                 </div>
               </div>
               <div className="shrink-0">
-                <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                <ArrowRight className="w-6 h-6 text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors" />
               </div>
             </div>
           )}
@@ -259,8 +262,8 @@ export default function OrgsList({
               onClick={() => handleSelectOrganization(org)}
               className={`flex items-center gap-4 px-8 py-6 transition-colors cursor-pointer group ${
                 org.isBanned || !org.isVerified
-                  ? "opacity-50 cursor-not-allowed hover:bg-red-50"
-                  : "hover:bg-gray-50"
+                  ? "opacity-50 cursor-not-allowed hover:bg-red-50 dark:hover:bg-red-950"
+                  : "hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
               {/* Avatar/Icon */}
@@ -281,7 +284,7 @@ export default function OrgsList({
                   </div>
                 )}
                 {org.isVerified && (
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-500 dark:bg-blue-600 rounded-full flex items-center justify-center">
                     <svg
                       className="w-3 h-3 text-white"
                       fill="currentColor"
@@ -300,29 +303,29 @@ export default function OrgsList({
               {/* Organization Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <div className="text-lg font-semibold text-black tracking-tighter">
+                  <div className="text-lg font-semibold text-black dark:text-white tracking-tighter">
                     {org.orgName}
                   </div>
                   {org.isBanned && (
-                    <span className="px-2 py-0.5 text-xs font-medium text-red-700 bg-red-100 rounded">
+                    <span className="px-2 py-0.5 text-xs font-medium text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900 rounded">
                       {translations.badges.banned}
                     </span>
                   )}
                   {!org.isVerified && !org.isBanned && (
-                    <span className="px-2 py-0.5 text-xs font-medium text-orange-700 bg-orange-100 rounded">
+                    <span className="px-2 py-0.5 text-xs font-medium text-orange-700 dark:text-orange-400 bg-orange-100 dark:bg-orange-900 rounded">
                       {translations.badges.unverified}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-400 dark:text-gray-500">
                     {org.membersCount}{" "}
                     {org.membersCount === 1
                       ? translations.memberCount.singular
                       : translations.memberCount.plural}
                   </span>
                   {org.jobsCount > 0 && (
-                    <span className="text-sm text-gray-400">
+                    <span className="text-sm text-gray-400 dark:text-gray-500">
                       {org.jobsCount}{" "}
                       {org.jobsCount === 1
                         ? translations.jobCount.singular
@@ -335,7 +338,7 @@ export default function OrgsList({
               {/* Action */}
               <div className="shrink-0">
                 {!org.isBanned && org.isVerified && (
-                  <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                  <ArrowRight className="w-6 h-6 text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors" />
                 )}
               </div>
             </div>
@@ -344,15 +347,15 @@ export default function OrgsList({
           {/* Create Organization */}
           <div
             onClick={handleCreateOrganization}
-            className="flex items-center gap-4 px-8 py-6 hover:bg-gray-50 transition-colors cursor-pointer group"
+            className="flex items-center gap-4 px-8 py-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer group"
           >
             <div className="shrink-0">
-              <div className="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center group-hover:bg-gray-300 transition-colors">
-                <Plus className="w-6 h-6 text-gray-500" />
+              <div className="w-14 h-14 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center group-hover:bg-gray-300 dark:group-hover:bg-gray-600 transition-colors">
+                <Plus className="w-6 h-6 text-gray-500 dark:text-gray-400" />
               </div>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-lg font-semibold text-black tracking-tighter">
+              <div className="text-lg font-semibold text-black dark:text-white tracking-tighter">
                 {translations.createOrganization}
               </div>
             </div>
@@ -360,7 +363,7 @@ export default function OrgsList({
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-6 border-t border-gray-200 shrink-0">
+        <div className="px-8 py-6 border-t border-gray-200 dark:border-gray-700 shrink-0">
           <FormFooter />
         </div>
       </div>
