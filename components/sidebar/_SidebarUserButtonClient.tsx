@@ -25,12 +25,18 @@ type User = {
   imageUrl: string;
 };
 
-export function SidebarUserButtonClient(user: User) {
+export function SidebarUserButtonClient({
+  user,
+  redirectPath,
+}: {
+  user: User;
+  redirectPath: string;
+}) {
   const { isMobile, setOpenMobile } = useSidebar();
   const router = useRouter();
   const openUserProfile = () => {
     setOpenMobile(false);
-    router.push("/user-profile");
+    router.push(redirectPath);
   };
 
   return (

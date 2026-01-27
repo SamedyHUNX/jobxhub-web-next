@@ -75,8 +75,8 @@ export function useAuth() {
       token,
       newPassword,
       confirmNewPassword,
-    }: { token: string } & ResetPasswordFormData) =>
-      authApi.resetPassword(token, newPassword, confirmNewPassword),
+    }: { token: string | null } & ResetPasswordFormData) =>
+      authApi.resetPassword(token!, newPassword, confirmNewPassword),
     onSuccess: () => {
       router.push(`/${locale}/sign-in`);
     },

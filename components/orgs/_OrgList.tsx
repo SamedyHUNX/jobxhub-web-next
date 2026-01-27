@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { CustomDialog } from "../CustomDialog";
 import BrandLogo from "../BrandLogo";
+import FormFooter from "../FormFooter";
+import { useOrgsByUserId } from "@/hooks/use-orgs-by-id";
 
 export interface OrgListProps {
   afterCreateOrganizationUrl?: ((org: Organization) => string) | string;
@@ -108,10 +110,10 @@ export default function OrgsList({
   });
   const router = useRouter();
   const locale = useLocale();
-  const { fetchOrgsByUserId, selectOrganization } = useOrgs();
+  const { selectOrganization } = useOrgs();
   // Use the hook to fetch organizations for the current user
   const { data: organizations = [], isLoading: isLoadingOrganizations } =
-    fetchOrgsByUserId(currentUser?.id || "");
+    useOrgsByUserId(currentUser?.id || "");
 
   const handleSelectOrganization = (org: Organization) => {
     if (org.isBanned) {
@@ -359,10 +361,7 @@ export default function OrgsList({
 
         {/* Footer */}
         <div className="px-8 py-6 border-t border-gray-200 shrink-0">
-          <div className="flex items-center justify-center gap-2 text-gray-500">
-            <span>{translations.securedBy}</span>
-            <span className="text-gray-900 font-semibold">JobXHub</span>
-          </div>
+          <FormFooter />
         </div>
       </div>
     </div>

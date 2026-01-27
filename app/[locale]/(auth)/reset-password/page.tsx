@@ -39,10 +39,6 @@ export default function ResetPasswordPage() {
     [validationT]
   );
 
-  if (!token) {
-    return null;
-  }
-
   // Initialize TanStack Form
   const form = useForm({
     defaultValues: { newPassword: "", confirmNewPassword: "" },
@@ -71,6 +67,10 @@ export default function ResetPasswordPage() {
       router.push(`/${locale}/reset-password`);
     }
   }, [token, router, locale]);
+
+  if (!token) {
+    return null;
+  }
 
   return (
     <div className="mx-auto space-y-8 px-4">

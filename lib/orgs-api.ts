@@ -8,9 +8,6 @@ const api = axios.create({
   baseURL: API_URL,
   timeout: 30000,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 function assertApiUrl() {
@@ -36,7 +33,8 @@ export const orgsApi = {
     assertApiUrl();
     const { data } = await api.post<OrgsResponse>(
       "/organizations/create",
-      formData
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
     return data;
   },

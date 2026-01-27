@@ -10,7 +10,7 @@ import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 export default function CreateNewOrgPage() {
@@ -20,6 +20,17 @@ export default function CreateNewOrgPage() {
   const validationT = (key: string) => t(`validations.${key}`);
   const successT = (key: string) => t(`apiSuccess.${key}`);
   const errorT = (key: string) => t(`apiError.${key}`);
+
+  const objectUrlRef = useRef<string | null>(null);
+
+  // Cleanup object URL on unmount or when image changes
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
+  }, []);
 
   const router = useRouter();
   const { createOrganization, isCreating, createError, createSuccess } =
@@ -112,7 +123,15 @@ export default function CreateNewOrgPage() {
                     <div className="w-24 h-24 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
                       {field.state.value ? (
                         <img
-                          src={URL.createObjectURL(field.state.value)}
+                          src={(() => {
+                            if (objectUrlRef.current) {
+                              URL.revokeObjectURL(objectUrlRef.current);
+                            }
+                            objectUrlRef.current = URL.createObjectURL(
+                              field.state.value
+                            );
+                            return objectUrlRef.current;
+                          })()}
                           alt="Profile preview"
                           className="w-full h-full object-cover"
                         />

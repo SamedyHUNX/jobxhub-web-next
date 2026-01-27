@@ -9,13 +9,14 @@ import {
   ClipboardListIcon,
   LayoutDashboard,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 export default function JobSeekerLayout({ children }: { children: ReactNode }) {
   const { profile: currentUser } = useProfile();
   const isSuperAdmin = currentUser?.userRole === "SUPER-ADMIN";
   const sidebarT = useTranslations("sidebar");
+  const locale = useLocale();
 
   return (
     <AppSidebar
@@ -25,23 +26,23 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
           items={
             [
               {
-                href: "/",
+                href: `/${locale}`,
                 icon: <ClipboardListIcon />,
                 label: sidebarT("findJobs"),
               },
               {
-                href: "/ai-search",
+                href: `/${locale}/ai-search`,
                 icon: <BrainCircuitIcon />,
                 label: sidebarT("aiSearch"),
               },
               {
-                href: "/employer",
+                href: `/${locale}/employer`,
                 icon: <LayoutDashboard />,
                 label: sidebarT("employerDashboard"),
                 authStatus: currentUser ? "signedIn" : "signedOut",
               },
               isSuperAdmin && {
-                href: "/super-admin/dashboard",
+                href: `/${locale}/super-admin/dashboard`,
                 icon: <LayoutDashboard />,
                 label: sidebarT("superAdminDashboard"),
                 authStatus: currentUser ? "signedIn" : "signedOut",
