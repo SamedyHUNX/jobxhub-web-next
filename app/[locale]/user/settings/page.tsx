@@ -13,6 +13,7 @@ import { X } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/FormField";
+import ProfileItem from "@/components/ProfileItem";
 
 export default function UserSettingsPage() {
   const {
@@ -155,19 +156,12 @@ export default function UserSettingsPage() {
 
         {/* Phone Number Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            {profileT("phoneNumber")}
-          </label>
           <div className="space-y-3">
             {currentUser.phoneNumber ? (
-              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span className="text-gray-900 dark:text-white">
-                  {currentUser.phoneNumber}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
-                  {profileT("verified")}
-                </span>
-              </div>
+              <ProfileItem
+                title={profileT("phoneNumber")}
+                value={currentUser.phoneNumber}
+              />
             ) : (
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 {profileT("noPhoneNumber")}
@@ -178,14 +172,10 @@ export default function UserSettingsPage() {
 
         {/* Date of Birth Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            {profileT("dob")}
-          </label>
-          <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-gray-900 dark:text-white">
-              {formatDate(currentUser.dateOfBirth)}
-            </span>
-          </div>
+          <ProfileItem
+            title={profileT("dob")}
+            value={formatDate(currentUser.dateOfBirth)}
+          />
         </div>
 
         {/* Account Information Section */}
@@ -194,30 +184,18 @@ export default function UserSettingsPage() {
             {profileT("accountInformation")}
           </label>
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                {profileT("accountType")}
-              </span>
-              <span className="text-sm text-gray-900 dark:text-white">
-                {currentUser.userRole}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                {profileT("memberSince")}
-              </span>
-              <span className="text-sm text-gray-900 dark:text-white">
-                {formatDate(currentUser.createdAt)}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                {profileT("lastUpdated")}
-              </span>
-              <span className="text-sm text-gray-900 dark:text-white">
-                {formatDate(currentUser.updatedAt)}
-              </span>
-            </div>
+            <ProfileItem
+              title={profileT("accountType")}
+              value={currentUser.userRole}
+            />
+            <ProfileItem
+              title={profileT("memberSince")}
+              value={formatDate(currentUser.createdAt)}
+            />
+            <ProfileItem
+              title={profileT("lastUpdated")}
+              value={formatDate(currentUser.updatedAt)}
+            />
           </div>
         </div>
       </div>
