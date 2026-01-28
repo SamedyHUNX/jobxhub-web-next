@@ -8,7 +8,7 @@ import {
 import { Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 interface UseOrgsParams {
   search?: string;

@@ -8,7 +8,7 @@ import { useOrgs } from "@/hooks/use-orgs";
 import { extractErrorMessage } from "@/lib/utils";
 import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
@@ -33,8 +33,15 @@ export default function CreateNewOrgPage() {
   }, []);
 
   const router = useRouter();
+  const locale = useLocale();
   const { createOrganization, isCreating, createError, createSuccess } =
     useOrgs();
+
+  useEffect(() => {
+    if (createSuccess) {
+      router.push(`/${locale}/employer/orgs/select`);
+    }
+  }, [createError]);
 
   const createOrganizationFormSchema = useMemo(
     () => createOrganizationSchema(validationT),

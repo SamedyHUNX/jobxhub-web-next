@@ -1,10 +1,10 @@
 import { orgsApi } from "@/lib/orgs-api";
 import { useQuery } from "@tanstack/react-query";
 
-export function useOrgsByUserId(userId: string | undefined) {
+export function useOrgsByUserId(userId: string) {
   return useQuery({
     queryKey: ["organizations", "user", userId],
-    queryFn: () => orgsApi.findByUser(userId!),
+    queryFn: () => orgsApi.findByUser(userId),
     enabled: !!userId,
     select: (data) => data.data.organizations,
   });
@@ -15,6 +15,6 @@ export function useOrgByOrgId(id: string | undefined) {
     queryKey: ["organization", id],
     queryFn: () => orgsApi.findOne(id!),
     enabled: !!id,
-    select: (data) => data.data.organizations[0],
+    select: (data) => data.data.organizations,
   });
 }
