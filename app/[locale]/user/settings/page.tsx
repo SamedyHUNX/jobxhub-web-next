@@ -301,7 +301,7 @@ export default function UserSettingsPage() {
                 name="phoneNumber"
                 label={profileT("phoneNumber")}
                 type="tel"
-                placeholder="+66993943796"
+                placeholder="+66123123123"
                 validator={(value) => {
                   const result =
                     updateProfileSchema.shape.phoneNumber.safeParse(value);

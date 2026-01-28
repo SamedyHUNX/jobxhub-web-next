@@ -22,7 +22,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <section className="auth-right-section">
         <NavBar />
         <Testimonial
-          quote="JobXHub’s AI analyzed my resume and instantly connected me with roles that actually matched my skills. The platform feels smart, intuitive, and incredibly efficient job searching finally felt tailored to me."
+          quote="JobXHubs AI analyzed my resume and instantly connected me with roles that actually matched my skills. The platform feels smart, intuitive, and incredibly efficient job searching finally felt tailored to me."
           author="Samedy H"
           occupation="Software Developer"
         />

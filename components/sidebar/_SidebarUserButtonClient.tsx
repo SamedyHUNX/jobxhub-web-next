@@ -62,10 +62,6 @@ export function SidebarUserButtonClient({
             <UserInfo {...user} />
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={openUserProfile}>
-            <UserIcon className="mr-1" /> Profile
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href={`/user/settings`}>
               <SettingsIcon className="mr-1" />

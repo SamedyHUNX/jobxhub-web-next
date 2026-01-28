@@ -2,6 +2,7 @@
 
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
+import ProfileImage from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { countries } from "@/lib/constants";
@@ -37,7 +38,7 @@ export default function SignUpPage() {
       lastName: "",
       email: "",
       password: "",
-      countryCode: "+61", // Default to Australia
+      countryCode: "+61",
       phoneNumber: "",
       dateOfBirth: "",
       image: null as File | null,
@@ -48,7 +49,12 @@ export default function SignUpPage() {
         ...value,
         phoneNumber: `${value.countryCode}${value.phoneNumber}`,
       };
-      signUp({ formData, locale });
+      try {
+        signUp({ formData, locale });
+      } catch (error: any) {
+        // Already handled toast in useEffect
+        console.error("Failed to sign up", error);
+      }
     },
     validators: {
       onSubmit: ({ value }) => {
@@ -91,75 +97,14 @@ export default function SignUpPage() {
               }}
             >
               {(field: any) => (
-                <div className="flex flex-col items-center space-y-3">
-                  <div className="relative">
-                    <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center overflow-hidden">
-                      {field.state.value ? (
-                        <img
-                          src={URL.createObjectURL(field.state.value)}
-                          alt="Profile preview"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <svg
-                          className="w-10 h-10 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                      )}
-                    </div>
-                    <label
-                      htmlFor="image-upload"
-                      className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 cursor-pointer shadow-lg transition-colors"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                    </label>
-                    <input
-                      id="image-upload"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) field.handleChange(file);
-                      }}
-                    />
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {authT("uploadPhoto")}
-                  </p>
-                  {field.state.meta.errors.length > 0 && (
-                    <p className="text-sm text-red-500 dark:text-red-400">
-                      {field.state.meta.errors[0]}
-                    </p>
-                  )}
-                </div>
+                <ProfileImage
+                  value={field.state.value}
+                  onChange={(file) => field.handleChange(file)}
+                  label={authT("uploadPhoto")}
+                  error={field.state.meta.errors[0]}
+                  size="md"
+                  editable={true}
+                />
               )}
             </form.Field>
           </div>
