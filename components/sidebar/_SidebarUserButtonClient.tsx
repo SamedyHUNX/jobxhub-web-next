@@ -86,6 +86,8 @@ function UserInfo({ email, username, imageUrl }: User) {
     .map((str) => str[0])
     .join("");
 
+  console.log("diddy", imageUrl);
+
   return (
     <div className="flex items-center gap-2 overflow-hidden">
       <Avatar className="rounded-lg size-8">

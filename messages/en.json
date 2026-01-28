@@ -47,7 +47,9 @@
     "newPasswordPlaceholder": "Enter your new password",
     "confirmNewPassword": "Confirm New Password",
     "confirmNewPasswordPlaceholder": "Enter your confirm new password",
-    "resetPassword": "Reset Password"
+    "resetPassword": "Reset Password",
+    "verifyEmailSuccessTitle": "Email has been verified. Please sign in",
+    "verifyEmailFailedTitle": "Failed to verify email. Please contact support"
   },
   "organizations": {
     "newPageTitle": "Create New Organization",
