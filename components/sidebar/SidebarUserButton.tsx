@@ -2,7 +2,6 @@
 
 import { useProfile } from "@/hooks/use-profile";
 import { SidebarUserButtonClient } from "./_SidebarUserButtonClient";
-import { useLocale } from "next-intl";
 
 export const SidebarUserButton = () => {
   const {
@@ -10,7 +9,6 @@ export const SidebarUserButton = () => {
     isLoading: isFetchingCurrentUser,
     isError: currentUserError,
   } = useProfile();
-  const locale = useLocale();
 
   // Handle loading state
   if (isFetchingCurrentUser) {
@@ -30,7 +28,7 @@ export const SidebarUserButton = () => {
   return (
     <SidebarUserButtonClient
       user={currentUser}
-      redirectPath={`/${locale}/user-profile`}
+      redirectPath={`/user-profile`}
     />
   );
 };

@@ -1,23 +1,25 @@
-import { useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { Camera } from "lucide-react";
 
-interface ImageUploadProps {
+interface ProfileImageProps {
   value: string | File | null;
-  onChange: (file: File | null) => void;
+  onChange?: (file: File | null) => void;
   fallbackInitials?: string;
   label?: string;
   error?: string;
   size?: "sm" | "md" | "lg";
+  editable?: boolean;
 }
 
-export default function ImageUpload({
+export default function ProfileImage({
   value,
   onChange,
   fallbackInitials = "",
   label = "Click to upload photo",
   error,
   size = "md",
-}: ImageUploadProps) {
+  editable = true,
+}: ProfileImageProps) {
   const objectUrlRef = useRef<string | null>(null);
 
   // Cleanup object URL on unmount or when image changes
@@ -29,10 +31,12 @@ export default function ImageUpload({
     };
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      onChange(file);
+      if (onChange) {
+        onChange(file);
+      }
     }
   };
 
@@ -114,19 +118,24 @@ export default function ImageUpload({
             </svg>
           )}
         </div>
-        <label
-          htmlFor="image-upload"
-          className={`absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full ${buttonSizeClasses[size]} cursor-pointer shadow-lg transition-colors flex items-center justify-center`}
-        >
-          <Camera className={iconSizeClasses[size]} />
-        </label>
-        <input
-          id="image-upload"
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleFileChange}
-        />
+
+        {editable && (
+          <div>
+            <label
+              htmlFor="image-upload"
+              className={`absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full ${buttonSizeClasses[size]} cursor-pointer shadow-lg transition-colors flex items-center justify-center`}
+            >
+              {<Camera className={iconSizeClasses[size]} />}
+            </label>
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
+        )}
       </div>
       {label && (
         <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>

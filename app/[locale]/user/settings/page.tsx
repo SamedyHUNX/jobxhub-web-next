@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { extractErrorMessage } from "@/lib/utils";
 import { createUpdateProfileSchema } from "@/schemas";
 import { X } from "lucide-react";
-import ImageUpload from "@/components/ImageUpload";
+import ProfileImage from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/FormField";
 import ProfileItem from "@/components/ProfileItem";
@@ -119,10 +119,9 @@ export default function UserSettingsPage() {
               <div className="relative">
                 <div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
                   {currentUser.imageUrl ? (
-                    <img
-                      src={currentUser.imageUrl}
-                      alt={`${currentUser.firstName} ${currentUser.lastName}`}
-                      className="w-full h-full object-cover"
+                    <ProfileImage
+                      value={currentUser.imageUrl}
+                      editable={false}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl font-semibold text-gray-600 dark:text-gray-300">
@@ -144,13 +143,9 @@ export default function UserSettingsPage() {
                 </p>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            >
+            <Button className="yellow-btn" onClick={() => setIsModalOpen(true)}>
               {profileT("updateProfile")}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -232,7 +227,8 @@ export default function UserSettingsPage() {
               {/* Profile Image Upload */}
               <form.Field name="image">
                 {(field) => (
-                  <ImageUpload
+                  <ProfileImage
+                    editable={true}
                     value={field.state.value || form.state.values.imageUrl}
                     onChange={(file) => field.handleChange(file)}
                     fallbackInitials={`${currentUser.firstName?.[0] || ""}${
@@ -316,20 +312,16 @@ export default function UserSettingsPage() {
               />
 
               {/* Modal Footer */}
-              <div className="flex gap-3 pt-4">
+              <div className="w-full flex gap-2 justify-end">
                 <Button
-                  type="button"
                   onClick={handleCancel}
                   disabled={isUpdating}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50"
+                  variant={"destructive"}
+                  className="h-12"
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  disabled={isUpdating}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
-                >
+                <Button type="submit" disabled={isUpdating} className="h-12">
                   <LoadingSwap isLoading={isUpdating}>
                     {profileT("saveChanges")}
                   </LoadingSwap>
