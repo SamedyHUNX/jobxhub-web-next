@@ -58,6 +58,13 @@
     "slugName": "Your org's unique identifier (visible to others)",
     "create": "Create"
   },
+  "employer": {
+    "sidebar": {
+      "employerDashboard": "Employer Dashboard",
+      "selectOrganization": "Select Organization",
+      "createOrganization": "Create Organization"
+    }
+  },
   "orgList": {
     "createOrganization": "Create organization",
     "loading": "Loading...",
