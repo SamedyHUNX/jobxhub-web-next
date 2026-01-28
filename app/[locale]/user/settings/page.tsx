@@ -12,6 +12,7 @@ import { createUpdateProfileSchema } from "@/schemas";
 import { X } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/FormField";
 
 export default function UserSettingsPage() {
   const {
@@ -268,105 +269,73 @@ export default function UserSettingsPage() {
 
               {/* First Name & Last Name */}
               <div className="grid grid-cols-2 gap-4">
-                <form.Field name="firstName">
-                  {(field) => (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {profileT("firstName")}
-                      </label>
-                      <input
-                        type="text"
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="John"
-                      />
-                      {field.state.meta.errors && (
-                        <p className="text-xs text-red-600 mt-1">
-                          {field.state.meta.errors[0]}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </form.Field>
+                <FormField
+                  form={form}
+                  name="firstName"
+                  label={profileT("firstName")}
+                  type="text"
+                  placeholder="John"
+                  validator={(value) => {
+                    const result =
+                      updateProfileSchema.shape.firstName.safeParse(value);
+                    return result.success
+                      ? undefined
+                      : result.error.errors[0].message;
+                  }}
+                />
 
-                <form.Field name="lastName">
-                  {(field) => (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {profileT("lastName")}
-                      </label>
-                      <input
-                        type="text"
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Doe"
-                      />
-                      {field.state.meta.errors && (
-                        <p className="text-xs text-red-600 mt-1">
-                          {field.state.meta.errors[0]}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </form.Field>
+                <FormField
+                  form={form}
+                  name="lastName"
+                  label={profileT("lastName")}
+                  type="text"
+                  placeholder="Doe"
+                  validator={(value) => {
+                    const result =
+                      updateProfileSchema.shape.lastName.safeParse(value);
+                    return result.success
+                      ? undefined
+                      : result.error.errors[0].message;
+                  }}
+                />
               </div>
 
               {/* Username */}
-              <form.Field name="username">
-                {(field) => (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {profileT("username")}
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                        @
-                      </span>
-                      <input
-                        type="text"
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="w-full pl-8 pr-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="johndoe"
-                      />
-                    </div>
-                    {field.state.meta.errors && (
-                      <p className="text-xs text-red-600 mt-1">
-                        {field.state.meta.errors[0]}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </form.Field>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                  @
+                </span>
+                <FormField
+                  form={form}
+                  name="username"
+                  label={profileT("username")}
+                  type="text"
+                  placeholder="johndoe"
+                  validator={(value) => {
+                    const result =
+                      updateProfileSchema.shape.username.safeParse(value);
+                    return result.success
+                      ? undefined
+                      : result.error.errors[0].message;
+                  }}
+                />
+              </div>
 
               {/* Phone Number */}
-              <form.Field name="phoneNumber">
-                {(field) => (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {profileT("phoneNumber")}
-                    </label>
-                    <input
-                      type="tel"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="+66993943796"
-                    />
-                    {field.state.meta.errors && (
-                      <p className="text-xs text-red-600 mt-1">
-                        {field.state.meta.errors[0]}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </form.Field>
+              <FormField
+                form={form}
+                name="phoneNumber"
+                label={profileT("phoneNumber")}
+                type="tel"
+                placeholder="+66993943796"
+                validator={(value) => {
+                  const result =
+                    updateProfileSchema.shape.phoneNumber.safeParse(value);
+                  return result.success
+                    ? undefined
+                    : result.error.errors[0].message;
+                }}
+              />
 
               {/* Modal Footer */}
               <div className="flex gap-3 pt-4">
