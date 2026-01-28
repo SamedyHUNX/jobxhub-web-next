@@ -4,10 +4,13 @@ import { useState } from "react";
 import { Camera } from "lucide-react";
 import { useProfile } from "@/hooks/use-profile";
 import PageLoader from "@/components/PageLoader";
+import { useTranslations } from "next-intl";
 
 export default function UserSettingsPage() {
   const { profile: currentUser } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
+
+  const t = useTranslations("user.settings.profile");
 
   if (!currentUser) {
     return <PageLoader />;
@@ -25,7 +28,7 @@ export default function UserSettingsPage() {
     <div className="flex-1 overflow-y-auto ">
       <div className="max-w-7xl mx-auto p-8">
         <h1 className="text-4xl font-sans font-semibold text-gray-900 dark:text-white mb-10">
-          Profile details
+          {t("title")}
         </h1>
 
         {/* Profile Section */}
@@ -53,7 +56,7 @@ export default function UserSettingsPage() {
               </div>
               <div>
                 <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
-                  Profile
+                  {t("profile")}
                 </label>
                 <p className="text-lg font-medium text-gray-900 dark:text-white mb-1">
                   {currentUser.firstName} {currentUser.lastName}
@@ -67,7 +70,7 @@ export default function UserSettingsPage() {
               onClick={() => setIsEditing(!isEditing)}
               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              Update profile
+              {t("updateProfile")}
             </button>
           </div>
         </div>
@@ -75,15 +78,12 @@ export default function UserSettingsPage() {
         {/* Email Addresses Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            Email addresses
+            {t("email")}
           </label>
           <div className="space-y-3">
             <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
               <span className="text-gray-900 dark:text-white">
                 {currentUser.email}
-              </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
-                Primary
               </span>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function UserSettingsPage() {
         {/* Phone Number Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            Phone number
+            {t("phoneNumber")}
           </label>
           <div className="space-y-3">
             {currentUser.phoneNumber ? (
@@ -101,12 +101,12 @@ export default function UserSettingsPage() {
                   {currentUser.phoneNumber}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
-                  Verified
+                  {t("verified")}
                 </span>
               </div>
             ) : (
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                No phone number added
+                {t("noPhoneNumber")}
               </div>
             )}
           </div>
@@ -115,7 +115,7 @@ export default function UserSettingsPage() {
         {/* Date of Birth Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            Date of birth
+            {t("dob")}
           </label>
           <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
             <span className="text-gray-900 dark:text-white">
@@ -127,7 +127,7 @@ export default function UserSettingsPage() {
         {/* Username Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            Username
+            {t("username")}
           </label>
           <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
             <span className="text-gray-900 dark:text-white">
@@ -144,7 +144,7 @@ export default function UserSettingsPage() {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                Account type
+                {t("accountType")}
               </span>
               <span className="text-sm text-gray-900 dark:text-white">
                 {currentUser.userRole}
@@ -152,7 +152,7 @@ export default function UserSettingsPage() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                Member since
+                {t("memberSince")}
               </span>
               <span className="text-sm text-gray-900 dark:text-white">
                 {formatDate(currentUser.createdAt)}
@@ -160,7 +160,7 @@ export default function UserSettingsPage() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                Last updated
+                {t("lastUpdated")}
               </span>
               <span className="text-sm text-gray-900 dark:text-white">
                 {formatDate(currentUser.updatedAt)}

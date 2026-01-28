@@ -67,6 +67,20 @@
   },
   "user": {
     "settings": {
+      "profile": {
+        "title": "Profile details",
+        "profile": "Profile",
+        "updateProfile": "Update Profile",
+        "email": "Email",
+        "phoneNumber": "Phone number",
+        "noPhoneNumber": "No phone number added",
+        "verified": "Verified",
+        "dob": "Date of birth",
+        "username": "Username",
+        "accountType": "Account Type",
+        "memberSince": "Member Since",
+        "lastUpdated": "Last Updated"
+      },
       "sidebar": {
         "profile": "Profile",
         "security": "Security",
