@@ -22,7 +22,7 @@ export default function UserSettingsPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-white dark:bg-black">
+    <div className="flex-1 overflow-y-auto ">
       <div className="max-w-7xl mx-auto p-8">
         <h1 className="text-4xl font-sans font-semibold text-gray-900 dark:text-white mb-10">
           Profile details
