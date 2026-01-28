@@ -1,16 +1,95 @@
 "use client";
 
-import { useState } from "react";
-import { Camera } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import PageLoader from "@/components/PageLoader";
 import { useTranslations } from "next-intl";
+import { LoadingSwap } from "@/components/LoadingSwap";
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
+import { extractErrorMessage } from "@/lib/utils";
+import { createUpdateProfileSchema } from "@/schemas";
+import { X } from "lucide-react";
+import ImageUpload from "@/components/ImageUpload";
+import { Button } from "@/components/ui/button";
 
 export default function UserSettingsPage() {
-  const { profile: currentUser } = useProfile();
-  const [isEditing, setIsEditing] = useState(false);
+  const {
+    profile: currentUser,
+    updateProfile,
+    isUpdating,
+    updateError,
+  } = useProfile();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const t = useTranslations("user.settings.profile");
+  const t = useTranslations();
+  const profileT = (key: string) => t(`user.settings.profile.${key}`);
+  const validationT = (key: string) => t(`validations.${key}`);
+  const successT = (key: string) => t(`apiSuccess.${key}`);
+  const errorT = (key: string) => t(`apiError.${key}`);
+
+  // Define validation schema
+  const updateProfileSchema = useMemo(
+    () => createUpdateProfileSchema(validationT),
+    [validationT]
+  );
+
+  // Initialize TanStack Form with current user data
+  const form = useForm({
+    defaultValues: {
+      firstName: currentUser?.firstName || "",
+      lastName: currentUser?.lastName || "",
+      username: currentUser?.username || "",
+      phoneNumber: currentUser?.phoneNumber || "",
+      image: null as File | null,
+      imageUrl: currentUser?.imageUrl || "",
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        // If there's a new image file, create FormData
+        if (value.image) {
+          const formData = new FormData();
+          formData.append("firstName", value.firstName);
+          formData.append("lastName", value.lastName);
+          formData.append("username", value.username);
+          formData.append("phoneNumber", value.phoneNumber);
+          formData.append("image", value.image);
+          await updateProfile(formData as any);
+        } else {
+          // Otherwise send regular JSON
+          const { image, ...profileData } = value;
+          await updateProfile(profileData);
+        }
+        setIsModalOpen(false);
+        toast.success(successT("profileUpdated"));
+      } catch (err: any) {
+        toast.error(extractErrorMessage(err, errorT));
+      }
+    },
+    validators: {
+      onSubmit: ({ value }) => {
+        const result = updateProfileSchema.safeParse(value);
+        return result.success ? undefined : result.error.format();
+      },
+    },
+  });
+
+  // Re-populate form when modal opens
+  useEffect(() => {
+    if (currentUser && isModalOpen) {
+      form.setFieldValue("firstName", currentUser.firstName || "");
+      form.setFieldValue("lastName", currentUser.lastName || "");
+      form.setFieldValue("username", currentUser.username || "");
+      form.setFieldValue("phoneNumber", currentUser.phoneNumber || "");
+      form.setFieldValue("imageUrl", currentUser.imageUrl || "");
+      form.setFieldValue("image", null);
+    }
+  }, [currentUser, isModalOpen, form]);
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    form.reset();
+  };
 
   if (!currentUser) {
     return <PageLoader />;
@@ -25,10 +104,10 @@ export default function UserSettingsPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto ">
+    <div className="flex-1 overflow-y-auto">
       <div className="max-w-7xl mx-auto p-8">
         <h1 className="text-4xl font-sans font-semibold text-gray-900 dark:text-white mb-10">
-          {t("title")}
+          {profileT("title")}
         </h1>
 
         {/* Profile Section */}
@@ -50,13 +129,10 @@ export default function UserSettingsPage() {
                     </div>
                   )}
                 </div>
-                <button className="absolute bottom-0 right-0 w-6 h-6 bg-white dark:bg-gray-700 rounded-full shadow-md border border-gray-200 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                  <Camera className="w-3.5 h-3.5 text-gray-600 dark:text-gray-300" />
-                </button>
               </div>
-              <div>
+              <div className="flex-1">
                 <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
-                  {t("profile")}
+                  {profileT("profile")}
                 </label>
                 <p className="text-lg font-medium text-gray-900 dark:text-white mb-1">
                   {currentUser.firstName} {currentUser.lastName}
@@ -67,32 +143,19 @@ export default function UserSettingsPage() {
               </div>
             </div>
             <button
-              onClick={() => setIsEditing(!isEditing)}
+              type="button"
+              onClick={() => setIsModalOpen(true)}
               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              {t("updateProfile")}
+              {profileT("updateProfile")}
             </button>
-          </div>
-        </div>
-
-        {/* Email Addresses Section */}
-        <div className="border-b border-gray-200 dark:border-gray-700 py-8">
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            {t("email")}
-          </label>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <span className="text-gray-900 dark:text-white">
-                {currentUser.email}
-              </span>
-            </div>
           </div>
         </div>
 
         {/* Phone Number Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            {t("phoneNumber")}
+            {profileT("phoneNumber")}
           </label>
           <div className="space-y-3">
             {currentUser.phoneNumber ? (
@@ -101,12 +164,12 @@ export default function UserSettingsPage() {
                   {currentUser.phoneNumber}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
-                  {t("verified")}
+                  {profileT("verified")}
                 </span>
               </div>
             ) : (
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                {t("noPhoneNumber")}
+                {profileT("noPhoneNumber")}
               </div>
             )}
           </div>
@@ -115,7 +178,7 @@ export default function UserSettingsPage() {
         {/* Date of Birth Section */}
         <div className="border-b border-gray-200 dark:border-gray-700 py-8">
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            {t("dob")}
+            {profileT("dob")}
           </label>
           <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
             <span className="text-gray-900 dark:text-white">
@@ -124,27 +187,15 @@ export default function UserSettingsPage() {
           </div>
         </div>
 
-        {/* Username Section */}
-        <div className="border-b border-gray-200 dark:border-gray-700 py-8">
-          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            {t("username")}
-          </label>
-          <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-gray-900 dark:text-white">
-              {currentUser.username}
-            </span>
-          </div>
-        </div>
-
         {/* Account Information Section */}
         <div className="py-8">
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-4">
-            Account information
+            {profileT("accountInformation")}
           </label>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                {t("accountType")}
+                {profileT("accountType")}
               </span>
               <span className="text-sm text-gray-900 dark:text-white">
                 {currentUser.userRole}
@@ -152,7 +203,7 @@ export default function UserSettingsPage() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                {t("memberSince")}
+                {profileT("memberSince")}
               </span>
               <span className="text-sm text-gray-900 dark:text-white">
                 {formatDate(currentUser.createdAt)}
@@ -160,7 +211,7 @@ export default function UserSettingsPage() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                {t("lastUpdated")}
+                {profileT("lastUpdated")}
               </span>
               <span className="text-sm text-gray-900 dark:text-white">
                 {formatDate(currentUser.updatedAt)}
@@ -169,6 +220,178 @@ export default function UserSettingsPage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      {isModalOpen && (
+        <div className="min-h-screen bg-black/70 dark:bg-black/70 fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl p-12 border border-gray-300 dark:border-gray-700">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
+                  {profileT("editProfile")}
+                </h2>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                form.handleSubmit();
+              }}
+              className="p-6 space-y-6"
+            >
+              {/* Profile Image Upload */}
+              <form.Field name="image">
+                {(field) => (
+                  <ImageUpload
+                    value={field.state.value || form.state.values.imageUrl}
+                    onChange={(file) => field.handleChange(file)}
+                    fallbackInitials={`${currentUser.firstName?.[0] || ""}${
+                      currentUser.lastName?.[0] || ""
+                    }`}
+                    label={profileT("clickToUploadPhoto")}
+                    error={field.state.meta.errors?.[0]}
+                    size="lg"
+                  />
+                )}
+              </form.Field>
+
+              {/* First Name & Last Name */}
+              <div className="grid grid-cols-2 gap-4">
+                <form.Field name="firstName">
+                  {(field) => (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {profileT("firstName")}
+                      </label>
+                      <input
+                        type="text"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="John"
+                      />
+                      {field.state.meta.errors && (
+                        <p className="text-xs text-red-600 mt-1">
+                          {field.state.meta.errors[0]}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
+
+                <form.Field name="lastName">
+                  {(field) => (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {profileT("lastName")}
+                      </label>
+                      <input
+                        type="text"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Doe"
+                      />
+                      {field.state.meta.errors && (
+                        <p className="text-xs text-red-600 mt-1">
+                          {field.state.meta.errors[0]}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
+              </div>
+
+              {/* Username */}
+              <form.Field name="username">
+                {(field) => (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {profileT("username")}
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                        @
+                      </span>
+                      <input
+                        type="text"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="w-full pl-8 pr-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="johndoe"
+                      />
+                    </div>
+                    {field.state.meta.errors && (
+                      <p className="text-xs text-red-600 mt-1">
+                        {field.state.meta.errors[0]}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </form.Field>
+
+              {/* Phone Number */}
+              <form.Field name="phoneNumber">
+                {(field) => (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {profileT("phoneNumber")}
+                    </label>
+                    <input
+                      type="tel"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="+66993943796"
+                    />
+                    {field.state.meta.errors && (
+                      <p className="text-xs text-red-600 mt-1">
+                        {field.state.meta.errors[0]}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </form.Field>
+
+              {/* Modal Footer */}
+              <div className="flex gap-3 pt-4">
+                <Button
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={isUpdating}
+                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+                >
+                  <LoadingSwap isLoading={isUpdating}>
+                    {profileT("saveChanges")}
+                  </LoadingSwap>
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

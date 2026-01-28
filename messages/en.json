@@ -79,7 +79,13 @@
         "username": "Username",
         "accountType": "Account Type",
         "memberSince": "Member Since",
-        "lastUpdated": "Last Updated"
+        "lastUpdated": "Last Updated",
+        "accountInformation": "Account Information",
+        "saveChanges": "Save Changes",
+        "editProfile": "Edit Profile",
+        "clickToUploadPhoto": "Click on the button to change the photo",
+        "firstName": "First name",
+        "lastName": "Last name"
       },
       "sidebar": {
         "profile": "Profile",
@@ -138,7 +144,11 @@
     "passwordUppercase": "Required at least 1 uppercase letter",
     "passwordMustMatch": "Passwords must match",
     "orgNameRequired": "Please provide the organization name",
-    "slugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)"
+    "slugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)",
+    "usernameTooShort": "Please provide at least 3 characters",
+    "usernameTooLong": "Username cannot be more than 20 characters long",
+    "usernameInvalid": "Invalid username",
+    "phoneNumberInvalid": "Invalid phone number"
   },
   "apiSuccess": {
     "signInSuccess": "Signed in successfully",

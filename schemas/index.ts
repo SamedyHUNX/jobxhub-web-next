@@ -72,3 +72,21 @@ export type CreateOrgFormData = {
   slug: string;
   image: File | null;
 };
+
+export const createUpdateProfileSchema = (t: (key: string) => string) => {
+  return z.object({
+    firstName: z.string().min(1, t("firstNameRequired")).optional(),
+    lastName: z.string().min(1, t("lastNameRequired")).optional(),
+    username: z
+      .string()
+      .min(3, t("usernameTooShort"))
+      .max(10, t("usernameTooLong"))
+      .regex(/^[a-zA-Z0-9_]+$/, t("usernameInvalid"))
+      .optional(),
+    phoneNumber: z
+      .string()
+      .regex(/^\+?[1-9]\d{1,14}$/, t("phoneNumberInvalid"))
+      .optional()
+      .or(z.literal("")),
+  });
+};
