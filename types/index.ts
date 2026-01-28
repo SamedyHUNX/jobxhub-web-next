@@ -10,8 +10,10 @@ export interface User {
   lastName: string;
   imageUrl: string;
   userRole: string;
+  phoneNumber: string;
   dateOfBirth: string;
-  token: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthRequest {

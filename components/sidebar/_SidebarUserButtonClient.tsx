@@ -18,6 +18,7 @@ import { ChevronsUpDown, SettingsIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SignOutButton } from "../SignOutButton";
+import { useLocale } from "next-intl";
 
 type User = {
   username: string;
@@ -66,7 +67,7 @@ export function SidebarUserButtonClient({
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={"/user-settings/notifications"}>
+            <Link href={`/user/settings`}>
               <SettingsIcon className="mr-1" />
               Settings
             </Link>

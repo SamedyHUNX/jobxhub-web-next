@@ -65,6 +65,15 @@
       "createOrganization": "Create Organization"
     }
   },
+  "user": {
+    "settings": {
+      "sidebar": {
+        "profile": "Profile",
+        "security": "Security",
+        "billing": "Billing"
+      }
+    }
+  },
   "orgList": {
     "createOrganization": "Create organization",
     "loading": "Loading...",
