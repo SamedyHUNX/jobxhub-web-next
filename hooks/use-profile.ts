@@ -27,7 +27,7 @@ export function useProfile() {
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
-    mutationFn: (updatedData: Partial<User>) => usersApi.updateMe(updatedData),
+    mutationFn: (updatedData: FormData) => usersApi.updateMe(updatedData),
     onSuccess: (response) => {
       const updatedUser = response.data.users;
       // Update the query cache
@@ -38,7 +38,7 @@ export function useProfile() {
     },
   });
 
-  const updateProfile = async (updatedData: Partial<User>) => {
+  const updateProfile = async (updatedData: FormData) => {
     return updateProfileMutation.mutateAsync(updatedData);
   };
 

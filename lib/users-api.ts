@@ -16,12 +16,11 @@ function assertApiUrl() {
 }
 
 export const usersApi = {
-  // Sign In
-  updateMe: async (updatedData: Partial<User>) => {
+  updateMe: async (formData: FormData) => {
     assertApiUrl();
-    const { data } = await api.put("/users/me", updatedData, {
+    const { data } = await api.put("/users/me", formData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
     });
     return data;

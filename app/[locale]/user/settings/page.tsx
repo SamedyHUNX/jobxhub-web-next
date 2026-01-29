@@ -48,20 +48,19 @@ export default function UserSettingsPage() {
     },
     onSubmit: async ({ value }) => {
       try {
-        // If there's a new image file, create FormData
+        // Always create FormData
+        const formData = new FormData();
+        formData.append("firstName", value.firstName);
+        formData.append("lastName", value.lastName);
+        formData.append("username", value.username);
+        formData.append("phoneNumber", value.phoneNumber);
+
+        // Add image only if it exists
         if (value.image) {
-          const formData = new FormData();
-          formData.append("firstName", value.firstName);
-          formData.append("lastName", value.lastName);
-          formData.append("username", value.username);
-          formData.append("phoneNumber", value.phoneNumber);
           formData.append("image", value.image);
-          await updateProfile(formData as any);
-        } else {
-          // Otherwise send regular JSON
-          const { image, ...profileData } = value;
-          await updateProfile(profileData);
         }
+
+        await updateProfile(formData);
         setIsModalOpen(false);
         toast.success(successT("profileUpdated"));
       } catch (err: any) {
