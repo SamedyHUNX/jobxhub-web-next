@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -13,18 +15,18 @@ import AppSidebarClient from "./_AppSidebarClient";
 import BrandLogo from "../BrandLogo";
 import { SignedIn } from "../AuthStatus";
 import { NavBar } from "../Navbar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const AppSidebar = ({
   content,
   children,
   footerButton,
-  showNavBar = true,
 }: {
   content?: ReactNode;
   children: ReactNode;
   footerButton?: ReactNode;
-  showNavBar?: boolean;
 }) => {
+  const isMobile = useIsMobile();
   return (
     <SidebarProvider className="overflow-y-hidden">
       <AppSidebarClient>
@@ -43,7 +45,7 @@ export const AppSidebar = ({
           </SignedIn>
         </Sidebar>
         <main className="flex-1 w-full">
-          {showNavBar && <NavBar />}
+          {!isMobile && <NavBar />}
           {children}
         </main>
       </AppSidebarClient>

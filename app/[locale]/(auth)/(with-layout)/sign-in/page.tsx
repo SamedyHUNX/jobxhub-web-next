@@ -41,7 +41,11 @@ export default function SignInPage() {
       password: "",
     },
     onSubmit: async ({ value }) => {
-      signIn(value as SignInFormData);
+      try {
+        signIn(value as SignInFormData);
+      } catch (error) {
+        console.error("Failed to sign in", error);
+      }
     },
     validators: {
       onSubmit: ({ value }) => {

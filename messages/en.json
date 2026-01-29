@@ -6,7 +6,8 @@
   "sidebar": {
     "findJobs": "Find Jobs",
     "aiSearch": "AI Search",
-    "employerDashboard": "Employer Dashboard"
+    "employerDashboard": "Employer Dashboard",
+    "superAdminDashboard": "Super-Admin Dashboard"
   },
   "auth": {
     "email": "Email",
@@ -46,7 +47,86 @@
     "newPasswordPlaceholder": "Enter your new password",
     "confirmNewPassword": "Confirm New Password",
     "confirmNewPasswordPlaceholder": "Enter your confirm new password",
-    "resetPassword": "Reset Password"
+    "resetPassword": "Reset Password",
+    "verifyEmailSuccessTitle": "Email has been verified. Please sign in",
+    "verifyEmailFailedTitle": "Failed to verify email. Please contact support"
+  },
+  "organizations": {
+    "newPageTitle": "Create New Organization",
+    "uploadPhoto": "Upload the organization logo",
+    "orgName": "Organization name",
+    "slugName": "Your org's unique identifier (visible to others)",
+    "create": "Create"
+  },
+  "employer": {
+    "sidebar": {
+      "employerDashboard": "Employer Dashboard",
+      "selectOrganization": "Select Organization",
+      "createOrganization": "Create Organization"
+    }
+  },
+  "user": {
+    "settings": {
+      "profile": {
+        "title": "Profile details",
+        "profile": "Profile",
+        "updateProfile": "Update Profile",
+        "email": "Email",
+        "phoneNumber": "Phone number",
+        "noPhoneNumber": "No phone number added",
+        "verified": "Verified",
+        "dob": "Date of birth",
+        "username": "Username",
+        "accountType": "Account Type",
+        "memberSince": "Member Since",
+        "lastUpdated": "Last Updated",
+        "accountInformation": "Account Information",
+        "saveChanges": "Save Changes",
+        "editProfile": "Edit Profile",
+        "clickToUploadPhoto": "Click on the button to change the photo",
+        "firstName": "First name",
+        "lastName": "Last name"
+      },
+      "sidebar": {
+        "profile": "Profile",
+        "security": "Security",
+        "billing": "Billing"
+      }
+    }
+  },
+  "orgList": {
+    "createOrganization": "Create organization",
+    "loading": "Loading...",
+    "securedBy": "Secured by",
+    "nevermind": "Nevermind",
+    "contactSupport": "Contact Support",
+    "chooseAccount": {
+      "title": "Select your organization",
+      "subTitle": ""
+    },
+    "memberCount": {
+      "singular": "member",
+      "plural": "members"
+    },
+    "jobCount": {
+      "singular": "job",
+      "plural": "jobs"
+    },
+    "badges": {
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "banned": "Banned"
+    },
+    "errors": {
+      "unverified": {
+        "title": "Organization not verified",
+        "message": "The organization has not been verified by admin team yet. Please wait for an hour. Or contact support."
+      },
+      "banned": {
+        "title": "Organization banned",
+        "message": "The organization has been banned. Please contact the support team."
+      }
+    }
   },
   "validations": {
     "invalidEmail": "Please enter a valid email",
@@ -62,14 +142,22 @@
     "passwordNumber": "Required at least 1 number",
     "passwordLowercase": "Required at least 1 lowercase letter",
     "passwordUppercase": "Required at least 1 uppercase letter",
-    "passwordMustMatch": "Passwords must match"
+    "passwordMustMatch": "Passwords must match",
+    "orgNameRequired": "Please provide the organization name",
+    "slugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)",
+    "usernameTooShort": "Please provide at least 3 characters",
+    "usernameTooLong": "Username cannot be more than 20 characters long",
+    "usernameInvalid": "Invalid username",
+    "phoneNumberInvalid": "Invalid phone number"
   },
   "apiSuccess": {
     "signInSuccess": "Signed in successfully",
     "signUpSuccess": "Please check your inbox to verify your email",
     "verifyEmailSuccess": "Your account has been verified. Please sign in",
     "forgotPasswordSuccess": "A reset email has been sent to your email",
-    "resetPasswordSuccess": "Your password has been reset successfully"
+    "resetPasswordSuccess": "Your password has been reset successfully",
+    "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team",
+    "profileUpdated": "Profile updated successfully"
   },
   "apiError": {
     "invalidCredentials": "Invalid email or password",
@@ -89,6 +177,10 @@
     "invalidatedToken": "Token has been invalidated. Please sign in again.",
     "userNotFound": "User not found",
     "tooManyRequests": "Too many requests",
-    "passwordsMustMatch": "Passwords must match"
+    "passwordsMustMatch": "Passwords must match",
+    "temporaryLocked": "Account temporarily locked due to multiple failed login attempts. Please try again later or reset your password.",
+    "accountDisabled": "Account has been disabled. Please contact support team",
+    "tooManyRequest": "Too many request. Please try again in 1 hour",
+    "unauthorized": "You are not authorized to do this action"
   }
 }

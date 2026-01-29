@@ -1,18 +1,20 @@
+"use client";
+
 import { useAuth } from "@/hooks/use-auth";
 import { ReactNode } from "react";
 
 function CustomSignedIn({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
 
-  if (!user) return null;
+  if (!user || !isInitialized) return null;
 
   return <>{children}</>;
 }
 
 function CustomSignedOut({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
 
-  if (user) return null;
+  if (user || !isInitialized) return null;
 
   return <>{children}</>;
 }

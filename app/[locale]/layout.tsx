@@ -53,7 +53,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className="font-sans">
+      <body className={`font-sans ${inter.variable} ${geist.variable}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

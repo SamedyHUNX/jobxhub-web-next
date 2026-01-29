@@ -11,7 +11,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
 
 export default function ResetPasswordPage() {
   // Translations
@@ -25,17 +24,6 @@ export default function ResetPasswordPage() {
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-
-  // Redirect if no token provided
-  useEffect(() => {
-    if (!token) {
-      router.push(`/${locale}/reset-password`);
-    }
-  }, [token, router]);
-
-  if (!token) {
-    return null;
-  }
 
   const {
     resetPassword,
@@ -54,12 +42,30 @@ export default function ResetPasswordPage() {
   const form = useForm({
     defaultValues: { newPassword: "", confirmNewPassword: "" },
     onSubmit: async ({ value }) => {
-      resetPassword({ token, ...value });
+      try {
+        resetPassword({ token, ...value });
+      } catch (error: any) {
+        console.error("Failed to reset password", error);
+      }
     },
     validators: {
       onSubmit: ({ value }) => {
         const result = resetPasswordFormSchema.safeParse(value);
         return result.success ? undefined : result.error.format();
+      },
+      onChange: ({ value }) => {
+        // Real-time validation as user types
+        if (value.newPassword && value.confirmNewPassword) {
+          if (value.newPassword !== value.confirmNewPassword) {
+            return {
+              form: validationT("passwordsMustMatch"),
+              fields: {
+                confirmNewPassword: validationT("passwordsMustMatch"),
+              },
+            };
+          }
+        }
+        return undefined;
       },
     },
   });
@@ -71,6 +77,17 @@ export default function ResetPasswordPage() {
       toast.success(successT("resetPasswordSuccess"));
     }
   }, [resetPasswordError, resetPasswordSuccess, errorT, successT]);
+
+  // Redirect if no token provided
+  useEffect(() => {
+    if (!token) {
+      router.push(`/${locale}/reset-password`);
+    }
+  }, [token, router, locale]);
+
+  if (!token) {
+    return null;
+  }
 
   return (
     <div className="mx-auto space-y-8 px-4">
@@ -91,14 +108,8 @@ export default function ResetPasswordPage() {
             type="password"
             placeholder={authT("newPasswordPlaceholder")}
             validator={(value) => {
-              const schema = z
-                .string()
-                .min(8, validationT("passwordMinLength"))
-                .regex(/[A-Z]/, validationT("passwordUppercase"))
-                .regex(/[a-z]/, validationT("passwordLowercase"))
-                .regex(/[0-9]/, validationT("passwordNumber"));
-
-              const result = schema.safeParse(value);
+              const result =
+                resetPasswordFormSchema.shape.newPassword.safeParse(value);
               return result.success
                 ? undefined
                 : result.error.errors[0].message;
@@ -112,15 +123,10 @@ export default function ResetPasswordPage() {
             type="password"
             placeholder={authT("confirmNewPasswordPlaceholder")}
             validator={(value) => {
-              const newPassword = form.getFieldValue("newPassword");
-              const schema = z
-                .string()
-                .min(1, validationT("confirmPasswordRequired"))
-                .refine((val) => val === newPassword, {
-                  message: validationT("passwordMustMatch"),
-                });
-
-              const result = schema.safeParse(value);
+              const result =
+                resetPasswordFormSchema.shape.confirmNewPassword.safeParse(
+                  value
+                );
               return result.success
                 ? undefined
                 : result.error.errors[0].message;

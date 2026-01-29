@@ -10,8 +10,10 @@ export interface User {
   lastName: string;
   imageUrl: string;
   userRole: string;
+  phoneNumber: string;
   dateOfBirth: string;
-  token: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthRequest {
@@ -55,3 +57,25 @@ export type ResetPasswordFormData = {
   newPassword: string;
   confirmNewPassword: string;
 };
+
+// Organizations
+export interface Organization {
+  id: string;
+  orgName: string;
+  imageUrl: string;
+  slug: string;
+  isVerified: boolean;
+  isBanned: boolean;
+  membersCount: number;
+  pendingInvitationsCount: number;
+  adminDeleteEnabled: boolean;
+  createdBy: string;
+  jobsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrgsResponse {
+  message: string;
+  data: Organization[];
+}

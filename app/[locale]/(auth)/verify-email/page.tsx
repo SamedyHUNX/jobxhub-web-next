@@ -42,6 +42,31 @@ export default function VerifyEmailPage() {
     }
   }, [verifyEmailError, verifyEmailSuccess]);
 
+  if (verifyEmailSuccess) {
+    return (
+      <div className="space-y-8 max-w-lg mx-auto mt-[15%] min-h-screen text-center">
+        <div className="mx-auto w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-6">
+          {/* Success checkmark icon */}
+        </div>
+        <h2 className="text-3xl font-bold">
+          {authT("verifyEmailSuccessTitle")}
+        </h2>
+        <Link href={`/${locale}/sign-in`}>{authT("signIn")}</Link>
+      </div>
+    );
+  }
+
+  if (verifyEmailError) {
+    return (
+      <div className="space-y-8 max-w-lg mx-auto mt-[15%] min-h-screen text-center">
+        <h2 className="text-3xl font-bold">
+          {authT("verifyEmailFailedTitle")}
+        </h2>
+        {/* Error message and retry option */}
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 max-w-lg mx-auto mt-[15%] min-h-screen">
       <div className="text-center">
@@ -78,7 +103,7 @@ export default function VerifyEmailPage() {
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
           {authT("havingTrouble")}{" "}
           <Link
-            href="/support"
+            href={`/${locale}/support`}
             className="font-medium text-blue-500 hover:text-blue-400 transition-colors"
           >
             {authT("contactSupport")}

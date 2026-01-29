@@ -1,5 +1,6 @@
 import { authApi } from "@/lib/auth-api";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
+import { clearAuth } from "@/stores/slices/auth.slice";
 import { ResetPasswordFormData, SignInFormData, SignUpFormData } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -51,7 +52,7 @@ export function useAuth() {
   const verifyEmailMutation = useMutation({
     mutationFn: (token: string) => authApi.verifyEmail(token),
     onSuccess: () => {
-      router.push("/sign-in");
+      router.push(`/${locale}/sign-in`);
     },
   });
 
@@ -61,7 +62,7 @@ export function useAuth() {
       authApi.forgotPassword(email, locale),
     onSuccess: (_, variables) => {
       router.push(
-        `/forgot-password/email-sent?email=${encodeURIComponent(
+        `/${locale}/forgot-password/email-sent?email=${encodeURIComponent(
           variables.email
         )}`
       );
@@ -74,12 +75,31 @@ export function useAuth() {
       token,
       newPassword,
       confirmNewPassword,
-    }: { token: string } & ResetPasswordFormData) =>
-      authApi.resetPassword(token, newPassword, confirmNewPassword),
+    }: { token: string | null } & ResetPasswordFormData) =>
+      authApi.resetPassword(token!, newPassword, confirmNewPassword),
     onSuccess: () => {
       router.push(`/${locale}/sign-in`);
     },
   });
+
+  // Sign out
+  const signOut = async () => {
+    // dispatch(clearSelection());
+    // localStorage.removeItem("selectedOrganization");
+    try {
+      await authApi.signOut();
+
+      dispatch(clearAuth());
+      queryClient.clear();
+
+      router.push(`/${locale}/sign-in`);
+    } catch (error) {
+      console.error("Sign out failed:", error);
+      dispatch(clearAuth());
+      queryClient.clear();
+      router.push(`/${locale}/sign-in`);
+    }
+  };
 
   return {
     // State
@@ -119,5 +139,8 @@ export function useAuth() {
     isResettingPassword: resetPasswordMutation.isPending,
     resetPasswordError: resetPasswordMutation.error as AxiosError,
     resetPasswordSuccess: resetPasswordMutation.isSuccess,
+
+    // Sign Out
+    signOut,
   };
 }
