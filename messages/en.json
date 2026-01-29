@@ -156,7 +156,8 @@
     "verifyEmailSuccess": "Your account has been verified. Please sign in",
     "forgotPasswordSuccess": "A reset email has been sent to your email",
     "resetPasswordSuccess": "Your password has been reset successfully",
-    "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team"
+    "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team",
+    "profileUpdated": "Profile updated successfully"
   },
   "apiError": {
     "invalidCredentials": "Invalid email or password",

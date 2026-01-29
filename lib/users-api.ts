@@ -19,7 +19,7 @@ export const usersApi = {
   // Sign In
   updateMe: async (updatedData: Partial<User>) => {
     assertApiUrl();
-    const { data } = await api.post<AuthResponse>("/users/me", updatedData, {
+    const { data } = await api.put("/users/me", updatedData, {
       headers: {
         "Content-Type": "application/json",
       },

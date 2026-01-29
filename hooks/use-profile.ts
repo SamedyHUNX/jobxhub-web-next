@@ -28,7 +28,8 @@ export function useProfile() {
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: (updatedData: Partial<User>) => usersApi.updateMe(updatedData),
-    onSuccess: (updatedUser) => {
+    onSuccess: (response) => {
+      const updatedUser = response.data.users;
       // Update the query cache
       queryClient.setQueryData(["profile"], updatedUser);
 
