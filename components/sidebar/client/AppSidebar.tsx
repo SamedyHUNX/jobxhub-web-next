@@ -9,13 +9,13 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "../ui/sidebar";
+} from "../../ui/sidebar";
 import { ReactNode } from "react";
-import AppSidebarClient from "./_AppSidebarClient";
-import BrandLogo from "../BrandLogo";
-import { SignedIn } from "../AuthStatus";
-import { NavBar } from "../Navbar";
+import BrandLogo from "../../BrandLogo";
+import { SignedIn } from "../../AuthStatus";
+import { NavBar } from "../../Navbar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import AppSidebarClient from "./_AppSidebarClient";
 
 export const AppSidebar = ({
   content,

@@ -1,7 +1,7 @@
 "use client";
 
-import { AppSidebar } from "@/components/sidebar/AppSidebar";
-import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
+import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
+import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
 import { useProfile } from "@/hooks/use-profile";
 import { UserIcon, ShieldCheckIcon, CreditCardIcon } from "lucide-react";
 import { useTranslations } from "next-intl";

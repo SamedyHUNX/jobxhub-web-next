@@ -6,10 +6,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "../ui/sidebar";
+} from "../../ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignedIn, SignedOut } from "../AuthStatus";
+import { SignedIn, SignedOut } from "../../AuthStatus";
 
 export default function SidebarNavMenuGroup({
   items,

@@ -17,7 +17,7 @@ import {
 import { ChevronsUpDown, SettingsIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { SignOutButton } from "../SignOutButton";
+import { SignOutButton } from "../../SignOutButton";
 import { useLocale } from "next-intl";
 
 type User = {

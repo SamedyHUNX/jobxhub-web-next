@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Organization } from "@/types";
 
 interface OrganizationsState {
-  selectedOrgId: string | Organization | null;
+  selectedOrgId: Organization | null;
 }
 
 const initialState: OrganizationsState = {
@@ -15,7 +15,7 @@ const organizationsSlice = createSlice({
   reducers: {
     setSelectedOrganization: (
       state,
-      action: PayloadAction<string | Organization | null>
+      action: PayloadAction<Organization | null>
     ) => {
       state.selectedOrgId = action.payload;
     },

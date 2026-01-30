@@ -8,7 +8,7 @@ import {
 import { Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 interface UseOrgsParams {
   search?: string;
@@ -21,6 +21,22 @@ export function useOrgs(params?: UseOrgsParams) {
   const selectedOrganization = useAppSelector(
     (state) => state.organizations.selectedOrgId
   );
+
+  // Initialize from localStorage on mount
+  useEffect(() => {
+    if (!selectedOrganization) {
+      const stored = localStorage.getItem("selectedOrganization");
+      if (stored) {
+        try {
+          const org = JSON.parse(stored);
+          dispatch(setSelectedOrganization(org));
+        } catch (e) {
+          console.error("Failed to parse stored organization", e);
+          localStorage.removeItem("selectedOrganization");
+        }
+      }
+    }
+  }, [selectedOrganization, dispatch]);
 
   // Fetch organizations with filters using useQuery
   const {
@@ -46,24 +62,6 @@ export function useOrgs(params?: UseOrgsParams) {
     },
   });
 
-  // Fetch organizations by user
-  const fetchOrgsByUserId = (userId: string) =>
-    useQuery({
-      queryKey: ["organizations", "user", userId],
-      queryFn: () => orgsApi.findByUser(userId),
-      enabled: !!userId,
-      select: (data) => data.data.organizations,
-    });
-
-  // Fetch single organization
-  const fetchOrgByOrgId = (id: string) =>
-    useQuery({
-      queryKey: ["organization", id],
-      queryFn: () => orgsApi.findOne(id),
-      enabled: !!id,
-      select: (data) => data.data.organizations[0],
-    });
-
   // Select organization
   const selectOrganization = useCallback(
     (orgOrId: string | Organization) => {
@@ -88,14 +86,12 @@ export function useOrgs(params?: UseOrgsParams) {
   }, [dispatch]);
 
   return {
+    selectedOrganization,
     // Mutations
     createOrganization: createOrganizationMutation.mutate,
     isCreating: createOrganizationMutation.isPending,
     createSuccess: createOrganizationMutation.isSuccess,
     createError: createOrganizationMutation.error as AxiosError,
-
-    fetchOrgByOrgId,
-    fetchOrgsByUserId,
 
     selectOrganization,
     clearSelectedOrganization,
