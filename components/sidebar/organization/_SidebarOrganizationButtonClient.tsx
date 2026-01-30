@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User } from "@/types";
 import { SignOutButton } from "@/components/SignOutButton";
 
 export function SidebarOrganizationButtonClient({

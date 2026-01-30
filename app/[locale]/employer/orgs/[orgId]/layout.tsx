@@ -5,7 +5,7 @@ import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup
 import SidebarOrganizationButton from "@/components/sidebar/organization/SidebarOrganizationButton";
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";
-import { CheckIcon, FilePlusIcon, LayoutDashboardIcon } from "lucide-react";
+import { FilePlusIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
@@ -15,28 +15,21 @@ export default function EmployerOrgsDashboardLayout({
   children: ReactNode;
 }) {
   const locale = useLocale();
-  const employerT = useTranslations("employer.sidebar");
+  const employerT = useTranslations("sidebar.jobs");
   const { selectedOrganization } = useOrgs();
   const { profile: currentUser } = useProfile();
-
-  console.log("selectedOrganization:", selectedOrganization);
 
   return (
     <AppSidebar
       content={
         <>
           <SidebarNavMenuGroup
-            className="mt-auto"
+            className="mt-4"
             items={[
               {
-                href: `/${locale}/employer/orgs/select`,
-                icon: <CheckIcon />,
-                label: employerT("selectOrganization"),
-              },
-              {
-                href: `/${locale}/employer/orgs/new`,
+                href: `/${locale}/employer/orgs/${selectedOrganization?.id}/new`,
                 icon: <FilePlusIcon />,
-                label: employerT("createOrganization"),
+                label: employerT("createJob"),
               },
             ]}
           />

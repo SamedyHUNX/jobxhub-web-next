@@ -11,8 +11,6 @@ export default function SidebarOrganizationButton({
   currentOrg: Organization | null;
   currentUser: User | undefined;
 }) {
-  console.log("org", currentOrg);
-  console.log(currentUser);
   // Handle no selected organization
   if (!currentUser || !currentOrg) {
     return <BackHomeButton variant="destructive" />;

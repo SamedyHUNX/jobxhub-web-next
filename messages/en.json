@@ -7,7 +7,10 @@
     "findJobs": "Find Jobs",
     "aiSearch": "AI Search",
     "employerDashboard": "Employer Dashboard",
-    "superAdminDashboard": "Super-Admin Dashboard"
+    "superAdminDashboard": "Super-Admin Dashboard",
+    "jobs": {
+      "createJob": "Create Job Listing"
+    }
   },
   "auth": {
     "email": "Email",
@@ -128,6 +131,51 @@
       }
     }
   },
+  "jobListings": {
+    "title": "Create Job",
+    "description": "Fill the necessary information below",
+    "form": {
+      "title": "Job listing title",
+      "wage": "Wage",
+      "city": "City",
+      "state": "State",
+      "locationRequirement": "Location Requirement",
+      "type": "Job Type",
+      "experienceLevel": "Experience Level",
+      "description": "Job Description",
+      "buttonText": "Create Job Listing",
+      "creatingText": "Creating...",
+      "options": {
+        "wageIntervals": {
+          "yearly": "Yearly",
+          "hourly": "Hourly",
+          "monthly": "Monthly",
+          "weekly": "Weekly"
+        },
+        "locationRequirements": {
+          "inOffice": "In Office",
+          "hybrid": "Hybrid",
+          "remote": "Remote"
+        },
+        "jobTypes": {
+          "fullTime": "Full Time",
+          "internship": "Internship",
+          "partTime": "Part Time",
+          "freelance": "Freelance",
+          "contract": "Contract"
+        },
+        "experienceLevels": {
+          "junior": "Junior",
+          "mid": "Mid-Level",
+          "senior": "Senior",
+          "lead": "Lead",
+          "ceo": "CEO",
+          "director": "Director",
+          "manager": "Manager"
+        }
+      }
+    }
+  },
   "validations": {
     "invalidEmail": "Please enter a valid email",
     "passwordRequired": "Please enter the password",
@@ -148,7 +196,14 @@
     "usernameTooShort": "Please provide at least 3 characters",
     "usernameTooLong": "Username cannot be more than 20 characters long",
     "usernameInvalid": "Invalid username",
-    "phoneNumberInvalid": "Invalid phone number"
+    "phoneNumberInvalid": "Invalid phone number",
+    "jobTitleRequired": "Job title required",
+    "jobDescriptionMinLength": "Description is too short. Need at least 100 characters",
+    "jobDescriptionMaxLength": "Description is too long. Allowed at most 5000 characters",
+    "experienceLevelRequired": "Please provide experience level",
+    "jobTypeRequired": "Please provide job type",
+    "locationRequirementRequired": "Please provide the required location",
+    "nonRemoteRequired": "Non-remote"
   },
   "apiSuccess": {
     "signInSuccess": "Signed in successfully",
