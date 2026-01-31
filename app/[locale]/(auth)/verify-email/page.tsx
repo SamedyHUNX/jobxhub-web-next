@@ -1,19 +1,16 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { extractErrorMessage } from "@/lib/utils";
+
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { toast } from "sonner";
 
 export default function VerifyEmailPage() {
   // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
   const locale = useLocale();
 
   const router = useRouter();
@@ -32,15 +29,6 @@ export default function VerifyEmailPage() {
 
     verifyEmail(token);
   }, [token, verifyEmail, router, locale]);
-
-  // Handle error with toast
-  useEffect(() => {
-    if (verifyEmailError) {
-      toast.error(extractErrorMessage(verifyEmailError, errorT));
-    } else if (verifyEmailSuccess) {
-      toast.success(successT("verifyEmailSuccess"));
-    }
-  }, [verifyEmailError, verifyEmailSuccess]);
 
   if (verifyEmailSuccess) {
     return (

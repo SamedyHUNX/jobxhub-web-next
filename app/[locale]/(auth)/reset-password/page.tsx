@@ -4,21 +4,17 @@ import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { extractErrorMessage } from "@/lib/utils";
 import { createResetPasswordSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { toast } from "sonner";
 
 export default function ResetPasswordPage() {
   // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
   const router = useRouter();
   const locale = useLocale();
 
@@ -28,8 +24,6 @@ export default function ResetPasswordPage() {
   const {
     resetPassword,
     isResettingPassword,
-    resetPasswordError,
-    resetPasswordSuccess,
   } = useAuth();
 
   // Define schema
@@ -69,14 +63,6 @@ export default function ResetPasswordPage() {
       },
     },
   });
-
-  useEffect(() => {
-    if (resetPasswordError) {
-      toast.error(extractErrorMessage(resetPasswordError, errorT));
-    } else if (resetPasswordSuccess) {
-      toast.success(successT("resetPasswordSuccess"));
-    }
-  }, [resetPasswordError, resetPasswordSuccess, errorT, successT]);
 
   // Redirect if no token provided
   useEffect(() => {

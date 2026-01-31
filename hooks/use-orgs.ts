@@ -1,4 +1,5 @@
-import { orgsApi } from "@/lib/orgs-api";
+import { orgsApi } from "@/lib/apis/orgs-api";
+import { extractErrorMessage } from "@/lib/utils";
 import { CreateOrgFormData } from "@/schemas";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import {
@@ -8,7 +9,9 @@ import {
 import { Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect } from "react";
+import { toast } from "sonner";
 
 interface UseOrgsParams {
   search?: string;
@@ -21,6 +24,8 @@ export function useOrgs(params?: UseOrgsParams) {
   const selectedOrganization = useAppSelector(
     (state) => state.organizations.selectedOrgId
   );
+  const successT = useTranslations("apiSuccesses");
+  const errorT = useTranslations("apiErrors");
 
   // Initialize from localStorage on mount
   useEffect(() => {
@@ -59,6 +64,10 @@ export function useOrgs(params?: UseOrgsParams) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
+      toast.success(successT("createOrgSuccess"));
+    },
+    onError: (error: AxiosError) => {
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 

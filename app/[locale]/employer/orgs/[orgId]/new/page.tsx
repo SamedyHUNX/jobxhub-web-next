@@ -15,8 +15,7 @@ export default function CreateJobPage() {
 
   const { selectedOrganization } = useOrgs();
 
-  const { createJobListing, isCreating, createError, createSuccess } =
-    useJobListings();
+  const { createJobListing, isCreating } = useJobListings();
 
   const translations = {
     labels: {
@@ -70,19 +69,6 @@ export default function CreateJobPage() {
     createJobListing(data);
   };
 
-  if (createSuccess) {
-    return (
-      <div className="w-[95%] mx-auto px-4 pt-8 h-fit flex flex-col">
-        <h1 className="text-4xl font-bold mb-2 shrink-0 tracking-tighter">
-          {pageT("successTitle")}
-        </h1>
-        <p className="text-muted-foreground mb-6 shrink-0 tracking-tighter">
-          {pageT("successDescription")}
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-[95%] mx-auto px-4 pt-8 h-fit flex flex-col">
       <h1 className="text-4xl font-bold mb-2 shrink-0 tracking-tighter">
@@ -97,6 +83,7 @@ export default function CreateJobPage() {
             onSubmit={handleSubmit}
             translations={translations}
             orgId={selectedOrganization?.id}
+            isLoading={isCreating}
           />
         </CardContent>
       </Card>

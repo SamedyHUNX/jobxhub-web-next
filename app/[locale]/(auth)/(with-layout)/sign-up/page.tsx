@@ -6,24 +6,20 @@ import ProfileImage from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { countries } from "@/lib/constants";
-import { extractErrorMessage } from "@/lib/utils";
 import { createSignUpSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
-import { toast } from "sonner";
+import { useMemo } from "react";
 
 export default function SignUpPage() {
   // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
   const locale = useLocale();
 
-  const { signUp, isSigningUp, signUpError, signUpSuccess } = useAuth();
+  const { signUp, isSigningUp } = useAuth();
 
   const signUpSchema = useMemo(
     () => createSignUpSchema(validationT),
@@ -63,14 +59,6 @@ export default function SignUpPage() {
       },
     },
   });
-
-  useEffect(() => {
-    if (signUpError) {
-      toast.error(extractErrorMessage(signUpError, errorT));
-    } else if (signUpSuccess) {
-      toast.success(successT("signUpSuccess"));
-    }
-  }, [signUpError, signUpSuccess, errorT, successT]);
 
   return (
     <div className="space-y-8 pb-8 px-4">

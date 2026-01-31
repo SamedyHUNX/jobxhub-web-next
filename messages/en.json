@@ -205,7 +205,7 @@
     "locationRequirementRequired": "Please provide the required location",
     "nonRemoteRequired": "Non-remote"
   },
-  "apiSuccess": {
+  "apiSuccesses": {
     "signInSuccess": "Signed in successfully",
     "signUpSuccess": "Please check your inbox to verify your email",
     "verifyEmailSuccess": "Your account has been verified. Please sign in",
@@ -214,7 +214,7 @@
     "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team",
     "profileUpdated": "Profile updated successfully"
   },
-  "apiError": {
+  "apiErrors": {
     "invalidCredentials": "Invalid email or password",
     "allFieldsRequired": "All fields are required",
     "profileImageRequired": "Profile image is required",

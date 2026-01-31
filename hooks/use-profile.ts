@@ -1,20 +1,25 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { authApi } from "@/lib/auth-api";
+import { authApi } from "@/lib/apis/auth-api";
 import { useAppDispatch } from "@/stores/hooks";
 import { useEffect } from "react";
 import { setAuth } from "@/stores/slices/auth.slice";
-import { User } from "@/types";
-import { usersApi } from "@/lib/users-api";
+import { usersApi } from "@/lib/apis/users-api";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { extractErrorMessage } from "@/lib/utils";
+import { AxiosError } from "axios";
 
 export function useProfile() {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
+  const successT = useTranslations("apiSuccesses");
+  const errorT = useTranslations("apiErrors");
 
   const { data, isLoading, error, refetch, isError } = useQuery({
     queryKey: ["profile"],
     queryFn: () => authApi.getProfile(),
     staleTime: 5 * 60 * 1000,
-    retry: 1,
+    retry: 2,
     enabled: true,
   });
 
@@ -35,21 +40,23 @@ export function useProfile() {
 
       // Update Redux
       dispatch(setAuth({ user: updatedUser }));
+      toast.success(successT("profileUpdated"));
+    },
+    onError(error: AxiosError) {
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 
-  const updateProfile = async (updatedData: FormData) => {
-    return updateProfileMutation.mutateAsync(updatedData);
-  };
-
   return {
+    // Get data
     profile: data,
     isLoading,
     isError,
     error,
     refetch,
-    updateProfile,
+
+    // Update profile
+    updateProfile: updateProfileMutation.mutate,
     isUpdating: updateProfileMutation.isPending,
-    updateError: updateProfileMutation.error,
   };
 }

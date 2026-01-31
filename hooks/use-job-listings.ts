@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import {
@@ -65,6 +64,9 @@ export function useJobListings(params?: UseJobListingsParams) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
     },
+    onError: (error: AxiosError) => {
+      console.error(error);
+    },
   });
 
   return {
@@ -77,8 +79,6 @@ export function useJobListings(params?: UseJobListingsParams) {
     // Create Job Mutations
     createJobListing: createJobListingMutation.mutate,
     isCreating: createJobListingMutation.isPending,
-    createSuccess: createJobListingMutation.isSuccess,
-    createError: createJobListingMutation.error as AxiosError,
 
     // Fetch job by jobId
     fetchJobListingByJobId,

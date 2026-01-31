@@ -165,7 +165,7 @@ export default function OrgsList({
   };
 
   const handleCreateOrganization = () => {
-    const baseUrl = `/${locale}/employer/orgs/new`;
+    const baseUrl = `/${locale}/employer/new`;
     const params = new URLSearchParams();
 
     if (hideSlug) {
@@ -260,10 +260,11 @@ export default function OrgsList({
             <div
               key={org.id}
               onClick={() => handleSelectOrganization(org)}
-              className={`flex items-center gap-4 px-8 py-6 transition-colors cursor-pointer group ${org.isBanned || !org.isVerified
+              className={`flex items-center gap-4 px-8 py-6 transition-colors cursor-pointer group ${
+                org.isBanned || !org.isVerified
                   ? "opacity-50 cursor-not-allowed hover:bg-red-50 dark:hover:bg-red-950"
                   : "hover:bg-gray-50 dark:hover:bg-gray-700"
-                }`}
+              }`}
             >
               {/* Avatar/Icon */}
               <div className="shrink-0 relative">

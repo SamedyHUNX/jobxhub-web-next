@@ -1,4 +1,4 @@
-import { orgsApi } from "@/lib/orgs-api";
+import { orgsApi } from "@/lib/apis/orgs-api";
 import { useQuery } from "@tanstack/react-query";
 
 export function useOrgsByUserId(userId: string) {

@@ -6,12 +6,11 @@ import ImageUpload from "@/components/ProfileImage";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
 import { useOrgs } from "@/hooks/use-orgs";
-import { extractErrorMessage } from "@/lib/utils";
 import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 
 export default function CreateNewOrgPage() {
@@ -19,8 +18,6 @@ export default function CreateNewOrgPage() {
   const t = useTranslations();
   const newOrgT = (key: string) => t(`organizations.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
 
   const router = useRouter();
   const locale = useLocale();
@@ -65,15 +62,6 @@ export default function CreateNewOrgPage() {
       },
     },
   });
-
-  // Show toast notifications
-  useEffect(() => {
-    if (createError) {
-      toast.error(extractErrorMessage(createError, errorT));
-    } else if (createSuccess) {
-      toast.success(successT("createOrgSuccess"));
-    }
-  }, [createError, createSuccess, errorT, successT]);
 
   // Auto-generate slug from organization name
   const generateSlug = (name: string) => {

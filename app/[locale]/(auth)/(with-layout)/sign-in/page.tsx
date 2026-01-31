@@ -3,30 +3,23 @@
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useMemo } from "react";
-import { toast } from "sonner";
+import { useMemo } from "react";
 import { SignInFormData } from "@/types";
 import { createSignInSchema } from "@/schemas";
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/LoadingSwap";
-import { extractErrorMessage } from "@/lib/utils";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
-
-  const router = useRouter();
 
   const locale = useLocale();
 
-  const { signIn, isSigningIn, signInError, signInSuccess } = useAuth();
+  const { signIn, isSigningIn } = useAuth();
 
   // Define schema
   const signInSchema = useMemo(
@@ -54,14 +47,6 @@ export default function SignInPage() {
       },
     },
   });
-
-  useEffect(() => {
-    if (signInError) {
-      toast.error(extractErrorMessage(signInError, errorT));
-    } else if (signInSuccess) {
-      toast.success(successT("signInSuccess"));
-    }
-  }, [signInError, signInSuccess, errorT, successT]);
 
   return (
     <div className="mx-auto space-y-8 px-4">

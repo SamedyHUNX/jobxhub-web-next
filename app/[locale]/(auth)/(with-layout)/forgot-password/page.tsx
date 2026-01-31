@@ -1,24 +1,20 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { extractErrorMessage } from "@/lib/utils";
 import { forgotPasswordSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { toast } from "sonner";
 
 export default function ForgotPasswordPage() {
   // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
 
   const forgotPasswordFormSchema = useMemo(
     () => forgotPasswordSchema(validationT),
@@ -29,8 +25,6 @@ export default function ForgotPasswordPage() {
   const {
     forgotPassword,
     isRequestingForgotPassword,
-    forgotPasswordError,
-    forgotPasswordSuccess,
   } = useAuth();
 
   // Initialize Transtack Form
@@ -48,14 +42,6 @@ export default function ForgotPasswordPage() {
       },
     },
   });
-
-  useEffect(() => {
-    if (forgotPasswordError) {
-      toast.error(extractErrorMessage(forgotPasswordError, errorT));
-    } else if (forgotPasswordSuccess) {
-      toast.success(successT("forgotPasswordSuccess"));
-    }
-  }, [forgotPasswordError, forgotPasswordSuccess, errorT, successT]);
 
   return (
     <div className="mx-auto space-y-8 px-4">

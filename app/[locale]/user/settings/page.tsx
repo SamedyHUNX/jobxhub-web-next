@@ -6,8 +6,6 @@ import PageLoader from "@/components/PageLoader";
 import { useTranslations } from "next-intl";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { useForm } from "@tanstack/react-form";
-import { toast } from "sonner";
-import { extractErrorMessage } from "@/lib/utils";
 import { createUpdateProfileSchema } from "@/schemas";
 import { X } from "lucide-react";
 import ProfileImage from "@/components/ProfileImage";
@@ -20,15 +18,12 @@ export default function UserSettingsPage() {
     profile: currentUser,
     updateProfile,
     isUpdating,
-    updateError,
   } = useProfile();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const t = useTranslations();
   const profileT = (key: string) => t(`user.settings.profile.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
 
   // Define validation schema
   const updateProfileSchema = useMemo(
@@ -62,9 +57,8 @@ export default function UserSettingsPage() {
 
         await updateProfile(formData);
         setIsModalOpen(false);
-        toast.success(successT("profileUpdated"));
-      } catch (err: any) {
-        toast.error(extractErrorMessage(err, errorT));
+      } catch (error: any) {
+        console.error("Failed to update profile", error);
       }
     },
     validators: {
@@ -230,9 +224,8 @@ export default function UserSettingsPage() {
                     editable={true}
                     value={field.state.value || form.state.values.imageUrl}
                     onChange={(file) => field.handleChange(file)}
-                    fallbackInitials={`${currentUser.firstName?.[0] || ""}${
-                      currentUser.lastName?.[0] || ""
-                    }`}
+                    fallbackInitials={`${currentUser.firstName?.[0] || ""}${currentUser.lastName?.[0] || ""
+                      }`}
                     label={profileT("clickToUploadPhoto")}
                     error={field.state.meta.errors?.[0]}
                     size="lg"

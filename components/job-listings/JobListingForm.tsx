@@ -87,6 +87,7 @@ export default function JobListingForm({
   className,
   buttonClassName,
   showBorder = true,
+  isLoading,
   fields,
   children,
   hideSubmitButton = false,
@@ -118,6 +119,7 @@ export default function JobListingForm({
     },
     onSubmit: async ({ value }) => {
       try {
+        onSubmit(value);
       } catch (error) {
         console.error("Failed to create the job", error);
       }
