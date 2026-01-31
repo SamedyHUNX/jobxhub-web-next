@@ -6,18 +6,26 @@ import {
   clearSelection,
   setSelectedOrganization,
 } from "@/stores/slices/organizations.slice";
-import { Organization } from "@/types";
+import type { Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 interface UseOrgsParams {
   search?: string;
   isVerified?: boolean;
 }
+
+interface SelectOrgOptions {
+  redirectUrl?: string | ((org: Organization) => string);
+  skipRedirect?: boolean;
+}
+
+const SELECTED_ORG_KEY = "selectedOrgId";
 
 export function useOrgs(params?: UseOrgsParams) {
   const dispatch = useAppDispatch();
@@ -27,26 +35,10 @@ export function useOrgs(params?: UseOrgsParams) {
   );
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
-
   const router = useRouter();
+  const locale = useLocale();
 
-  // Initialize from localStorage on mount
-  useEffect(() => {
-    if (!selectedOrganization) {
-      const stored = localStorage.getItem("selectedOrganization");
-      if (stored) {
-        try {
-          const org = JSON.parse(stored);
-          dispatch(setSelectedOrganization(org));
-        } catch (e) {
-          console.error("Failed to parse stored organization", e);
-          localStorage.removeItem("selectedOrganization");
-        }
-      }
-    }
-  }, [selectedOrganization, dispatch]);
-
-  // Fetch organizations with filters using useQuery
+  // Fetch organizations
   const {
     data: organizationsData,
     isLoading,
@@ -55,10 +47,44 @@ export function useOrgs(params?: UseOrgsParams) {
   } = useQuery({
     queryKey: ["organizations", params],
     queryFn: () => orgsApi.findAll(params?.search, params?.isVerified),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   const organizations = organizationsData?.data.organizations || [];
+
+  // Initialize from cookie on mount
+  useEffect(() => {
+    if (!selectedOrganization && organizations.length > 0) {
+      const storedId = Cookies.get(SELECTED_ORG_KEY);
+      if (storedId) {
+        const org = organizations.find((o: Organization) => o.id === storedId);
+        if (org) {
+          dispatch(setSelectedOrganization(org));
+        } else {
+          // Clean up invalid cookie
+          Cookies.remove(SELECTED_ORG_KEY);
+        }
+      }
+    }
+  }, [selectedOrganization, organizations, dispatch]);
+
+  function useOrgsByUserId(userId: string) {
+    return useQuery({
+      queryKey: ["organizations", "user", userId],
+      queryFn: () => orgsApi.findByUser(userId),
+      enabled: !!userId,
+      select: (data) => data.data.organizations,
+    });
+  }
+
+  function useOrgByOrgId(id: string | undefined) {
+    return useQuery({
+      queryKey: ["organization", id],
+      queryFn: () => orgsApi.findOne(id!),
+      enabled: !!id,
+      select: (data) => data.data.organizations,
+    });
+  }
 
   // Create organization mutation
   const createOrganizationMutation = useMutation({
@@ -68,42 +94,99 @@ export function useOrgs(params?: UseOrgsParams) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
       toast.success(successT("createOrgSuccess"));
-      router.push(`/employer/select`);
+      router.push(`/${locale}/employer/select`);
     },
     onError: (error: AxiosError) => {
       toast.error(extractErrorMessage(error, errorT));
     },
   });
 
-  // Select organization
+  // Select organization with navigation
   const selectOrganization = useCallback(
-    (orgOrId: string | Organization) => {
-      if (typeof orgOrId === "string") {
-        const org = organizations.find((o: Organization) => o.id === orgOrId);
-        if (org) {
-          dispatch(setSelectedOrganization(org));
-          localStorage.setItem("selectedOrganization", JSON.stringify(org));
+    (orgId: string, options?: SelectOrgOptions) => {
+      const org = organizations.find((o: Organization) => o.id === orgId);
+      if (!org) return;
+
+      // Update state and cookie
+      dispatch(setSelectedOrganization(org));
+      Cookies.set(SELECTED_ORG_KEY, orgId, {
+        secure: true,
+        sameSite: "strict",
+        expires: 7,
+      });
+
+      // Handle navigation
+      if (!options?.skipRedirect) {
+        let url: string;
+
+        if (options?.redirectUrl) {
+          url =
+            typeof options.redirectUrl === "function"
+              ? options.redirectUrl(org)
+              : options.redirectUrl;
+        } else {
+          // Default redirect
+          url = `/${locale}/employer/orgs/${org.id}`;
         }
-      } else {
-        dispatch(setSelectedOrganization(orgOrId));
-        localStorage.setItem("selectedOrganization", JSON.stringify(orgOrId));
+
+        router.push(url);
       }
     },
-    [dispatch, organizations]
+    [dispatch, organizations, router, locale]
+  );
+
+  // Create new organization with navigation
+  const createOrganization = useCallback(
+    (formData: CreateOrgFormData, redirectUrl?: string) => {
+      createOrganizationMutation.mutate(formData);
+      // Navigation happens in onSuccess
+    },
+    [createOrganizationMutation]
+  );
+
+  // Navigate to create organization page
+  const navigateToCreateOrg = useCallback(
+    (options?: { hideSlug?: boolean; skipInvitationScreen?: boolean }) => {
+      const baseUrl = `/${locale}/employer/new`;
+      const params = new URLSearchParams();
+
+      if (options?.hideSlug) {
+        params.append("hideSlug", "true");
+      }
+      if (options?.skipInvitationScreen !== undefined) {
+        params.append(
+          "skipInvitationScreen",
+          String(options.skipInvitationScreen)
+        );
+      }
+
+      const url = params.toString() ? `${baseUrl}?${params}` : baseUrl;
+      router.push(url);
+    },
+    [router, locale]
   );
 
   // Clear selected organization
   const clearSelectedOrganization = useCallback(() => {
     dispatch(clearSelection());
-    localStorage.removeItem("selectedOrganization");
+    Cookies.remove(SELECTED_ORG_KEY);
   }, [dispatch]);
 
   return {
+    // Data
+    organizations,
     selectedOrganization,
-    // Mutations
-    createOrganization: createOrganizationMutation.mutate,
-    isCreating: createOrganizationMutation.isPending,
+    isLoading,
+    error,
+
+    // Actions
     selectOrganization,
+    createOrganization,
+    navigateToCreateOrg,
     clearSelectedOrganization,
+    refetch,
+
+    // Mutation states
+    isCreating: createOrganizationMutation.isPending,
   };
 }

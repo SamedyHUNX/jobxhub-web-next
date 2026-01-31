@@ -100,8 +100,8 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       experienceLevel: z.enum(experienceLevels, {
         message: t("experienceLevelRequired"),
       }),
-      wage: z.coerce
-        .number()
+      wage: z
+        .string()
         .optional()
         .nullable()
         .transform((val) => val ?? undefined),

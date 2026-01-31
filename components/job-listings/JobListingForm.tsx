@@ -112,7 +112,6 @@ export default function JobListingForm({
       ...defaultValues,
     },
     onSubmit: async ({ value }) => {
-      console.log("Form onSubmit called with:", value); // ADD THIS
       try {
         onSubmit(value);
       } catch (error) {
@@ -121,9 +120,7 @@ export default function JobListingForm({
     },
     validators: {
       onSubmit: ({ value }) => {
-        console.log("Validating:", value); // ADD THIS
         const result = jobListingSchema.safeParse(value);
-        console.log("Validation result:", result); // ADD THIS
         return result.success ? undefined : result.error.format();
       },
     },
@@ -207,19 +204,9 @@ export default function JobListingForm({
                   name="wage"
                   label={getLabel("wage", "Wage")}
                   description={getDescription("wage")}
-                  type="number"
+                  type="text"
                   validator={(value) => {
-                    // Convert string to number before validation
-                    if (value === "" || value === null || value === undefined) {
-                      return undefined;
-                    }
-                    const numValue = Number(value);
-                    // Guard against NaN
-                    if (Number.isNaN(numValue)) {
-                      return "Wage must be a valid number";
-                    }
-                    const result =
-                      jobListingSchema.shape.wage.safeParse(numValue);
+                    const result = jobListingSchema.shape.wage.safeParse(value);
                     return result.success
                       ? undefined
                       : result.error.issues[0].message;

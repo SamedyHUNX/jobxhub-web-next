@@ -2,6 +2,8 @@ import { CreateOrgFormData } from "@/schemas";
 import { OrgsResponse } from "@/types";
 import axios from "axios";
 
+import Cookies from "js-cookie";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 const api = axios.create({
@@ -9,6 +11,20 @@ const api = axios.create({
   timeout: 30000,
   withCredentials: true,
 });
+
+// Add request interceptor to include orgId from cookie
+api.interceptors.request.use(
+  (config) => {
+    const orgId = Cookies.get("selectedOrgId");
+    if (orgId) {
+      config.headers["X-Organization-Id"] = orgId;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 function assertApiUrl() {
   if (!API_URL) {

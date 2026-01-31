@@ -1,13 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import {
-  setSelectedJobListing,
-  clearSelection,
-} from "@/stores/slices/job-listings.slice";
 import { jobListingsApi } from "@/lib/job-listings-api";
-import { JobListing } from "@/types";
 import { CreateJobListingFormData } from "@/schemas";
 import { AxiosError } from "axios";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { extractErrorMessage } from "@/lib/utils";
 
 interface UseJobListingsParams {
   search?: string;
@@ -24,6 +22,9 @@ export function useJobListings(params?: UseJobListingsParams) {
   const selectedJobListing = useAppSelector(
     (state) => state.jobListings.selectedJobListing
   );
+
+  const successT = useTranslations("apiSuccesses");
+  const errorT = useTranslations("apiErrors");
 
   // Fetch all job listings with filters using useQuery
   const {
@@ -63,9 +64,10 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast(successT("createJobListingSuccess"));
     },
     onError: (error: AxiosError) => {
-      console.error(error);
+      toast(extractErrorMessage(error, errorT));
     },
   });
 

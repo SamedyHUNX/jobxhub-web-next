@@ -212,7 +212,8 @@
     "forgotPasswordSuccess": "A reset email has been sent to your email",
     "resetPasswordSuccess": "Your password has been reset successfully",
     "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team",
-    "profileUpdated": "Profile updated successfully"
+    "profileUpdated": "Profile updated successfully",
+    "createJobListingSuccess": "Created job listing successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

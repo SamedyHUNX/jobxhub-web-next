@@ -1,23 +1,42 @@
 "use client";
 
-import { OrgListWithTranslation } from "@/components/orgs/OrgListWithTranslation";
-import { useOrgs } from "@/hooks/use-orgs";
-import { useLocale } from "next-intl";
-import { useEffect } from "react";
+import { OrgListTranslations } from "@/components/orgs/OrgList";
+import OrgsListContainer from "@/components/orgs/OrgListContainer";
+import { useTranslations } from "next-intl";
 
 export default function OrganizationSelectPage() {
-  const { clearSelectedOrganization } = useOrgs();
-  const locale = useLocale();
+  const t = useTranslations("orgList");
 
-  // Clear any previously selected org when landing here
-  useEffect(() => {
-    clearSelectedOrganization();
-  }, [clearSelectedOrganization]);
+  const translations: OrgListTranslations = {
+    title: t("chooseAccount.title"),
+    subTitle: t("chooseAccount.subTitle"),
+    loadingText: t("loading"),
+    createOrganization: t("createOrganization"),
+    securedBy: t("securedBy"),
+    contactSupport: t("contactSupport"),
+    nevermind: t("nevermind"),
+    organizationBanned: {
+      title: t("errors.banned.title"),
+      message: t("errors.banned.message"),
+    },
+    verificationRequired: {
+      title: t("errors.unverified.title"),
+      message: t("errors.unverified.message"),
+    },
+    badges: {
+      banned: t("badges.banned"),
+      unverified: t("badges.unverified"),
+      verified: t("badges.verified"),
+    },
+    memberCount: {
+      singular: t("memberCount.singular"),
+      plural: t("memberCount.plural"),
+    },
+    jobCount: {
+      singular: t("jobCount.singular"),
+      plural: t("jobCount.plural"),
+    },
+  };
 
-  return (
-    <OrgListWithTranslation
-      hidePersonal
-      afterCreateOrganizationUrl={`/${locale}/employer/orgs/select`}
-    />
-  );
+  return <OrgsListContainer hidePersonal translations={translations} />;
 }

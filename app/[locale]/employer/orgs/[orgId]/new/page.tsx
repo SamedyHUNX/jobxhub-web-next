@@ -65,8 +65,12 @@ export default function CreateJobPage() {
     },
   };
 
-  const handleSubmit = (data: CreateJobListingFormData) => {
-    createJobListing(data);
+  const handleSubmit = async (data: CreateJobListingFormData) => {
+    try {
+      await createJobListing(data);
+    } catch (error) {
+      console.error("Error creating job", error);
+    }
   };
 
   return (
