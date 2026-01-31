@@ -1,3 +1,5 @@
+import { createElement } from "react";
+
 interface FormFieldProps {
   form: any;
   name: string;
@@ -16,7 +18,8 @@ export function FormField({
   onChange,
   type = "text",
   placeholder,
-}: FormFieldProps) {
+  component, // Add this prop
+}: FormFieldProps & { component?: React.ComponentType<any> }) {
   return (
     <form.Field
       name={name}
@@ -32,24 +35,30 @@ export function FormField({
           >
             {label}
           </label>
-          <input
-            id={name}
-            type={type}
-            value={field.state.value}
-            onChange={(e) => {
-              field.handleChange(e.target.value);
-              if (onChange) {
-                onChange(e.target.value);
-              }
-            }}
-            onBlur={field.handleBlur}
-            placeholder={placeholder}
-            className={`w-full px-3 py-2 rounded-md bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:border-blue-500 focus:ring-blue-500 ${
-              field.state.meta.errors.length > 0
-                ? "border-red-500 dark:border-red-500 focus:border-red-500 focus:ring-red-500"
-                : ""
-            }`}
-          />
+          {component ? (
+            createElement(component, {
+              ...field,
+              markdown: field.state.value,
+              onChange: (value: string) => {
+                field.handleChange(value);
+                if (onChange) onChange(value);
+              },
+              className: "min-h-[200px]",
+            })
+          ) : (
+            <input
+              id={name}
+              type={type}
+              value={field.state.value}
+              onChange={(e) => {
+                field.handleChange(e.target.value);
+                if (onChange) onChange(e.target.value);
+              }}
+              onBlur={field.handleBlur}
+              placeholder={placeholder}
+              className="w-full px-3 py-2 rounded-md..."
+            />
+          )}
         </div>
       )}
     </form.Field>

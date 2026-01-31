@@ -80,7 +80,7 @@ export default function SignUpPage() {
                   const result = signUpSchema.shape.image.safeParse(value);
                   return result.success
                     ? undefined
-                    : result.error.errors[0].message;
+                    : result.error.issues[0].message;
                 },
               }}
             >
@@ -108,7 +108,7 @@ export default function SignUpPage() {
                 const result = signUpSchema.shape.firstName.safeParse(value);
                 return result.success
                   ? undefined
-                  : result.error.errors[0].message;
+                  : result.error.issues[0].message;
               }}
             />
             <FormField
@@ -120,7 +120,7 @@ export default function SignUpPage() {
                 const result = signUpSchema.shape.lastName.safeParse(value);
                 return result.success
                   ? undefined
-                  : result.error.errors[0].message;
+                  : result.error.issues[0].message;
               }}
             />
           </div>
@@ -136,7 +136,7 @@ export default function SignUpPage() {
                 const result = signUpSchema.shape.username.safeParse(value);
                 return result.success
                   ? undefined
-                  : result.error.errors[0].message;
+                  : result.error.issues[0].message;
               }}
             />
 
@@ -150,7 +150,7 @@ export default function SignUpPage() {
                 const result = signUpSchema.shape.email.safeParse(value);
                 return result.success
                   ? undefined
-                  : result.error.errors[0].message;
+                  : result.error.issues[0].message;
               }}
             />
 
@@ -164,7 +164,7 @@ export default function SignUpPage() {
                 const result = signUpSchema.shape.password.safeParse(value);
                 return result.success
                   ? undefined
-                  : result.error.errors[0].message;
+                  : result.error.issues[0].message;
               }}
             />
 
@@ -202,7 +202,7 @@ export default function SignUpPage() {
                         signUpSchema.shape.phoneNumber.safeParse(value);
                       return result.success
                         ? undefined
-                        : result.error.errors[0].message;
+                        : result.error.issues[0].message;
                     }}
                   />
                 </div>
@@ -219,7 +219,7 @@ export default function SignUpPage() {
                 const result = signUpSchema.shape.dateOfBirth.safeParse(value);
                 return result.success
                   ? undefined
-                  : result.error.errors[0].message;
+                  : result.error.issues[0].message;
               }}
             />
           </div>

@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
                 forgotPasswordFormSchema.shape.email.safeParse(value);
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
         </div>

@@ -10,6 +10,7 @@ import { Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -26,6 +27,8 @@ export function useOrgs(params?: UseOrgsParams) {
   );
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
+
+  const router = useRouter();
 
   // Initialize from localStorage on mount
   useEffect(() => {
@@ -65,6 +68,7 @@ export function useOrgs(params?: UseOrgsParams) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
       toast.success(successT("createOrgSuccess"));
+      router.push(`/employer/select`);
     },
     onError: (error: AxiosError) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -99,9 +103,6 @@ export function useOrgs(params?: UseOrgsParams) {
     // Mutations
     createOrganization: createOrganizationMutation.mutate,
     isCreating: createOrganizationMutation.isPending,
-    createSuccess: createOrganizationMutation.isSuccess,
-    createError: createOrganizationMutation.error as AxiosError,
-
     selectOrganization,
     clearSelectedOrganization,
   };

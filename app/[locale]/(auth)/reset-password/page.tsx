@@ -21,10 +21,7 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const {
-    resetPassword,
-    isResettingPassword,
-  } = useAuth();
+  const { resetPassword, isResettingPassword } = useAuth();
 
   // Define schema
   const resetPasswordFormSchema = useMemo(
@@ -98,7 +95,7 @@ export default function ResetPasswordPage() {
                 resetPasswordFormSchema.shape.newPassword.safeParse(value);
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
 
@@ -115,7 +112,7 @@ export default function ResetPasswordPage() {
                 );
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
         </div>

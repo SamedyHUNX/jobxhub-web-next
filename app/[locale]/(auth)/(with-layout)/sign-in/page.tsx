@@ -70,7 +70,7 @@ export default function SignInPage() {
               const result = signInSchema.shape.email.safeParse(value);
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
 
@@ -85,7 +85,7 @@ export default function SignInPage() {
               const result = signInSchema.shape.password.safeParse(value);
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
 

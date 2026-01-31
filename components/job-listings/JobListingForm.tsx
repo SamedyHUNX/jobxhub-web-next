@@ -20,18 +20,12 @@ import { useTranslations } from "next-intl";
 import { ReactNode, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import TextField from "../form/TextField";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import SelectField from "../form/SelectField";
-import TextAreaField from "../form/TextAreaField";
 import { Button } from "../ui/button";
 import { LoadingSwap } from "../LoadingSwap";
 import { states } from "@/data/australia-state";
+import { FormField } from "../FormField";
+import { MarkdownEditor } from "../markdown/MarkdownEditor";
 
 export interface JobListingFormProps {
   // Core functionality
@@ -118,6 +112,7 @@ export default function JobListingForm({
       ...defaultValues,
     },
     onSubmit: async ({ value }) => {
+      console.log("Form onSubmit called with:", value); // ADD THIS
       try {
         onSubmit(value);
       } catch (error) {
@@ -126,7 +121,9 @@ export default function JobListingForm({
     },
     validators: {
       onSubmit: ({ value }) => {
+        console.log("Validating:", value); // ADD THIS
         const result = jobListingSchema.safeParse(value);
+        console.log("Validation result:", result); // ADD THIS
         return result.success ? undefined : result.error.format();
       },
     },
@@ -193,55 +190,54 @@ export default function JobListingForm({
               label={getLabel("title", "Job Title")}
               description={getDescription("title")}
               disabled={isFieldDisabled("title")}
+              validator={(value) => {
+                const result = jobListingSchema.shape.title.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.issues[0].message;
+              }}
             />
           )}
 
           {shouldShowField("wage") && (
             <div className="space-y-2">
-              <label className="text-lg font-medium text-gray-700 tracking-tighter">
-                {getLabel("wage", "Wage")}
-              </label>
               <div className="flex gap-2">
-                <form.Field name="wage">
-                  {(field: any) => (
-                    <input
-                      type="number"
-                      value={field.state.value ?? ""}
-                      onChange={(e) => {
-                        const value = isNaN(e.target.valueAsNumber)
-                          ? null
-                          : e.target.valueAsNumber;
-                        field.handleChange(value);
-                      }}
-                      disabled={isFieldDisabled("wage")}
-                      className="flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  )}
-                </form.Field>
+                <TextField
+                  form={form}
+                  name="wage"
+                  label={getLabel("wage", "Wage")}
+                  description={getDescription("wage")}
+                  type="number"
+                  validator={(value) => {
+                    // Convert string to number before validation
+                    if (value === "" || value === null || value === undefined) {
+                      return undefined;
+                    }
+                    const numValue = Number(value);
+                    // Guard against NaN
+                    if (Number.isNaN(numValue)) {
+                      return "Wage must be a valid number";
+                    }
+                    const result =
+                      jobListingSchema.shape.wage.safeParse(numValue);
+                    return result.success
+                      ? undefined
+                      : result.error.issues[0].message;
+                  }}
+                />
 
                 {shouldShowField("wageInterval") && (
-                  <form.Field name="wageInterval">
-                    {(field: any) => (
-                      <div className="w-37.5">
-                        <Select
-                          value={field.state.value ?? ""}
-                          onValueChange={(val) => field.handleChange(val)}
-                          disabled={isFieldDisabled("wageInterval")}
-                        >
-                          <SelectTrigger className="rounded-l-none">
-                            / <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {wageIntervals.map((interval) => (
-                              <SelectItem key={interval} value={interval}>
-                                {getWageIntervalLabel(interval)}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
-                  </form.Field>
+                  <SelectField
+                    form={form}
+                    name="wageInterval"
+                    label={getLabel("wageInterval", "Wage")}
+                    description={getDescription("wageInterval")}
+                    options={wageIntervals.map((interval) => ({
+                      value: interval,
+                      label: getWageIntervalLabel(interval),
+                    }))}
+                    disabled={isFieldDisabled("wageInterval")}
+                  />
                 )}
               </div>
               <p className="text-sm text-gray-500">
@@ -262,7 +258,13 @@ export default function JobListingForm({
               name="city"
               label={getLabel("city", "City")}
               description={getDescription("city")}
-              disabled={isFieldDisabled("city")}
+              type="text"
+              validator={(value) => {
+                const result = jobListingSchema.shape.city.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.issues[0].message;
+              }}
             />
           )}
 
@@ -313,6 +315,12 @@ export default function JobListingForm({
                 label: getJobTypeLabel(type),
               }))}
               disabled={isFieldDisabled("type")}
+              validator={(value) => {
+                const result = jobListingSchema.shape.type.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.issues[0].message;
+              }}
             />
           )}
 
@@ -327,21 +335,32 @@ export default function JobListingForm({
                 label: getExperienceLevelLabel(level),
               }))}
               disabled={isFieldDisabled("experienceLevel")}
+              validator={(value) => {
+                const result =
+                  jobListingSchema.shape.experienceLevel.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.issues[0].message;
+              }}
             />
           )}
         </div>
 
         {shouldShowField("description") && (
-          <TextAreaField
+          <FormField
             form={form}
             name="description"
             label={getLabel("description", "Description")}
-            description={getDescription("description")}
-            disabled={isFieldDisabled("description")}
+            component={MarkdownEditor}
+            validator={(value) => {
+              const result =
+                jobListingSchema.shape.description.safeParse(value);
+              return result.success
+                ? undefined
+                : result.error.issues[0].message;
+            }}
           />
         )}
-
-        {/* Custom children for additional fields */}
         {children?.(form)}
       </div>
 
