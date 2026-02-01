@@ -4,6 +4,29 @@ import { ArrowRight, Plus } from "lucide-react";
 import { CustomDialog } from "../CustomDialog";
 import BrandLogo from "../BrandLogo";
 
+interface PersonalAccountData {
+  id: string;
+  username: string;
+  imageUrl: string;
+}
+
+export interface OrgListProps {
+  // Required data - passed from parent
+  organizations: OrgListItemData[];
+  currentUser: PersonalAccountData | undefined;
+  isLoading?: boolean;
+
+  // Callbacks
+  onSelectOrganization: (org: OrgListItemData) => void;
+  onSelectPersonal?: () => void;
+  onCreateOrganization: () => void;
+
+  // UI options
+  hidePersonal?: boolean;
+  fallback?: React.ReactNode;
+  translations?: typeof defaultTranslations;
+}
+
 export default function OrgsList({
   organizations,
   currentUser,
@@ -178,29 +201,6 @@ export interface OrgListItemData {
   isBanned: boolean;
   membersCount: number;
   jobsCount: number;
-}
-
-interface PersonalAccountData {
-  id: string;
-  username: string;
-  imageUrl: string;
-}
-
-export interface OrgListProps {
-  // Required data - passed from parent
-  organizations: OrgListItemData[];
-  currentUser: PersonalAccountData | null;
-  isLoading?: boolean;
-
-  // Callbacks
-  onSelectOrganization: (org: OrgListItemData) => void;
-  onSelectPersonal?: () => void;
-  onCreateOrganization: () => void;
-
-  // UI options
-  hidePersonal?: boolean;
-  fallback?: React.ReactNode;
-  translations?: typeof defaultTranslations;
 }
 
 // ===== Sub-components =====

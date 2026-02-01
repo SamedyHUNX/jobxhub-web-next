@@ -2,7 +2,6 @@ import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";
 import { useRouter } from "next/navigation";
 import OrgsList, { OrgListItemData, OrgListTranslations } from "./OrgList";
-import { useOrgsByUserId } from "@/hooks/use-orgs-by-id";
 import type { Organization, User } from "@/types";
 import { ReactNode } from "react";
 
@@ -31,16 +30,16 @@ export default function OrgsListContainer({
   translations,
 }: OrgListContainerProps) {
   const { user: currentUser } = useProfile();
-  const { selectOrganization, navigateToCreateOrg } = useOrgs();
+  const { selectOrganization, navigateToCreateOrg, allOrgs, isLoading } =
+    useOrgs({
+      userId: currentUser?.id,
+    });
   const router = useRouter();
 
-  // Fetch organizations for current user
-  const { data: organizations = [], isLoading } = useOrgsByUserId(
-    currentUser?.id || ""
-  );
+  console.log("hi", allOrgs);
 
   // Map to display format
-  const mappedOrganizations: OrgListItemData[] = organizations.map(
+  const mappedOrganizations: OrgListItemData[] = allOrgs.map(
     (org: Organization) => ({
       id: org.id,
       name: org.orgName,

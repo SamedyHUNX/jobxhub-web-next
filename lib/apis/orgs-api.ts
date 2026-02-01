@@ -36,15 +36,23 @@ export const orgsApi = {
   // Get all orgs with optional filtering
   findAll: async (
     search?: string,
-    isVerified?: boolean
+    isVerified?: boolean,
+    userId?: string
   ): Promise<FindAllOrgsResponse> => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
     if (isVerified !== undefined)
       params.append("isVerified", String(isVerified));
+    if (userId) params.append("userId", userId);
 
     const { data } = await api.get(`/organizations?${params.toString()}`);
-    return data.data;
+    return data;
+  },
+
+  // Separate endpoint for user's organizations
+  findByUserId: async (userId: string) => {
+    const response = await api.get(`/organizations/user/${userId}`);
+    return response.data;
   },
 
   // Create an Organization

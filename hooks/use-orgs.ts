@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 
 interface UseOrgsParams {
+  userId?: string;
   search?: string;
   isVerified?: boolean;
 }
@@ -45,8 +46,10 @@ export function useOrgs(params?: UseOrgsParams) {
     error,
   } = useQuery({
     queryKey: ["organizations", params],
-    queryFn: () => orgsApi.findAll(params?.search, params?.isVerified),
-    staleTime: 5 * 60 * 1000, // 5 minutes stale
+    queryFn: () =>
+      orgsApi.findAll(params?.search, params?.isVerified, params?.userId),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!params?.userId,
   });
 
   const allOrgs = orgsData?.data || [];
