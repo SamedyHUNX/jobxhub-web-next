@@ -14,7 +14,7 @@ import { FormField } from "@/components/FormField";
 import ProfileItem from "@/components/ProfileItem";
 
 export default function UserSettingsPage() {
-  const { profile: currentUser, updateProfile, isUpdating } = useProfile();
+  const { user: currentUser, updateProfile, isUpdating } = useProfile();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const t = useTranslations();

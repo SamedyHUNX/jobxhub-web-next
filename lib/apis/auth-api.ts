@@ -1,5 +1,15 @@
 import axios from "axios";
-import { AuthResponse, SignInFormData, SignUpFormData, User } from "@/types";
+import {
+  ForgotPasswordResponse,
+  GetProfileResponse,
+  ResetPasswordResponse,
+  SignInFormData,
+  SignInResponse,
+  SignUpFormData,
+  SignUpResponse,
+  User,
+  VerifyEmailResponse,
+} from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -17,15 +27,13 @@ function assertApiUrl() {
 
 export const authApi = {
   // Sign In
-  signIn: async (credentials: SignInFormData): Promise<AuthResponse> => {
+  signIn: async (credentials: SignInFormData): Promise<SignInResponse> => {
     assertApiUrl();
-    const { data } = await api.post<AuthResponse>(
+    const { data } = await api.post<SignInResponse>(
       "/auth/sign-in",
       credentials,
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
     return data;
@@ -35,49 +43,33 @@ export const authApi = {
   signUp: async (
     formData: SignUpFormData,
     locale: string
-  ): Promise<AuthResponse> => {
+  ): Promise<SignUpResponse> => {
     assertApiUrl();
 
-    // Create FormData instance
     const form = new FormData();
-
-    // Append all fields to FormData
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
-        if (value instanceof File) {
-          form.append(key, value);
-        } else {
-          form.append(key, String(value));
-        }
+        form.append(key, value instanceof File ? value : String(value));
       }
     });
 
-    // for (const [key, value] of form.entries()) {
-    //   console.log(key, value);
-    // }
-
-    const { data } = await api.post<AuthResponse>("/auth/sign-up", form, {
-      headers: {
-        "Accept-Language": locale,
-      },
+    const { data } = await api.post<SignUpResponse>("/auth/sign-up", form, {
+      headers: { "Accept-Language": locale },
     });
     return data;
   },
 
   // Get user info
-  getProfile: async () => {
-    const { data } = await api.get<User>("/auth/me");
-    return data;
+  getProfile: async (): Promise<User | null> => {
+    const { data } = await api.get<GetProfileResponse>("/auth/me");
+    return data.data?.[0] ?? null;
   },
 
   // Verify Email
-  verifyEmail: async (token: string): Promise<Partial<AuthResponse>> => {
-    const { data } = await api.post<Partial<AuthResponse>>(
-      "/auth/verify-email",
-      {
-        token,
-      }
-    );
+  verifyEmail: async (token: string): Promise<VerifyEmailResponse> => {
+    const { data } = await api.post<VerifyEmailResponse>("/auth/verify-email", {
+      token,
+    });
     return data;
   },
 
@@ -85,17 +77,11 @@ export const authApi = {
   forgotPassword: async (
     email: string,
     locale: string
-  ): Promise<{ user: User }> => {
-    const {
-      data: { data },
-    } = await api.post(
+  ): Promise<ForgotPasswordResponse> => {
+    const { data } = await api.post<ForgotPasswordResponse>(
       "/auth/forgot-password",
       { email },
-      {
-        headers: {
-          "Accept-Language": locale,
-        },
-      }
+      { headers: { "Accept-Language": locale } }
     );
     return data;
   },
@@ -105,17 +91,16 @@ export const authApi = {
     token: string,
     newPassword: string,
     confirmNewPassword: string
-  ): Promise<AuthResponse> => {
-    const { data } = await api.post<AuthResponse>("/auth/reset-password", {
-      token,
-      newPassword,
-      confirmNewPassword,
-    });
+  ): Promise<ResetPasswordResponse> => {
+    const { data } = await api.post<ResetPasswordResponse>(
+      "/auth/reset-password",
+      { token, newPassword, confirmNewPassword }
+    );
     return data;
   },
 
   // Sign Out
-  signOut: async () => {
+  signOut: async (): Promise<void> => {
     await api.post("/auth/sign-out");
   },
 };

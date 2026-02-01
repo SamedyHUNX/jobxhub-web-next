@@ -2,7 +2,16 @@ import { authApi } from "@/lib/apis/auth-api";
 import { extractErrorMessage } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { clearAuth } from "@/stores/slices/auth.slice";
-import { ResetPasswordFormData, SignInFormData, SignUpFormData } from "@/types";
+import {
+  ForgotPasswordResponse,
+  ResetPasswordResponse,
+  ResetPasswordVariables,
+  SignInFormData,
+  SignInResponse,
+  SignUpFormData,
+  SignUpResponse,
+  VerifyEmailResponse,
+} from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
@@ -19,53 +28,62 @@ export function useAuth() {
   const locale = useLocale();
 
   // Sign in mutation
-  const signInMutation = useMutation({
-    mutationFn: (credentials: SignInFormData) => authApi.signIn(credentials),
+  // (data, error, variable)
+  const signInMutation = useMutation<
+    SignInResponse,
+    AxiosError,
+    SignInFormData
+  >({
+    mutationFn: (credentials) => authApi.signIn(credentials),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-      queryClient.refetchQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"], exact: true });
       toast.success(successT("signInSuccess"));
       router.push(`/${locale}`);
     },
     onError: (error) => {
-      toast.error(extractErrorMessage(error as AxiosError, errorT));
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 
   // Sign up mutation
-  const signUpMutation = useMutation({
-    mutationFn: ({
-      formData,
-      locale,
-    }: {
-      formData: SignUpFormData;
-      locale: string;
-    }) => authApi.signUp(formData, locale),
+  const signUpMutation = useMutation<
+    SignUpResponse,
+    AxiosError,
+    { formData: SignUpFormData; locale: string }
+  >({
+    mutationFn: ({ formData, locale }) => authApi.signUp(formData, locale),
     onSuccess: () => {
       toast.success(successT("signUpSuccess"));
       router.push(`/${locale}/sign-in`);
     },
     onError: (error) => {
-      toast.error(extractErrorMessage(error as AxiosError, errorT));
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 
   // Verify email mutation
-  const verifyEmailMutation = useMutation({
-    mutationFn: (token: string) => authApi.verifyEmail(token),
+  const verifyEmailMutation = useMutation<
+    VerifyEmailResponse,
+    AxiosError,
+    string
+  >({
+    mutationFn: (token) => authApi.verifyEmail(token),
     onSuccess: () => {
       toast.success(successT("verifyEmailSuccess"));
       router.push(`/${locale}/sign-in`);
     },
     onError: (error) => {
-      toast.error(extractErrorMessage(error as AxiosError, errorT));
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 
   // Forgot password mutation
-  const forgotPasswordMutation = useMutation({
-    mutationFn: ({ email, locale }: { email: string; locale: string }) =>
-      authApi.forgotPassword(email, locale),
+  const forgotPasswordMutation = useMutation<
+    ForgotPasswordResponse,
+    AxiosError,
+    { email: string; locale: string }
+  >({
+    mutationFn: ({ email, locale }) => authApi.forgotPassword(email, locale),
     onSuccess: (_, variables) => {
       toast.success(successT("forgotPasswordSuccess"));
       router.push(
@@ -75,24 +93,24 @@ export function useAuth() {
       );
     },
     onError: (error) => {
-      toast.error(extractErrorMessage(error as AxiosError, errorT));
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 
   // Reset password mutation
-  const resetPasswordMutation = useMutation({
-    mutationFn: ({
-      token,
-      newPassword,
-      confirmNewPassword,
-    }: { token: string | null } & ResetPasswordFormData) =>
-      authApi.resetPassword(token!, newPassword, confirmNewPassword),
+  const resetPasswordMutation = useMutation<
+    ResetPasswordResponse, // mutation result type
+    AxiosError, // error type
+    ResetPasswordVariables // variables type
+  >({
+    mutationFn: ({ token, newPassword, confirmNewPassword }) =>
+      authApi.resetPassword(token, newPassword, confirmNewPassword),
     onSuccess: () => {
       toast.success(successT("resetPasswordSuccess"));
       router.push(`/${locale}/sign-in`);
     },
     onError: (error) => {
-      toast.error(extractErrorMessage(error as AxiosError, errorT));
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 

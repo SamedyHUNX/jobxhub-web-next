@@ -13,10 +13,12 @@ import { useLocale, useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 export default function JobSeekerLayout({ children }: { children: ReactNode }) {
-  const { profile: currentUser } = useProfile();
+  const { user: currentUser } = useProfile();
   const isSuperAdmin = currentUser?.userRole === "SUPER-ADMIN";
   const sidebarT = useTranslations("sidebar");
   const locale = useLocale();
+
+  console.log(currentUser);
 
   return (
     <AppSidebar
@@ -51,7 +53,13 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
           }
         />
       }
-      footerButton={<SidebarUserButton />}
+      footerButton={
+        currentUser ? (
+          <SidebarUserButton currentUser={currentUser} />
+        ) : (
+          <div className="px-4 py-2">Loading...</div>
+        )
+      }
     >
       {children}
     </AppSidebar>

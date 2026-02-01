@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/lib/utils";
 import { AxiosError } from "axios";
+import { UpdateProfileResponse } from "@/types";
 
 export function useProfile() {
   const dispatch = useAppDispatch();
@@ -15,7 +16,13 @@ export function useProfile() {
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
 
-  const { data, isLoading, error, refetch, isError } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    error,
+    refetch,
+    isError,
+  } = useQuery({
     queryKey: ["profile"],
     queryFn: () => authApi.getProfile(),
     staleTime: 5 * 60 * 1000,
@@ -25,22 +32,27 @@ export function useProfile() {
 
   // Sync profile data to Redux when it's fetched
   useEffect(() => {
-    if (data) {
-      dispatch(setAuth({ user: data }));
+    if (user) {
+      dispatch(setAuth({ user }));
     }
-  }, [data, dispatch]);
+  }, [user, dispatch]);
 
   // Update profile mutation
-  const updateProfileMutation = useMutation({
-    mutationFn: (updatedData: FormData) => usersApi.updateMe(updatedData),
+  const updateProfileMutation = useMutation<
+    UpdateProfileResponse,
+    AxiosError,
+    FormData
+  >({
+    mutationFn: (updatedData) => usersApi.updateMe(updatedData),
     onSuccess: (response) => {
-      const updatedUser = response.data.users;
-      // Update the query cache
-      queryClient.setQueryData(["profile"], updatedUser);
-
-      // Update Redux
-      dispatch(setAuth({ user: updatedUser }));
-      toast.success(successT("profileUpdated"));
+      if (response.data && response.data.length > 0) {
+        const updatedUser = response.data[0];
+        queryClient.setQueryData(["profile"], response.data);
+        dispatch(setAuth({ user: updatedUser }));
+        toast.success(successT("profileUpdated"));
+      } else {
+        toast.error(errorT("profileUpdateFailed"));
+      }
     },
     onError(error: AxiosError) {
       toast.error(extractErrorMessage(error, errorT));
@@ -49,7 +61,7 @@ export function useProfile() {
 
   return {
     // Get data
-    profile: data,
+    user,
     isLoading,
     isError,
     error,

@@ -24,18 +24,19 @@ export interface AuthRequest {
   lastName: string;
 }
 
-export interface AuthResponse {
-  status: string;
-  code: number;
+export interface ApiResponse<T = any> {
+  statusCode: number;
   message: string;
-  data: UsersData;
+  data: T | null;
 }
 
-export interface UsersData {
-  users: User[];
-}
-
-export type SignInResponse = UsersData;
+export type SignInResponse = ApiResponse<{}>;
+export type SignUpResponse = ApiResponse<{}>;
+export type GetProfileResponse = ApiResponse<User[]>;
+export type VerifyEmailResponse = ApiResponse<{}>;
+export type ForgotPasswordResponse = ApiResponse<{}>;
+export type ResetPasswordResponse = ApiResponse<{}>;
+export type UpdateProfileResponse = ApiResponse<User[]>;
 
 export interface SignInFormData {
   email: string;
@@ -57,6 +58,10 @@ export type ResetPasswordFormData = {
   newPassword: string;
   confirmNewPassword: string;
 };
+
+export interface ResetPasswordVariables extends ResetPasswordFormData {
+  token: string;
+}
 
 // Organizations
 export interface Organization {
