@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
+import AuthLeftHeader from "@/components/AuthLeftHeader";
 
 export default function SignInPage() {
   // Translations
@@ -50,6 +51,9 @@ export default function SignInPage() {
 
   return (
     <div className="mx-auto space-y-8 px-4">
+      {/* Header Section */}
+      <AuthLeftHeader title={authT("signInToAccount")} />
+
       <form
         onSubmit={(e) => {
           e.preventDefault();

@@ -66,4 +66,10 @@ export const orgsApi = {
     const { data } = await api.get(`/organizations/org/${orgId}`);
     return data;
   },
+
+  // Get selected organization
+  selectedOrg: async () => {
+    const { data } = await api.get(`/organizations/org/selected`);
+    return data;
+  },
 };

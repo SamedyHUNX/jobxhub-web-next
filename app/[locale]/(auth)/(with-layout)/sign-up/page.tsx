@@ -1,5 +1,6 @@
 "use client";
 
+import AuthLeftHeader from "@/components/AuthLeftHeader";
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import ProfileImage from "@/components/ProfileImage";
@@ -62,6 +63,8 @@ export default function SignUpPage() {
 
   return (
     <div className="space-y-8 pb-8 px-4">
+      {/* Header Section */}
+      <AuthLeftHeader title={authT("signUpToProceed")} />
       <form
         onSubmit={(e) => {
           e.preventDefault();

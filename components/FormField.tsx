@@ -18,7 +18,7 @@ export function FormField({
   onChange,
   type = "text",
   placeholder,
-  component, // Add this prop
+  component,
 }: FormFieldProps & { component?: React.ComponentType<any> }) {
   return (
     <form.Field
@@ -56,8 +56,15 @@ export function FormField({
               }}
               onBlur={field.handleBlur}
               placeholder={placeholder}
-              className="w-full px-3 py-2 rounded-md..."
+              className={`w-full px-3 py-2 border rounded-xl h-14 ${
+                field.state.meta.errors.length > 0 ? "border-red-500" : ""
+              }`}
             />
+          )}
+          {field.state.meta.errors.length > 0 && (
+            <p className="text-sm text-red-600 dark:text-red-400">
+              {field.state.meta.errors[0]}
+            </p>
           )}
         </div>
       )}

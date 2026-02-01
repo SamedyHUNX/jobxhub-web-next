@@ -1,5 +1,7 @@
 "use client";
 
+import AuthLeftHeader from "@/components/AuthLeftHeader";
+import BrandLogo from "@/components/BrandLogo";
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
@@ -45,16 +47,10 @@ export default function ResetPasswordPage() {
         return result.success ? undefined : result.error.format();
       },
       onChange: ({ value }) => {
-        // Real-time validation as user types
+        // Only validate if both fields have values
         if (value.newPassword && value.confirmNewPassword) {
-          if (value.newPassword !== value.confirmNewPassword) {
-            return {
-              form: validationT("passwordsMustMatch"),
-              fields: {
-                confirmNewPassword: validationT("passwordsMustMatch"),
-              },
-            };
-          }
+          const result = resetPasswordFormSchema.safeParse(value);
+          return result.success ? undefined : result.error.format();
         }
         return undefined;
       },
@@ -64,7 +60,7 @@ export default function ResetPasswordPage() {
   // Redirect if no token provided
   useEffect(() => {
     if (!token) {
-      router.push(`/${locale}/reset-password`);
+      router.push(`/reset-password`);
     }
   }, [token, router, locale]);
 
@@ -73,7 +69,11 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="mx-auto space-y-8 px-4">
+    <div className="mx-auto space-y-8 px-4 mt-auto max-w-4xl">
+      <BrandLogo />
+      <div className="pt-4">
+        <AuthLeftHeader title={authT("yourNewPassword")} />
+      </div>
       <form
         onSubmit={async (e) => {
           e.preventDefault();

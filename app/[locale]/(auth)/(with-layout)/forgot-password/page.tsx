@@ -9,6 +9,7 @@ import { forgotPasswordSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
+import AuthLeftHeader from "@/components/AuthLeftHeader";
 
 export default function ForgotPasswordPage() {
   // Translations
@@ -22,10 +23,7 @@ export default function ForgotPasswordPage() {
   );
 
   const locale = useLocale();
-  const {
-    forgotPassword,
-    isRequestingForgotPassword,
-  } = useAuth();
+  const { forgotPassword, isRequestingForgotPassword } = useAuth();
 
   // Initialize Transtack Form
   const form = useForm({
@@ -45,6 +43,8 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="mx-auto space-y-8 px-4">
+      {/* Header Section */}
+      <AuthLeftHeader title={authT("enterYourEmail")} />
       <form
         onSubmit={(e) => {
           e.preventDefault();

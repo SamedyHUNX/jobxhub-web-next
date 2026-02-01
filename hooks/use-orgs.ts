@@ -68,24 +68,6 @@ export function useOrgs(params?: UseOrgsParams) {
     }
   }, [selectedOrganization, organizations, dispatch]);
 
-  function useOrgsByUserId(userId: string) {
-    return useQuery({
-      queryKey: ["organizations", "user", userId],
-      queryFn: () => orgsApi.findByUser(userId),
-      enabled: !!userId,
-      select: (data) => data.data.organizations,
-    });
-  }
-
-  function useOrgByOrgId(id: string | undefined) {
-    return useQuery({
-      queryKey: ["organization", id],
-      queryFn: () => orgsApi.findOne(id!),
-      enabled: !!id,
-      select: (data) => data.data.organizations,
-    });
-  }
-
   // Create organization mutation
   const createOrganizationMutation = useMutation({
     mutationFn: async (formData: CreateOrgFormData) => {
@@ -144,6 +126,11 @@ export function useOrgs(params?: UseOrgsParams) {
     [createOrganizationMutation]
   );
 
+  // Get selected org data
+  const selectedOrgData = selectedOrganization
+    ? organizations.find((o: Organization) => o.id === selectedOrganization)
+    : null;
+
   // Navigate to create organization page
   const navigateToCreateOrg = useCallback(
     (options?: { hideSlug?: boolean; skipInvitationScreen?: boolean }) => {
@@ -176,6 +163,7 @@ export function useOrgs(params?: UseOrgsParams) {
     // Data
     organizations,
     selectedOrganization,
+    selectedOrgData,
     isLoading,
     error,
 

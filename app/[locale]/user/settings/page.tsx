@@ -14,11 +14,7 @@ import { FormField } from "@/components/FormField";
 import ProfileItem from "@/components/ProfileItem";
 
 export default function UserSettingsPage() {
-  const {
-    profile: currentUser,
-    updateProfile,
-    isUpdating,
-  } = useProfile();
+  const { profile: currentUser, updateProfile, isUpdating } = useProfile();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const t = useTranslations();
@@ -224,8 +220,9 @@ export default function UserSettingsPage() {
                     editable={true}
                     value={field.state.value || form.state.values.imageUrl}
                     onChange={(file) => field.handleChange(file)}
-                    fallbackInitials={`${currentUser.firstName?.[0] || ""}${currentUser.lastName?.[0] || ""
-                      }`}
+                    fallbackInitials={`${currentUser.firstName?.[0] || ""}${
+                      currentUser.lastName?.[0] || ""
+                    }`}
                     label={profileT("clickToUploadPhoto")}
                     error={field.state.meta.errors?.[0]}
                     size="lg"
@@ -246,7 +243,7 @@ export default function UserSettingsPage() {
                       updateProfileSchema.shape.firstName.safeParse(value);
                     return result.success
                       ? undefined
-                      : result.error.errors[0].message;
+                      : result.error.issues[0].message;
                   }}
                 />
 
@@ -261,7 +258,7 @@ export default function UserSettingsPage() {
                       updateProfileSchema.shape.lastName.safeParse(value);
                     return result.success
                       ? undefined
-                      : result.error.errors[0].message;
+                      : result.error.issues[0].message;
                   }}
                 />
               </div>
@@ -282,7 +279,7 @@ export default function UserSettingsPage() {
                       updateProfileSchema.shape.username.safeParse(value);
                     return result.success
                       ? undefined
-                      : result.error.errors[0].message;
+                      : result.error.issues[0].message;
                   }}
                 />
               </div>
@@ -299,7 +296,7 @@ export default function UserSettingsPage() {
                     updateProfileSchema.shape.phoneNumber.safeParse(value);
                   return result.success
                     ? undefined
-                    : result.error.errors[0].message;
+                    : result.error.issues[0].message;
                 }}
               />
 

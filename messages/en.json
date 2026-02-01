@@ -15,6 +15,10 @@
   "auth": {
     "email": "Email",
     "emailPlaceholder": "user@example.com",
+    "signInToAccount": "Sign In to Your Account",
+    "signUpToProceed": "Sign Up to Proceed",
+    "enterYourEmail": "Enter Your Email",
+    "yourNewPassword": "Enter Your New Password",
     "password": "Password",
     "passwordPlaceholder": "Enter your password",
     "forgotPassword": "Forgot Password?",
@@ -203,7 +207,9 @@
     "experienceLevelRequired": "Please provide experience level",
     "jobTypeRequired": "Please provide job type",
     "locationRequirementRequired": "Please provide the required location",
-    "nonRemoteRequired": "Non-remote"
+    "nonRemoteRequired": "Non-remote",
+    "passwordsMustMatch": "Passwords must match",
+    "passwordsDoNotMatch": "Passwords must match"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",
