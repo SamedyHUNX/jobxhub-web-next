@@ -4,9 +4,9 @@ import { CreateOrgFormData } from "@/schemas";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import {
   clearSelection,
-  setSelectedOrganization,
+  setSelectedOrgId,
 } from "@/stores/slices/organizations.slice";
-import type { Organization } from "@/types";
+import type { CreateOrgResponse, Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
@@ -40,45 +40,51 @@ export function useOrgs(params?: UseOrgsParams) {
 
   // Fetch organizations
   const {
-    data: organizationsData,
+    data: orgsData,
     isLoading,
     error,
-    refetch,
   } = useQuery({
     queryKey: ["organizations", params],
     queryFn: () => orgsApi.findAll(params?.search, params?.isVerified),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5 minutes stale
   });
 
-  const organizations = organizationsData?.data.organizations || [];
+  const allOrgs = orgsData?.data || [];
 
   // Initialize from cookie on mount
   useEffect(() => {
-    if (!selectedOrganization && organizations.length > 0) {
+    if (!selectedOrganization && allOrgs.length > 0) {
       const storedId = Cookies.get(SELECTED_ORG_KEY);
       if (storedId) {
-        const org = organizations.find((o: Organization) => o.id === storedId);
+        const org = allOrgs.find((o: Organization) => o.id === storedId);
         if (org) {
-          dispatch(setSelectedOrganization(org));
+          dispatch(setSelectedOrgId(org.id));
         } else {
           // Clean up invalid cookie
           Cookies.remove(SELECTED_ORG_KEY);
         }
       }
     }
-  }, [selectedOrganization, organizations, dispatch]);
+  }, [selectedOrganization, allOrgs, dispatch]);
 
   // Create organization mutation
-  const createOrganizationMutation = useMutation({
-    mutationFn: async (formData: CreateOrgFormData) => {
+  const createOrganizationMutation = useMutation<
+    CreateOrgResponse,
+    AxiosError,
+    CreateOrgFormData
+  >({
+    mutationFn: async (formData) => {
       return await orgsApi.create(formData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["organizations"] });
+      queryClient.invalidateQueries({
+        queryKey: ["organizations"],
+        exact: true,
+      });
       toast.success(successT("createOrgSuccess"));
       router.push(`/${locale}/employer/select`);
     },
-    onError: (error: AxiosError) => {
+    onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
     },
   });
@@ -86,11 +92,11 @@ export function useOrgs(params?: UseOrgsParams) {
   // Select organization with navigation
   const selectOrganization = useCallback(
     (orgId: string, options?: SelectOrgOptions) => {
-      const org = organizations.find((o: Organization) => o.id === orgId);
+      const org = allOrgs.find((o: Organization) => o.id === orgId);
       if (!org) return;
 
       // Update state and cookie
-      dispatch(setSelectedOrganization(org));
+      dispatch(setSelectedOrgId(org.id));
       Cookies.set(SELECTED_ORG_KEY, orgId, {
         secure: true,
         sameSite: "strict",
@@ -114,7 +120,7 @@ export function useOrgs(params?: UseOrgsParams) {
         router.push(url);
       }
     },
-    [dispatch, organizations, router, locale]
+    [dispatch, allOrgs, router, locale]
   );
 
   // Create new organization with navigation
@@ -125,11 +131,6 @@ export function useOrgs(params?: UseOrgsParams) {
     },
     [createOrganizationMutation]
   );
-
-  // Get selected org data
-  const selectedOrgData = selectedOrganization
-    ? organizations.find((o: Organization) => o.id === selectedOrganization)
-    : null;
 
   // Navigate to create organization page
   const navigateToCreateOrg = useCallback(
@@ -161,9 +162,8 @@ export function useOrgs(params?: UseOrgsParams) {
 
   return {
     // Data
-    organizations,
+    allOrgs,
     selectedOrganization,
-    selectedOrgData,
     isLoading,
     error,
 
@@ -172,7 +172,6 @@ export function useOrgs(params?: UseOrgsParams) {
     createOrganization,
     navigateToCreateOrg,
     clearSelectedOrganization,
-    refetch,
 
     // Mutation states
     isCreating: createOrganizationMutation.isPending,

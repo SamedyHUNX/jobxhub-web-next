@@ -30,7 +30,7 @@ export default function OrgsListContainer({
   fallback,
   translations,
 }: OrgListContainerProps) {
-  const { profile: currentUser } = useProfile();
+  const { user: currentUser } = useProfile();
   const { selectOrganization, navigateToCreateOrg } = useOrgs();
   const router = useRouter();
 

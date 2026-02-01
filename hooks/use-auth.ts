@@ -133,7 +133,7 @@ export function useAuth() {
   };
 
   return {
-    // State
+    // Auth state
     user,
     isInitialized,
 

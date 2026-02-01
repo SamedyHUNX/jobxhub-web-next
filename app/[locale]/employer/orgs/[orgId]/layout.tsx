@@ -17,7 +17,14 @@ export default function EmployerOrgsDashboardLayout({
   const locale = useLocale();
   const employerT = useTranslations("sidebar.jobs");
   const { selectedOrganization } = useOrgs();
-  const { profile: currentUser } = useProfile();
+  const { user: currentUser } = useProfile();
+
+  if (!currentUser) {
+    return undefined;
+  }
+
+  console.log("currentUser", currentUser),
+    console.log("currentOrg", selectedOrganization);
 
   return (
     <AppSidebar

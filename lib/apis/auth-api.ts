@@ -62,7 +62,7 @@ export const authApi = {
   // Get user info
   getProfile: async (): Promise<User | null> => {
     const { data } = await api.get<GetProfileResponse>("/auth/me");
-    return data.data?.[0] ?? null;
+    return data.data?.[0] ?? undefined;
   },
 
   // Verify Email

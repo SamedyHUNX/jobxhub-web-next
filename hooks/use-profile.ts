@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/lib/apis/auth-api";
-import { useAppDispatch } from "@/stores/hooks";
+import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { useEffect } from "react";
 import { setAuth } from "@/stores/slices/auth.slice";
 import { usersApi } from "@/lib/apis/users-api";
@@ -12,12 +12,13 @@ import { UpdateProfileResponse } from "@/types";
 
 export function useProfile() {
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
   const queryClient = useQueryClient();
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
 
   const {
-    data: user,
+    data: profileData,
     isLoading,
     error,
     refetch,
@@ -32,10 +33,10 @@ export function useProfile() {
 
   // Sync profile data to Redux when it's fetched
   useEffect(() => {
-    if (user) {
-      dispatch(setAuth({ user }));
+    if (profileData) {
+      dispatch(setAuth({ user: profileData }));
     }
-  }, [user, dispatch]);
+  }, [profileData, dispatch]);
 
   // Update profile mutation
   const updateProfileMutation = useMutation<

@@ -16,6 +16,7 @@ export interface User {
   updatedAt: string;
 }
 
+// Axios APIs
 export interface AuthRequest {
   email: string;
   password: string;
@@ -27,15 +28,15 @@ export interface AuthRequest {
 export interface ApiResponse<T = any> {
   statusCode: number;
   message: string;
-  data: T | null;
+  data: T | [];
 }
 
-export type SignInResponse = ApiResponse<{}>;
-export type SignUpResponse = ApiResponse<{}>;
+export type SignInResponse = ApiResponse<[]>;
+export type SignUpResponse = ApiResponse<[]>;
 export type GetProfileResponse = ApiResponse<User[]>;
-export type VerifyEmailResponse = ApiResponse<{}>;
-export type ForgotPasswordResponse = ApiResponse<{}>;
-export type ResetPasswordResponse = ApiResponse<{}>;
+export type VerifyEmailResponse = ApiResponse<[]>;
+export type ForgotPasswordResponse = ApiResponse<[]>;
+export type ResetPasswordResponse = ApiResponse<[]>;
 export type UpdateProfileResponse = ApiResponse<User[]>;
 
 export interface SignInFormData {
@@ -80,10 +81,8 @@ export interface Organization {
   updatedAt: string;
 }
 
-export interface OrgsResponse {
-  message: string;
-  data: Organization[];
-}
+export type FindAllOrgsResponse = ApiResponse<Organization[]>;
+export type CreateOrgResponse = ApiResponse<[]>;
 
 // Create Job
 export type LocationRequirement = "in-office" | "hybrid" | "remote";

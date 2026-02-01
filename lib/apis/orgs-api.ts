@@ -1,5 +1,5 @@
 import { CreateOrgFormData } from "@/schemas";
-import { OrgsResponse } from "@/types";
+import { CreateOrgResponse, FindAllOrgsResponse } from "@/types";
 import axios from "axios";
 
 import Cookies from "js-cookie";
@@ -34,21 +34,24 @@ function assertApiUrl() {
 
 export const orgsApi = {
   // Get all orgs with optional filtering
-  findAll: async (search?: string, isVerified?: boolean) => {
+  findAll: async (
+    search?: string,
+    isVerified?: boolean
+  ): Promise<FindAllOrgsResponse> => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
     if (isVerified !== undefined)
       params.append("isVerified", String(isVerified));
 
     const { data } = await api.get(`/organizations?${params.toString()}`);
-    return data;
+    return data.data;
   },
 
   // Create an Organization
-  create: async (formData: CreateOrgFormData): Promise<OrgsResponse> => {
+  create: async (formData: CreateOrgFormData): Promise<CreateOrgResponse> => {
     assertApiUrl();
-    const { data } = await api.post<OrgsResponse>(
-      "/organizations/create",
+    const { data } = await api.post<CreateOrgResponse>(
+      "/organizations",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );

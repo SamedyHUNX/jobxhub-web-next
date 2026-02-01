@@ -189,7 +189,7 @@ interface PersonalAccountData {
 export interface OrgListProps {
   // Required data - passed from parent
   organizations: OrgListItemData[];
-  currentUser?: PersonalAccountData;
+  currentUser: PersonalAccountData | null;
   isLoading?: boolean;
 
   // Callbacks

@@ -1,27 +1,27 @@
+import { Organization } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface OrganizationsState {
-  selectedOrgId: string | null;
+interface CurrentOrgState {
+  selectedOrgId: string | undefined;
 }
 
-const initialState: OrganizationsState = {
-  selectedOrgId: null,
+const initialState: CurrentOrgState = {
+  selectedOrgId: undefined,
 };
 
 const organizationsSlice = createSlice({
   name: "organizations",
   initialState,
   reducers: {
-    setSelectedOrganization: (state, action: PayloadAction<string | null>) => {
+    setSelectedOrgId: (state, action: PayloadAction<string | undefined>) => {
       state.selectedOrgId = action.payload;
     },
     clearSelection: (state) => {
-      state.selectedOrgId = null;
+      state.selectedOrgId = undefined;
     },
   },
 });
 
-export const { setSelectedOrganization, clearSelection } =
-  organizationsSlice.actions;
+export const { setSelectedOrgId, clearSelection } = organizationsSlice.actions;
 
 export default organizationsSlice.reducer;

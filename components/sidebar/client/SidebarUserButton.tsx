@@ -20,19 +20,18 @@ import { ChevronsUpDown, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export const SidebarUserButton = ({ currentUser }: { currentUser?: User }) => {
-  // Handle undefined profile (no token or failed to load)
-  if (!currentUser) {
-    return null;
-  }
-
+export default function SidebarUserButton({
+  currentUser,
+}: {
+  currentUser: User;
+}) {
   return (
     <SidebarUserButtonClient
       user={currentUser}
       redirectPath={`/user-profile`}
     />
   );
-};
+}
 
 function SidebarUserButtonClient({
   user,
@@ -84,12 +83,14 @@ function SidebarUserButtonClient({
   );
 }
 
-function UserInfo({ email, username, imageUrl }: User) {
+function UserInfo({ email, username = "", imageUrl }: User) {
   const nameInitial = username
-    .split(" ")
-    .slice(0, 2)
-    .map((str) => str[0])
-    .join("");
+    ? username
+        .split(" ")
+        .slice(0, 2)
+        .map((str) => str[0] || "")
+        .join("")
+    : "?";
 
   return (
     <div className="flex items-center gap-2 overflow-hidden">
