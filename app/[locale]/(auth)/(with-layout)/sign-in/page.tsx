@@ -34,9 +34,9 @@ export default function SignInPage() {
       email: "",
       password: "",
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value }: {value: SignInFormData}) => {
       try {
-        signIn(value as SignInFormData);
+        await signIn(value);
       } catch (error) {
         console.error("Failed to sign in", error);
       }

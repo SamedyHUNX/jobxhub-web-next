@@ -33,7 +33,15 @@ export function useJobListings(params?: UseJobListingsParams) {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["jobListings", params],
+    queryKey: [
+      "jobListings",
+      params?.search,
+      params?.organizationId,
+      params?.status,
+      params?.type,
+      params?.locationRequirement,
+      params?.experienceLevel,
+    ],
     queryFn: () =>
       jobListingsApi.findAll(
         params?.search,
@@ -44,6 +52,14 @@ export function useJobListings(params?: UseJobListingsParams) {
         params?.experienceLevel
       ),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: Boolean(
+      params?.search ||
+        params?.organizationId ||
+        params?.status ||
+        params?.type ||
+        params?.locationRequirement ||
+        params?.experienceLevel
+    ),
   });
 
   const jobListings = jobListingsData?.data?.jobListings || [];

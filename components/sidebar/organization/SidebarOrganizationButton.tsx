@@ -31,7 +31,7 @@ export default function SidebarOrganizationButton({
   currentOrg,
   currentUser,
 }: {
-  currentOrg: Organization | null;
+  currentOrg: Organization | undefined;
   currentUser: User | null;
 }) {
   // Handle no selected organization

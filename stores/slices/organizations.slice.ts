@@ -1,4 +1,3 @@
-import { Organization } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface CurrentOrgState {

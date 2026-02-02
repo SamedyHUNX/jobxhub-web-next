@@ -65,9 +65,9 @@ export default function CreateJobPage() {
     },
   };
 
-  const handleSubmit = async (data: CreateJobListingFormData) => {
+  const handleSubmit = (data: CreateJobListingFormData) => {
     try {
-      await createJobListing(data);
+      createJobListing(data);
     } catch (error) {
       console.error("Error creating job", error);
     }
@@ -86,7 +86,7 @@ export default function CreateJobPage() {
           <JobListingForm
             onSubmit={handleSubmit}
             translations={translations}
-            orgId={selectedOrganization?.id}
+            orgId={selectedOrganization}
             isLoading={isCreating}
           />
         </CardContent>

@@ -1,19 +1,19 @@
 "use client";
 
 import { ReactNode, useEffect } from "react";
-import { useAppSelector } from "@/stores/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import PageLoader from "../PageLoader";
+import { useProfile } from "@/hooks/use-profile";
 
 export default function AuthGuard({ children }: { children: ReactNode }) {
-  const { user, isInitialized } = useAppSelector((state) => state.auth);
+  // const { user, isInitialized } = useAppSelector((state) => state.auth);
+  const { user } = useProfile();
   const router = useRouter();
   const locale = useLocale();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!isInitialized) return;
+    // if (!isInitialized) return;
 
     // Routes that should be accessible WITHOUT authentication
     const publicAuthRoutes = [
@@ -38,12 +38,12 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
     if (user && isPublicAuthRoute) {
       router.replace(`/${locale}`);
     }
-  }, [user, isInitialized, router, locale, pathname]);
+  }, [user, router, locale, pathname]);
 
   // Show loader until auth state is resolved
-  if (!isInitialized) {
-    return <PageLoader />;
-  }
+  // if (!isInitialized) {
+  //   return <PageLoader />;
+  // }
 
   // Render children (works for both authenticated and public routes)
   return <>{children}</>;
