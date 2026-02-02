@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useRef } from "react";
 import { useAppDispatch } from "@/stores/hooks";
 import { setAuth, clearAuth } from "@/stores/slices/auth.slice";
-import { authApi } from "@/lib/auth-api";
+import { authApi } from "@/lib/apis/auth-api";
 
 export function AuthInitializer({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();

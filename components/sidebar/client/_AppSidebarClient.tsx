@@ -3,9 +3,9 @@
 import { ReactNode } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import ThemeToggle from "../ThemeToggle";
-import { LanguageSwitcher } from "../LanguageSwitcher";
-import BrandLogo from "../BrandLogo";
+import ThemeToggle from "../../ThemeToggle";
+import { LanguageSwitcher } from "../../LanguageSwitcher";
+import BrandLogo from "../../BrandLogo";
 
 export default function AppSidebarClient({
   children,

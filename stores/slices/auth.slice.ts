@@ -2,12 +2,12 @@ import { User } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
-  user: User | null;
+  user: User | undefined;
   isInitialized: boolean;
 }
 
 const initialState: AuthState = {
-  user: null,
+  user: undefined,
   isInitialized: false,
 };
 
@@ -15,12 +15,12 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<{ user: User }>) => {
+    setAuth: (state, action: PayloadAction<{ user: User | undefined }>) => {
       state.user = action.payload.user;
       state.isInitialized = true;
     },
     clearAuth: (state) => {
-      state.user = null;
+      state.user = undefined;
       state.isInitialized = true;
     },
     markInitialized: (state) => {

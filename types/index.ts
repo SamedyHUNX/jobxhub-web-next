@@ -16,6 +16,7 @@ export interface User {
   updatedAt: string;
 }
 
+// Axios APIs
 export interface AuthRequest {
   email: string;
   password: string;
@@ -24,18 +25,19 @@ export interface AuthRequest {
   lastName: string;
 }
 
-export interface AuthResponse {
-  status: string;
-  code: number;
+export interface ApiResponse<T = any> {
+  statusCode: number;
   message: string;
-  data: UsersData;
+  data: T | [];
 }
 
-export interface UsersData {
-  users: User[];
-}
-
-export type SignInResponse = UsersData;
+export type SignInResponse = ApiResponse<[]>;
+export type SignUpResponse = ApiResponse<[]>;
+export type GetProfileResponse = ApiResponse<User[]>;
+export type VerifyEmailResponse = ApiResponse<[]>;
+export type ForgotPasswordResponse = ApiResponse<[]>;
+export type ResetPasswordResponse = ApiResponse<[]>;
+export type UpdateProfileResponse = ApiResponse<User[]>;
 
 export interface SignInFormData {
   email: string;
@@ -58,6 +60,10 @@ export type ResetPasswordFormData = {
   confirmNewPassword: string;
 };
 
+export interface ResetPasswordVariables extends ResetPasswordFormData {
+  token: string;
+}
+
 // Organizations
 export interface Organization {
   id: string;
@@ -75,7 +81,46 @@ export interface Organization {
   updatedAt: string;
 }
 
-export interface OrgsResponse {
-  message: string;
-  data: Organization[];
+export type FindAllOrgsResponse = ApiResponse<Organization[]>;
+export type CreateOrgResponse = ApiResponse<[]>;
+
+// Create Job
+export type LocationRequirement = "in-office" | "hybrid" | "remote";
+export const locationRequirements = ["in-office", "hybrid", "remote"] as const;
+
+export type ExperienceLevel =
+  | "junior"
+  | "mid"
+  | "senior"
+  | "lead"
+  | "manager"
+  | "ceo"
+  | "director";
+export type JobListingStatus = "draft" | "published" | "delisted";
+export type JobListingType =
+  | "internship"
+  | "part-time"
+  | "full-time"
+  | "contract"
+  | "freelance";
+export type WageInterval = "weekly" | "hourly" | "yearly" | "monthly";
+
+// Job Listings
+export interface JobListing {
+  id: string;
+  organizationId: string;
+  title: string;
+  description: string;
+  wage?: number;
+  wageInterval?: WageInterval;
+  stateAbbreviation?: string;
+  city?: string;
+  isFeatured: boolean;
+  locationRequirement: LocationRequirement;
+  experienceLevel: ExperienceLevel;
+  status: JobListingStatus;
+  type: JobListingType;
+  postedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }

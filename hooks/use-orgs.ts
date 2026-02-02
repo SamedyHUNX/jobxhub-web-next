@@ -1,19 +1,32 @@
-import { orgsApi } from "@/lib/orgs-api";
+import { orgsApi } from "@/lib/apis/orgs-api";
+import { extractErrorMessage } from "@/lib/utils";
 import { CreateOrgFormData } from "@/schemas";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import {
   clearSelection,
-  setSelectedOrganization,
+  setSelectedOrgId,
 } from "@/stores/slices/organizations.slice";
-import { Organization } from "@/types";
+import type { CreateOrgResponse, Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useCallback } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
+import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 interface UseOrgsParams {
+  userId?: string;
   search?: string;
   isVerified?: boolean;
 }
+
+interface SelectOrgOptions {
+  redirectUrl?: string | ((org: Organization) => string);
+  skipRedirect?: boolean;
+}
+
+const SELECTED_ORG_KEY = "selectedOrgId";
 
 export function useOrgs(params?: UseOrgsParams) {
   const dispatch = useAppDispatch();
@@ -21,83 +34,160 @@ export function useOrgs(params?: UseOrgsParams) {
   const selectedOrganization = useAppSelector(
     (state) => state.organizations.selectedOrgId
   );
+  const successT = useTranslations("apiSuccesses");
+  const errorT = useTranslations("apiErrors");
+  const router = useRouter();
+  const locale = useLocale();
 
-  // Fetch organizations with filters using useQuery
+  // Fetch organizations
   const {
-    data: organizationsData,
+    data: orgsData,
     isLoading,
     error,
-    refetch,
   } = useQuery({
-    queryKey: ["organizations", params],
-    queryFn: () => orgsApi.findAll(params?.search, params?.isVerified),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: [
+      "organizations",
+      params?.search,
+      params?.isVerified,
+      params?.userId,
+    ],
+    queryFn: () =>
+      orgsApi.findAll(params?.search, params?.isVerified, params?.userId),
+    staleTime: 5 * 60 * 1000,
+    enabled: Boolean(params?.search || params?.isVerified || params?.userId),
   });
 
-  const organizations = organizationsData?.data.organizations || [];
+  const allOrgs = orgsData?.data || [];
+
+  // Initialize from cookie on mount
+  useEffect(() => {
+    if (!selectedOrganization && allOrgs.length > 0) {
+      const storedId = Cookies.get(SELECTED_ORG_KEY);
+      if (storedId) {
+        const org = allOrgs.find((o: Organization) => o.id === storedId);
+        if (org) {
+          dispatch(setSelectedOrgId(org.id));
+        } else {
+          // Clean up invalid cookie
+          Cookies.remove(SELECTED_ORG_KEY);
+        }
+      }
+    }
+  }, [selectedOrganization, allOrgs, dispatch]);
 
   // Create organization mutation
-  const createOrganizationMutation = useMutation({
-    mutationFn: async (formData: CreateOrgFormData) => {
+  const createOrganizationMutation = useMutation<
+    CreateOrgResponse,
+    AxiosError,
+    CreateOrgFormData
+  >({
+    mutationFn: async (formData) => {
       return await orgsApi.create(formData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["organizations"] });
+      queryClient.invalidateQueries({
+        queryKey: ["organizations"],
+        exact: true,
+      });
+      toast.success(successT("createOrgSuccess"));
+      router.push(`/${locale}/employer/select`);
+    },
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 
-  // Fetch organizations by user
-  const fetchOrgsByUserId = (userId: string) =>
-    useQuery({
-      queryKey: ["organizations", "user", userId],
-      queryFn: () => orgsApi.findByUser(userId),
-      enabled: !!userId,
-      select: (data) => data.data.organizations,
-    });
-
-  // Fetch single organization
-  const fetchOrgByOrgId = (id: string) =>
-    useQuery({
-      queryKey: ["organization", id],
-      queryFn: () => orgsApi.findOne(id),
-      enabled: !!id,
-      select: (data) => data.data.organizations[0],
-    });
-
-  // Select organization
+  // Select organization with navigation
   const selectOrganization = useCallback(
-    (orgOrId: string | Organization) => {
-      if (typeof orgOrId === "string") {
-        const org = organizations.find((o: Organization) => o.id === orgOrId);
-        if (org) {
-          dispatch(setSelectedOrganization(org));
-          localStorage.setItem("selectedOrganization", JSON.stringify(org));
+    (orgId: string, options?: SelectOrgOptions) => {
+      const org = allOrgs.find((o: Organization) => o.id === orgId);
+      if (!org) return;
+
+      // Update state and cookie
+      dispatch(setSelectedOrgId(org.id));
+      Cookies.set(SELECTED_ORG_KEY, orgId, {
+        secure: true,
+        sameSite: "strict",
+        expires: 7,
+      });
+
+      // Handle navigation
+      if (!options?.skipRedirect) {
+        let url: string;
+
+        if (options?.redirectUrl) {
+          url =
+            typeof options.redirectUrl === "function"
+              ? options.redirectUrl(org)
+              : options.redirectUrl;
+        } else {
+          // Default redirect
+          url = `/employer/orgs/${org.id}`;
         }
-      } else {
-        dispatch(setSelectedOrganization(orgOrId));
-        localStorage.setItem("selectedOrganization", JSON.stringify(orgOrId));
+
+        router.push(url);
       }
     },
-    [dispatch, organizations]
+    [dispatch, allOrgs, router, locale]
+  );
+
+  const selectedOrgData = useMemo(
+    () => allOrgs.find((org: Organization) => org.id === selectedOrganization),
+    [allOrgs, selectedOrganization]
+  );
+
+  // Create new organization with navigation
+  const createOrganization = useCallback(
+    (formData: CreateOrgFormData, redirectUrl?: string) => {
+      createOrganizationMutation.mutate(formData);
+      // Navigation happens in onSuccess
+    },
+    [createOrganizationMutation]
+  );
+
+  // Navigate to create organization page
+  const navigateToCreateOrg = useCallback(
+    (options?: { hideSlug?: boolean; skipInvitationScreen?: boolean }) => {
+      const baseUrl = `/${locale}/employer/new`;
+      const params = new URLSearchParams();
+
+      if (options?.hideSlug) {
+        params.append("hideSlug", "true");
+      }
+      if (options?.skipInvitationScreen !== undefined) {
+        params.append(
+          "skipInvitationScreen",
+          String(options.skipInvitationScreen)
+        );
+      }
+
+      const url = params.toString() ? `${baseUrl}?${params}` : baseUrl;
+      router.push(url);
+    },
+    [router, locale]
   );
 
   // Clear selected organization
   const clearSelectedOrganization = useCallback(() => {
     dispatch(clearSelection());
-    localStorage.removeItem("selectedOrganization");
+    Cookies.remove(SELECTED_ORG_KEY);
   }, [dispatch]);
 
   return {
-    // Mutations
-    createOrganization: createOrganizationMutation.mutate,
-    isCreating: createOrganizationMutation.isPending,
-    createSuccess: createOrganizationMutation.isSuccess,
-    createError: createOrganizationMutation.error as AxiosError,
+    // Data
+    allOrgs,
+    selectedOrganization,
+    selectedOrgData,
+    isLoading,
+    error,
 
-    fetchOrgByOrgId,
-    fetchOrgsByUserId,
-
+    // Actions
     selectOrganization,
+    createOrganization,
+    navigateToCreateOrg,
     clearSelectedOrganization,
+
+    // Mutation states
+    isCreating: createOrganizationMutation.isPending,
   };
 }

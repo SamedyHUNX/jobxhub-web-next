@@ -4,6 +4,8 @@ import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import successImg from "@/public/assets/images/success.webp";
+import Image from "next/image";
 
 export default function EmailSentPage() {
   // Translations
@@ -31,30 +33,22 @@ export default function EmailSentPage() {
     <div className="space-y-8">
       {/* Success State */}
       <div className="text-center">
-        <div className="mx-auto w-16 h-16 bg-green-500/10 dark:bg-green-500/10 rounded-full flex items-center justify-center mb-6">
-          <svg
-            className="w-8 h-8 text-green-600 dark:text-green-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
+        <div className="mx-auto w-32 h-32 bg-green-500/10 dark:bg-green-500/10 rounded-full flex items-center justify-center mb-6">
+          <Image
+            src={successImg}
+            alt="success"
+            width={200}
+            height={200}
+            className="mix-blend-screen"
+          />
         </div>
         <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           {authT("emailSent")}
         </h2>{" "}
         <p className="mt-4 text-base text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-          {authT("emailSentDesc1")} +{" "}
           <span className="font-semibold text-gray-900 dark:text-white">
             {decodedEmail}
           </span>
-          {authT("emailSentDesc2")}+{" "}
         </p>
       </div>
 

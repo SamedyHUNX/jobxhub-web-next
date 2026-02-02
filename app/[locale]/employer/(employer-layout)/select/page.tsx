@@ -1,9 +1,10 @@
-import { useTranslations } from "next-intl";
-import OrgsList, { OrgListProps, OrgListTranslations } from "./_OrgList";
+"use client";
 
-export const OrgListWithTranslation = (
-  props: Omit<OrgListProps, "translations">
-) => {
+import { OrgListTranslations } from "@/components/orgs/OrgList";
+import OrgsListContainer from "@/components/orgs/OrgListContainer";
+import { useTranslations } from "next-intl";
+
+export default function OrganizationSelectPage() {
   const t = useTranslations("orgList");
 
   const translations: OrgListTranslations = {
@@ -37,5 +38,5 @@ export const OrgListWithTranslation = (
     },
   };
 
-  return <OrgsList {...props} translations={translations} />;
-};
+  return <OrgsListContainer hidePersonal translations={translations} />;
+}

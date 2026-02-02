@@ -1,6 +1,8 @@
 import { CreateOrgFormData } from "@/schemas";
-import { OrgsResponse } from "@/types";
+import { CreateOrgResponse, FindAllOrgsResponse } from "@/types";
 import axios from "axios";
+
+import Cookies from "js-cookie";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -10,6 +12,20 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// Add request interceptor to include orgId from cookie
+api.interceptors.request.use(
+  (config) => {
+    const orgId = Cookies.get("selectedOrgId");
+    if (orgId) {
+      config.headers["X-Organization-Id"] = orgId;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 function assertApiUrl() {
   if (!API_URL) {
     throw new Error("NEXT_PUBLIC_API_URL env variable is not set");
@@ -18,21 +34,32 @@ function assertApiUrl() {
 
 export const orgsApi = {
   // Get all orgs with optional filtering
-  findAll: async (search?: string, isVerified?: boolean) => {
+  findAll: async (
+    search?: string,
+    isVerified?: boolean,
+    userId?: string
+  ): Promise<FindAllOrgsResponse> => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
     if (isVerified !== undefined)
       params.append("isVerified", String(isVerified));
+    if (userId) params.append("userId", userId);
 
     const { data } = await api.get(`/organizations?${params.toString()}`);
     return data;
   },
 
+  // Separate endpoint for user's organizations
+  findByUserId: async (userId: string) => {
+    const response = await api.get(`/organizations/user/${userId}`);
+    return response.data;
+  },
+
   // Create an Organization
-  create: async (formData: CreateOrgFormData): Promise<OrgsResponse> => {
+  create: async (formData: CreateOrgFormData): Promise<CreateOrgResponse> => {
     assertApiUrl();
-    const { data } = await api.post<OrgsResponse>(
-      "/organizations/create",
+    const { data } = await api.post<CreateOrgResponse>(
+      "/organizations",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
@@ -48,6 +75,12 @@ export const orgsApi = {
   // Get a single organization by ID
   findOne: async (orgId: string) => {
     const { data } = await api.get(`/organizations/org/${orgId}`);
+    return data;
+  },
+
+  // Get selected organization
+  selectedOrg: async () => {
+    const { data } = await api.get(`/organizations/org/selected`);
     return data;
   },
 };

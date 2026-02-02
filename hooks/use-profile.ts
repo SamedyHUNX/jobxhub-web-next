@@ -1,55 +1,75 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { authApi } from "@/lib/auth-api";
-import { useAppDispatch } from "@/stores/hooks";
+import { authApi } from "@/lib/apis/auth-api";
+import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { useEffect } from "react";
 import { setAuth } from "@/stores/slices/auth.slice";
-import { User } from "@/types";
-import { usersApi } from "@/lib/users-api";
+import { usersApi } from "@/lib/apis/users-api";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { extractErrorMessage } from "@/lib/utils";
+import { AxiosError } from "axios";
+import { UpdateProfileResponse } from "@/types";
 
 export function useProfile() {
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
   const queryClient = useQueryClient();
+  const successT = useTranslations("apiSuccesses");
+  const errorT = useTranslations("apiErrors");
 
-  const { data, isLoading, error, refetch, isError } = useQuery({
+  const {
+    data: profileData,
+    isLoading,
+    error,
+    refetch,
+    isError,
+  } = useQuery({
     queryKey: ["profile"],
     queryFn: () => authApi.getProfile(),
     staleTime: 5 * 60 * 1000,
-    retry: 1,
+    retry: 2,
     enabled: true,
   });
 
   // Sync profile data to Redux when it's fetched
   useEffect(() => {
-    if (data) {
-      dispatch(setAuth({ user: data }));
+    if (profileData) {
+      dispatch(setAuth({ user: profileData }));
     }
-  }, [data, dispatch]);
+  }, [profileData, dispatch]);
 
   // Update profile mutation
-  const updateProfileMutation = useMutation({
-    mutationFn: (updatedData: FormData) => usersApi.updateMe(updatedData),
+  const updateProfileMutation = useMutation<
+    UpdateProfileResponse,
+    AxiosError,
+    FormData
+  >({
+    mutationFn: (updatedData) => usersApi.updateMe(updatedData),
     onSuccess: (response) => {
-      const updatedUser = response.data.users;
-      // Update the query cache
-      queryClient.setQueryData(["profile"], updatedUser);
-
-      // Update Redux
-      dispatch(setAuth({ user: updatedUser }));
+      if (response.data && response.data.length > 0) {
+        const updatedUser = response.data[0];
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        dispatch(setAuth({ user: updatedUser }));
+        toast.success(successT("profileUpdated"));
+      } else {
+        toast.error(errorT("profileUpdateFailed"));
+      }
+    },
+    onError(error) {
+      toast.error(extractErrorMessage(error, errorT));
     },
   });
 
-  const updateProfile = async (updatedData: FormData) => {
-    return updateProfileMutation.mutateAsync(updatedData);
-  };
-
   return {
-    profile: data,
+    // Get data
+    user,
     isLoading,
     isError,
     error,
     refetch,
-    updateProfile,
+
+    // Update profile
+    updateProfile: updateProfileMutation.mutate,
     isUpdating: updateProfileMutation.isPending,
-    updateError: updateProfileMutation.error,
   };
 }

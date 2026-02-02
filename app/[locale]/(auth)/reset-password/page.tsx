@@ -1,36 +1,29 @@
 "use client";
 
+import AuthLeftHeader from "@/components/AuthLeftHeader";
+import BrandLogo from "@/components/BrandLogo";
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { extractErrorMessage } from "@/lib/utils";
 import { createResetPasswordSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { toast } from "sonner";
 
 export default function ResetPasswordPage() {
   // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
   const router = useRouter();
   const locale = useLocale();
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const {
-    resetPassword,
-    isResettingPassword,
-    resetPasswordError,
-    resetPasswordSuccess,
-  } = useAuth();
+  const { resetPassword, isResettingPassword } = useAuth();
 
   // Define schema
   const resetPasswordFormSchema = useMemo(
@@ -54,34 +47,20 @@ export default function ResetPasswordPage() {
         return result.success ? undefined : result.error.format();
       },
       onChange: ({ value }) => {
-        // Real-time validation as user types
+        // Only validate if both fields have values
         if (value.newPassword && value.confirmNewPassword) {
-          if (value.newPassword !== value.confirmNewPassword) {
-            return {
-              form: validationT("passwordsMustMatch"),
-              fields: {
-                confirmNewPassword: validationT("passwordsMustMatch"),
-              },
-            };
-          }
+          const result = resetPasswordFormSchema.safeParse(value);
+          return result.success ? undefined : result.error.format();
         }
         return undefined;
       },
     },
   });
 
-  useEffect(() => {
-    if (resetPasswordError) {
-      toast.error(extractErrorMessage(resetPasswordError, errorT));
-    } else if (resetPasswordSuccess) {
-      toast.success(successT("resetPasswordSuccess"));
-    }
-  }, [resetPasswordError, resetPasswordSuccess, errorT, successT]);
-
   // Redirect if no token provided
   useEffect(() => {
     if (!token) {
-      router.push(`/${locale}/reset-password`);
+      router.push(`/reset-password`);
     }
   }, [token, router, locale]);
 
@@ -90,7 +69,11 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="mx-auto space-y-8 px-4">
+    <div className="mx-auto space-y-8 px-4 mt-auto max-w-4xl">
+      <BrandLogo />
+      <div className="pt-4">
+        <AuthLeftHeader title={authT("yourNewPassword")} />
+      </div>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -112,7 +95,7 @@ export default function ResetPasswordPage() {
                 resetPasswordFormSchema.shape.newPassword.safeParse(value);
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
 
@@ -129,7 +112,7 @@ export default function ResetPasswordPage() {
                 );
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
         </div>

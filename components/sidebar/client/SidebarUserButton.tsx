@@ -1,5 +1,6 @@
 "use client";
 
+import { SignOutButton } from "@/components/SignOutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,19 +15,25 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChevronsUpDown, SettingsIcon, UserIcon } from "lucide-react";
+import { User } from "@/types";
+import { ChevronsUpDown, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { SignOutButton } from "../SignOutButton";
-import { useLocale } from "next-intl";
 
-type User = {
-  username: string;
-  email: string;
-  imageUrl: string;
-};
+export default function SidebarUserButton({
+  currentUser,
+}: {
+  currentUser: User;
+}) {
+  return (
+    <SidebarUserButtonClient
+      user={currentUser}
+      redirectPath={`/user-profile`}
+    />
+  );
+}
 
-export function SidebarUserButtonClient({
+function SidebarUserButtonClient({
   user,
   redirectPath,
 }: {
@@ -76,12 +83,14 @@ export function SidebarUserButtonClient({
   );
 }
 
-function UserInfo({ email, username, imageUrl }: User) {
+function UserInfo({ email, username = "", imageUrl }: User) {
   const nameInitial = username
-    .split(" ")
-    .slice(0, 2)
-    .map((str) => str[0])
-    .join("");
+    ? username
+        .split(" ")
+        .slice(0, 2)
+        .map((str) => str[0] || "")
+        .join("")
+    : "?";
 
   return (
     <div className="flex items-center gap-2 overflow-hidden">

@@ -1,8 +1,9 @@
 "use client";
 
-import { AppSidebar } from "@/components/sidebar/AppSidebar";
-import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
-import { SidebarUserButton } from "@/components/sidebar/SidebarUserButton";
+import PageLoader from "@/components/PageLoader";
+import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
+import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
+import SidebarUserButton from "@/components/sidebar/client/SidebarUserButton";
 import { useProfile } from "@/hooks/use-profile";
 import {
   BrainCircuitIcon,
@@ -13,7 +14,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 export default function JobSeekerLayout({ children }: { children: ReactNode }) {
-  const { profile: currentUser } = useProfile();
+  const { user: currentUser, isLoading } = useProfile();
   const isSuperAdmin = currentUser?.userRole === "SUPER-ADMIN";
   const sidebarT = useTranslations("sidebar");
   const locale = useLocale();
@@ -51,7 +52,17 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
           }
         />
       }
-      footerButton={<SidebarUserButton />}
+      footerButton={
+        <>
+          {isLoading ? (
+            <div className="px-4 py-2">Loading...</div>
+          ) : currentUser ? (
+            <>
+              <SidebarUserButton currentUser={currentUser} />
+            </>
+          ) : null}
+        </>
+      }
     >
       {children}
     </AppSidebar>

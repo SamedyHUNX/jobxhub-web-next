@@ -1,0 +1,63 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import {
+  MDXEditorProps,
+  MDXEditorMethods,
+  MDXEditor,
+  headingsPlugin,
+  listsPlugin,
+  quotePlugin,
+  thematicBreakPlugin,
+  markdownShortcutPlugin,
+  tablePlugin,
+  toolbarPlugin,
+  BlockTypeSelect,
+  BoldItalicUnderlineToggles,
+  ListsToggle,
+  InsertThematicBreak,
+  InsertTable,
+} from "@mdxeditor/editor";
+import { useTheme } from "next-themes";
+import { forwardRef } from "react";
+
+export const markdownClassNames =
+  "max-w-none prose prose-neutral dark:prose-invert font-sans";
+
+const InternalMarkdownEditor = forwardRef<MDXEditorMethods, MDXEditorProps>(
+  ({ className, ...props }, ref) => {
+    const { theme, resolvedTheme } = useTheme();
+    const isDark = theme === "dark" || resolvedTheme === "dark";
+
+    return (
+      <MDXEditor
+        {...props}
+        ref={ref}
+        className={cn(markdownClassNames, isDark && "dark-theme", className)}
+        suppressHtmlProcessing
+        plugins={[
+          headingsPlugin(),
+          listsPlugin(),
+          quotePlugin(),
+          thematicBreakPlugin(),
+          markdownShortcutPlugin(),
+          tablePlugin(),
+          toolbarPlugin({
+            toolbarClassName: "flex flex-row items-center gap-4 flex-wrap",
+            toolbarContents: () => (
+              <>
+                <BlockTypeSelect />
+                <BoldItalicUnderlineToggles />
+                <ListsToggle />
+                <InsertThematicBreak />
+                <InsertTable />
+              </>
+            ),
+          }),
+        ]}
+      />
+    );
+  }
+);
+
+export default InternalMarkdownEditor;

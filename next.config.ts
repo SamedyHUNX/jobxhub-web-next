@@ -4,6 +4,7 @@ import type { NextConfig } from "next";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
+  transpilePackages: ['@mdxeditor/editor'],
   /* config options here */
   output: 'standalone',
 };

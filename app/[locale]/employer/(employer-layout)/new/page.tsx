@@ -6,12 +6,10 @@ import ImageUpload from "@/components/ProfileImage";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
 import { useOrgs } from "@/hooks/use-orgs";
-import { extractErrorMessage } from "@/lib/utils";
 import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
-import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef } from "react";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
 export default function CreateNewOrgPage() {
@@ -19,19 +17,7 @@ export default function CreateNewOrgPage() {
   const t = useTranslations();
   const newOrgT = (key: string) => t(`organizations.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const successT = (key: string) => t(`apiSuccess.${key}`);
-  const errorT = (key: string) => t(`apiError.${key}`);
-
-  const router = useRouter();
-  const locale = useLocale();
-  const { createOrganization, isCreating, createError, createSuccess } =
-    useOrgs();
-
-  useEffect(() => {
-    if (createSuccess) {
-      router.push(`/${locale}/employer/orgs/select`);
-    }
-  }, [createError]);
+  const { createOrganization, isCreating } = useOrgs();
 
   const createOrganizationFormSchema = useMemo(
     () => createOrganizationSchema(validationT),
@@ -65,15 +51,6 @@ export default function CreateNewOrgPage() {
       },
     },
   });
-
-  // Show toast notifications
-  useEffect(() => {
-    if (createError) {
-      toast.error(extractErrorMessage(createError, errorT));
-    } else if (createSuccess) {
-      toast.success(successT("createOrgSuccess"));
-    }
-  }, [createError, createSuccess, errorT, successT]);
 
   // Auto-generate slug from organization name
   const generateSlug = (name: string) => {
@@ -110,7 +87,7 @@ export default function CreateNewOrgPage() {
                     createOrganizationFormSchema.shape.image.safeParse(value);
                   return result.success
                     ? undefined
-                    : result.error.errors[0].message;
+                    : result.error.issues[0].message;
                 },
               }}
             >
@@ -141,7 +118,7 @@ export default function CreateNewOrgPage() {
                 createOrganizationFormSchema.shape.orgName.safeParse(value);
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
             onChange={(value) => {
               // Auto-generate slug when org name changes
@@ -160,7 +137,7 @@ export default function CreateNewOrgPage() {
                 createOrganizationFormSchema.shape.slug.safeParse(value);
               return result.success
                 ? undefined
-                : result.error.errors[0].message;
+                : result.error.issues[0].message;
             }}
           />
 

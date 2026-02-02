@@ -1,8 +1,7 @@
 "use client";
 
-import { AppSidebar } from "@/components/sidebar/AppSidebar";
-import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
-import { useProfile } from "@/hooks/use-profile";
+import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
+import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
 import { UserIcon, ShieldCheckIcon, CreditCardIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
@@ -12,7 +11,6 @@ export default function UserSettingsLayout({
 }: {
   children: ReactNode;
 }) {
-  const { profile: currentUser } = useProfile();
   const sidebarT = useTranslations("user.settings.sidebar");
 
   return (
