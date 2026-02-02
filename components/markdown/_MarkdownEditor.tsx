@@ -19,7 +19,7 @@ import {
   InsertTable,
 } from "@mdxeditor/editor";
 import { useTheme } from "next-themes";
-import { forwardRef, Ref } from "react";
+import { forwardRef } from "react";
 
 export const markdownClassNames =
   "max-w-none prose prose-neutral dark:prose-invert font-sans";
