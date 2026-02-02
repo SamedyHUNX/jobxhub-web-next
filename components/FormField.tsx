@@ -8,6 +8,7 @@ interface FormFieldProps {
   onChange?: (value: string) => void;
   type?: string;
   placeholder?: string;
+  className?: string;
 }
 
 export function FormField({
@@ -19,6 +20,7 @@ export function FormField({
   type = "text",
   placeholder,
   component,
+  className,
 }: FormFieldProps & { component?: React.ComponentType<any> }) {
   return (
     <form.Field
@@ -28,7 +30,7 @@ export function FormField({
       }}
     >
       {(field: any) => (
-        <div className="space-y-2">
+        <div className={`space-y-2 ${className}`}>
           <label
             htmlFor={name}
             className="block text-sm font-medium text-gray-700 dark:text-white"

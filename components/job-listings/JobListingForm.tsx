@@ -339,6 +339,7 @@ export default function JobListingForm({
             name="description"
             label={getLabel("description", "Description")}
             component={MarkdownEditor}
+            className="min-h-50"
             validator={(value) => {
               const result =
                 jobListingSchema.shape.description.safeParse(value);
