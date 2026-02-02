@@ -11,7 +11,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 
@@ -117,13 +117,18 @@ export function useOrgs(params?: UseOrgsParams) {
               : options.redirectUrl;
         } else {
           // Default redirect
-          url = `/${locale}/employer/orgs/${org.id}`;
+          url = `/employer/orgs/${org.id}`;
         }
 
         router.push(url);
       }
     },
     [dispatch, allOrgs, router, locale]
+  );
+
+  const selectedOrgData = useMemo(
+    () => allOrgs.find((org: Organization) => org.id === selectedOrganization),
+    [allOrgs, selectedOrganization]
   );
 
   // Create new organization with navigation
@@ -167,6 +172,7 @@ export function useOrgs(params?: UseOrgsParams) {
     // Data
     allOrgs,
     selectedOrganization,
+    selectedOrgData,
     isLoading,
     error,
 

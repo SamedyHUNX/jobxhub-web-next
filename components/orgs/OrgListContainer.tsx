@@ -35,9 +35,6 @@ export default function OrgsListContainer({
       userId: currentUser?.id,
     });
   const router = useRouter();
-
-  console.log("hi", allOrgs);
-
   // Map to display format
   const mappedOrganizations: OrgListItemData[] = allOrgs.map(
     (org: Organization) => ({

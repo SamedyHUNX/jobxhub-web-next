@@ -1,5 +1,6 @@
 "use client";
 
+import PageLoader from "@/components/PageLoader";
 import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
 import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
 import SidebarOrganizationButton from "@/components/sidebar/organization/SidebarOrganizationButton";
@@ -16,15 +17,18 @@ export default function EmployerOrgsDashboardLayout({
 }) {
   const locale = useLocale();
   const employerT = useTranslations("sidebar.jobs");
-  const { selectedOrganization } = useOrgs();
   const { user: currentUser } = useProfile();
+  const { selectedOrgData, isLoading } = useOrgs({ userId: currentUser?.id });
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   if (!currentUser) {
     return undefined;
   }
 
-  console.log("currentUser", currentUser),
-    console.log("currentOrg", selectedOrganization);
+  console.log(selectedOrgData);
 
   return (
     <AppSidebar
@@ -34,7 +38,7 @@ export default function EmployerOrgsDashboardLayout({
             className="mt-4"
             items={[
               {
-                href: `/${locale}/employer/orgs/${selectedOrganization?.id}/new`,
+                href: `/${locale}/employer/orgs/${selectedOrgData?.id}/new`,
                 icon: <FilePlusIcon />,
                 label: employerT("createJob"),
               },
@@ -45,7 +49,7 @@ export default function EmployerOrgsDashboardLayout({
       footerButton={
         <SidebarOrganizationButton
           currentUser={currentUser}
-          currentOrg={selectedOrganization}
+          currentOrg={selectedOrgData}
         />
       }
     >

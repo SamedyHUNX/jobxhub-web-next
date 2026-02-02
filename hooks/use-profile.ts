@@ -48,14 +48,14 @@ export function useProfile() {
     onSuccess: (response) => {
       if (response.data && response.data.length > 0) {
         const updatedUser = response.data[0];
-        queryClient.setQueryData(["profile"], response.data);
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
         dispatch(setAuth({ user: updatedUser }));
         toast.success(successT("profileUpdated"));
       } else {
         toast.error(errorT("profileUpdateFailed"));
       }
     },
-    onError(error: AxiosError) {
+    onError(error) {
       toast.error(extractErrorMessage(error, errorT));
     },
   });
