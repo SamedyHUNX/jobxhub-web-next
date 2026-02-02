@@ -9,7 +9,8 @@
     "employerDashboard": "Employer Dashboard",
     "superAdminDashboard": "Super-Admin Dashboard",
     "jobs": {
-      "createJob": "Create Job Listing"
+      "createJob": "Create Job Listing",
+      "allJobs": "All Jobs"
     }
   },
   "auth": {

@@ -26,6 +26,7 @@ import { LoadingSwap } from "../LoadingSwap";
 import { states } from "@/data/australia-state";
 import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
+import { useRouter } from "next/navigation";
 
 export interface JobListingFormProps {
   // Core functionality
@@ -71,6 +72,7 @@ export interface JobListingFormProps {
   hideSubmitButton?: boolean;
 
   orgId?: string;
+  redirectOnSuccess: string;
 }
 
 export default function JobListingForm({
@@ -86,9 +88,11 @@ export default function JobListingForm({
   children,
   hideSubmitButton = false,
   orgId,
+  redirectOnSuccess,
 }: JobListingFormProps) {
   const validationT = useTranslations("validations");
   const isMobile = useIsMobile();
+  const router = useRouter();
 
   // Define schema
   const jobListingSchema = useMemo(
@@ -114,6 +118,8 @@ export default function JobListingForm({
     onSubmit: async ({ value }) => {
       try {
         onSubmit(value);
+
+        router.push(redirectOnSuccess);
       } catch (error) {
         console.error("Failed to create the job", error);
       }
