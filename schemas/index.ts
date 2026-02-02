@@ -132,7 +132,10 @@ export const createJobListingSchema = (t: (key: string) => string) => {
     })
     .refine(
       (listing) => {
-        return listing.locationRequirement === "remote" || listing.city != null;
+        return (
+          listing.locationRequirement === "remote" ||
+          (listing.city != null && listing.city.trim() !== "")
+        );
       },
       {
         message: t("nonRemoteRequired"),
@@ -143,7 +146,8 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       (listing) => {
         return (
           listing.locationRequirement === "remote" ||
-          listing.stateAbbreviation != null
+          (listing.stateAbbreviation != null &&
+            listing.stateAbbreviation.trim() !== "")
         );
       },
       {
