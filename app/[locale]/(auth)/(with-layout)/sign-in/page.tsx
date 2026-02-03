@@ -6,11 +6,10 @@ import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { SignInFormData } from "@/types";
 import { createSignInSchema } from "@/schemas";
-import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/LoadingSwap";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
 import AuthLeftHeader from "@/components/AuthLeftHeader";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function SignInPage() {
   // Translations
@@ -34,12 +33,8 @@ export default function SignInPage() {
       email: "",
       password: "",
     },
-    onSubmit: async ({ value }: {value: SignInFormData}) => {
-      try {
-        await signIn(value);
-      } catch (error) {
-        console.error("Failed to sign in", error);
-      }
+    onSubmit: ({ value }: { value: SignInFormData }) => {
+      signIn(value);
     },
     validators: {
       onSubmit: ({ value }) => {
@@ -103,19 +98,13 @@ export default function SignInPage() {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          disabled={isSigningIn}
-          className="yellow-btn w-full mt-5"
-        >
-          <LoadingSwap isLoading={isSigningIn}>{authT("signIn")}</LoadingSwap>
-        </Button>
+        <SubmitButton isCreating={isSigningIn} buttonText={authT("signIn")} />
 
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("dontHaveAnAccount")}{" "}
             <Link
-              href={`/${locale}/sign-up`}
+              href={`/sign-up`}
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signUp")}

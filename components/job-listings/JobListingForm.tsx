@@ -17,62 +17,15 @@ import {
 import { locationRequirements } from "@/types";
 import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
-import { ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import TextField from "../form/TextField";
 import SelectField from "../form/SelectField";
-import { Button } from "../ui/button";
-import { LoadingSwap } from "../LoadingSwap";
 import { states } from "@/data/australia-state";
 import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import SubmitButton from "../SubmitButton";
-
-export interface JobListingFormProps {
-  // Core functionality
-  onSubmit: (data: CreateJobListingFormData) => void;
-  defaultValues?: Partial<CreateJobListingFormData>;
-
-  // Customization
-  mode?: "create" | "edit";
-  translations?: {
-    validations?: any;
-    labels?: Partial<Record<keyof CreateJobListingFormData, string>>;
-    descriptions?: Partial<Record<keyof CreateJobListingFormData, string>>;
-    buttons?: {
-      submit?: string;
-      submitting?: string;
-    };
-    options?: {
-      wageIntervals?: Record<string, string>;
-      locationRequirements?: Record<string, string>;
-      jobTypes?: Record<string, string>;
-      experienceLevels?: Record<string, string>;
-      clearState?: string;
-    };
-  };
-
-  // Layout & styling
-  className?: string;
-  buttonClassName?: string;
-  showBorder?: boolean;
-
-  // Field visibility/customization
-  fields?: {
-    show?: Partial<Record<keyof CreateJobListingFormData, boolean>>;
-    disabled?: Partial<Record<keyof CreateJobListingFormData, boolean>>;
-  };
-
-  // Advanced
-  validationSchema?: any;
-  children?: (form: any) => ReactNode;
-
-  // Additional props
-  isLoading?: boolean;
-  hideSubmitButton?: boolean;
-
-  orgId?: string;
-}
+import { JobListingFormProps } from "./_JoblistingFormProps";
 
 export default function JobListingForm({
   onSubmit,
@@ -111,11 +64,7 @@ export default function JobListingForm({
       ...defaultValues,
     },
     onSubmit: async ({ value }) => {
-      try {
-        onSubmit(value);
-      } catch (error) {
-        console.error("Failed to create the job", error);
-      }
+      onSubmit(value);
     },
     validators: {
       onSubmit: ({ value }) => {
@@ -353,7 +302,11 @@ export default function JobListingForm({
 
       {!hideSubmitButton && (
         <div className={cn("pt-4 mt-4", showBorder && "border-t")}>
-          <SubmitButton isCreating={isLoading || form.state.isSubmitting} />
+          <SubmitButton
+            isCreating={isLoading || form.state.isSubmitting}
+            buttonText={submitButtonText}
+            buttonClassname={buttonClassName}
+          />
         </div>
       )}
     </form>

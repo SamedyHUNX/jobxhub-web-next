@@ -3,8 +3,6 @@
 import { FormField } from "@/components/FormField";
 import FormFooter from "@/components/FormFooter";
 import ImageUpload from "@/components/ProfileImage";
-import { LoadingSwap } from "@/components/LoadingSwap";
-import { Button } from "@/components/ui/button";
 import { useOrgs } from "@/hooks/use-orgs";
 import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
