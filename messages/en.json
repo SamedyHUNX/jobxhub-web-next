@@ -203,6 +203,7 @@
     "orgNameRequired": "Please provide the organization name",
     "orgImageRequired": "Please upload the org logo",
     "orgSlugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)",
+    "orgDescriptionTooShort": "Need at least 10 characters",
     "usernameTooShort": "Please provide at least 3 characters",
     "usernameTooLong": "Username cannot be more than 20 characters long",
     "usernameInvalid": "Invalid username",

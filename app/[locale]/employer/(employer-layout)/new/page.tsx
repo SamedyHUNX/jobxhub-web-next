@@ -77,7 +77,9 @@ export default function CreateNewOrgPage() {
               validators={{
                 onChange: ({ value }) => {
                   const result =
-                    createOrganizationFormSchema.shape.orgImage.safeParse(value);
+                    createOrganizationFormSchema.shape.orgImage.safeParse(
+                      value
+                    );
                   return result.success
                     ? undefined
                     : result.error.issues[0].message;
@@ -127,14 +129,12 @@ export default function CreateNewOrgPage() {
             label={newOrgT("orgDescription")}
             validator={(value) => {
               const result =
-                createOrganizationFormSchema.shape.orgName.safeParse(value);
+                createOrganizationFormSchema.shape.orgDescription.safeParse(
+                  value
+                );
               return result.success
                 ? undefined
                 : result.error.issues[0].message;
-            }}
-            onChange={(value) => {
-              // Auto-generate orgSlug when org name changes
-              form.setFieldValue("orgSlug", generateSlug(value));
             }}
           />
 
