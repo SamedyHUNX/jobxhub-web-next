@@ -7,11 +7,11 @@ import { useTranslations } from "next-intl";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { useForm } from "@tanstack/react-form";
 import { createUpdateProfileSchema } from "@/schemas";
-import { X } from "lucide-react";
 import ProfileImage from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/FormField";
 import ProfileItem from "@/components/ProfileItem";
+import { Modal } from "@/components/Modal";
 
 export default function UserSettingsPage() {
   const { user: currentUser, updateProfile, isUpdating } = useProfile();
@@ -185,141 +185,124 @@ export default function UserSettingsPage() {
       </div>
 
       {/* Edit Profile Modal */}
-      {isModalOpen && (
-        <div className="min-h-screen bg-black/70 dark:bg-black/70 fixed inset-0 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl p-12 border border-gray-300 dark:border-gray-700">
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
-                  {profileT("editProfile")}
-                </h2>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        size="lg"
+      >
+        <Modal.Header onClose={() => setIsModalOpen(false)}>
+          {profileT("editProfile")}
+        </Modal.Header>
 
-            {/* Modal Body */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                form.handleSubmit();
-              }}
-              className="p-6 space-y-6"
-            >
-              {/* Profile Image Upload */}
-              <form.Field name="image">
-                {(field) => (
-                  <ProfileImage
-                    editable={true}
-                    value={field.state.value || form.state.values.imageUrl}
-                    onChange={(file) => field.handleChange(file)}
-                    fallbackInitials={`${currentUser.firstName?.[0] || ""}${
-                      currentUser.lastName?.[0] || ""
-                    }`}
-                    label={profileT("clickToUploadPhoto")}
-                    error={field.state.meta.errors?.[0]}
-                    size="lg"
-                  />
-                )}
-              </form.Field>
-
-              {/* First Name & Last Name */}
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  form={form}
-                  name="firstName"
-                  label={profileT("firstName")}
-                  type="text"
-                  placeholder="John"
-                  validator={(value) => {
-                    const result =
-                      updateProfileSchema.shape.firstName.safeParse(value);
-                    return result.success
-                      ? undefined
-                      : result.error.issues[0].message;
-                  }}
+        <Modal.Body>
+          {/* Modal Body */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+            className="p-6 space-y-6"
+          >
+            {/* Profile Image Upload */}
+            <form.Field name="image">
+              {(field) => (
+                <ProfileImage
+                  editable={true}
+                  value={field.state.value || form.state.values.imageUrl}
+                  onChange={(file) => field.handleChange(file)}
+                  fallbackInitials={`${currentUser.firstName?.[0] || ""}${
+                    currentUser.lastName?.[0] || ""
+                  }`}
+                  label={profileT("clickToUploadPhoto")}
+                  error={field.state.meta.errors?.[0]}
+                  size="lg"
                 />
+              )}
+            </form.Field>
 
-                <FormField
-                  form={form}
-                  name="lastName"
-                  label={profileT("lastName")}
-                  type="text"
-                  placeholder="Doe"
-                  validator={(value) => {
-                    const result =
-                      updateProfileSchema.shape.lastName.safeParse(value);
-                    return result.success
-                      ? undefined
-                      : result.error.issues[0].message;
-                  }}
-                />
-              </div>
-
-              {/* Username */}
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                  @
-                </span>
-                <FormField
-                  form={form}
-                  name="username"
-                  label={profileT("username")}
-                  type="text"
-                  placeholder="johndoe"
-                  validator={(value) => {
-                    const result =
-                      updateProfileSchema.shape.username.safeParse(value);
-                    return result.success
-                      ? undefined
-                      : result.error.issues[0].message;
-                  }}
-                />
-              </div>
-
-              {/* Phone Number */}
+            {/* First Name & Last Name */}
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 form={form}
-                name="phoneNumber"
-                label={profileT("phoneNumber")}
-                type="tel"
-                placeholder="+66123123123"
+                name="firstName"
+                label={profileT("firstName")}
+                type="text"
+                placeholder="John"
                 validator={(value) => {
                   const result =
-                    updateProfileSchema.shape.phoneNumber.safeParse(value);
+                    updateProfileSchema.shape.firstName.safeParse(value);
                   return result.success
                     ? undefined
                     : result.error.issues[0].message;
                 }}
               />
 
-              {/* Modal Footer */}
-              <div className="w-full flex gap-2 justify-end">
-                <Button
-                  onClick={handleCancel}
-                  disabled={isUpdating}
-                  variant={"destructive"}
-                  className="h-12"
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isUpdating} className="h-12">
-                  <LoadingSwap isLoading={isUpdating}>
-                    {profileT("saveChanges")}
-                  </LoadingSwap>
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+              <FormField
+                form={form}
+                name="lastName"
+                label={profileT("lastName")}
+                type="text"
+                placeholder="Doe"
+                validator={(value) => {
+                  const result =
+                    updateProfileSchema.shape.lastName.safeParse(value);
+                  return result.success
+                    ? undefined
+                    : result.error.issues[0].message;
+                }}
+              />
+            </div>
+
+            {/* Username */}
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                @
+              </span>
+              <FormField
+                form={form}
+                name="username"
+                label={profileT("username")}
+                type="text"
+                placeholder="johndoe"
+                validator={(value) => {
+                  const result =
+                    updateProfileSchema.shape.username.safeParse(value);
+                  return result.success
+                    ? undefined
+                    : result.error.issues[0].message;
+                }}
+              />
+            </div>
+
+            {/* Phone Number */}
+            <FormField
+              form={form}
+              name="phoneNumber"
+              label={profileT("phoneNumber")}
+              type="tel"
+              placeholder="+66123123123"
+              validator={(value) => {
+                const result =
+                  updateProfileSchema.shape.phoneNumber.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.issues[0].message;
+              }}
+            />
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant={"destructive"} onClick={() => setIsModalOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => form.handleSubmit()}>
+            <LoadingSwap isLoading={isUpdating}>
+              {profileT("saveChanges")}
+            </LoadingSwap>
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import FormFooter from "../FormFooter";
 import { ArrowRight, Plus } from "lucide-react";
 import { CustomDialog } from "../CustomDialog";
 import BrandLogo from "../BrandLogo";
+import type { Organization } from "@/types";
 
 interface PersonalAccountData {
   id: string;
@@ -12,12 +13,12 @@ interface PersonalAccountData {
 
 export interface OrgListProps {
   // Required data - passed from parent
-  organizations: OrgListItemData[];
+  organizations: Organization[];
   currentUser: PersonalAccountData | undefined;
   isLoading?: boolean;
 
   // Callbacks
-  onSelectOrganization: (org: OrgListItemData) => void;
+  onSelectOrganization: (org: Organization) => void;
   onSelectPersonal?: () => void;
   onCreateOrganization: () => void;
 
@@ -48,7 +49,7 @@ export default function OrgsList({
     message: "",
   });
 
-  const handleSelectOrganization = (org: OrgListItemData) => {
+  const handleSelectOrganization = (org: Organization) => {
     if (org.isBanned) {
       setModalState({
         isOpen: true,
@@ -192,17 +193,6 @@ export const defaultTranslations: OrgListTranslations = {
   },
 };
 
-// ===== Types =====
-export interface OrgListItemData {
-  id: string;
-  name: string;
-  imageUrl?: string;
-  isVerified: boolean;
-  isBanned: boolean;
-  membersCount: number;
-  jobsCount: number;
-}
-
 // ===== Sub-components =====
 
 export function OrgListHeader({
@@ -285,7 +275,7 @@ export function OrganizationItem({
   onClick,
   translations,
 }: {
-  org: OrgListItemData;
+  org: Organization;
   index: number;
   onClick: () => void;
   translations: typeof defaultTranslations;
@@ -308,7 +298,7 @@ export function OrganizationItem({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <div className="text-lg font-semibold text-black dark:text-white tracking-tighter">
-            {org.name}
+            {org.orgName}
           </div>
           <OrgBadges org={org} translations={translations} />
         </div>
@@ -329,7 +319,7 @@ export function OrgAvatar({
   org,
   index,
 }: {
-  org: OrgListItemData;
+  org: Organization;
   index: number;
 }) {
   const getOrgColor = (idx: number) => {
@@ -352,7 +342,7 @@ export function OrgAvatar({
       {org.imageUrl ? (
         <img
           src={org.imageUrl}
-          alt={org.name}
+          alt={org.orgName}
           className="w-14 h-14 rounded-full object-cover"
         />
       ) : (
@@ -361,7 +351,7 @@ export function OrgAvatar({
             index
           )} rounded-full flex items-center justify-center text-2xl text-white font-bold`}
         >
-          {getOrgInitial(org.name)}
+          {getOrgInitial(org.orgName)}
         </div>
       )}
       {org.isVerified && (
@@ -387,7 +377,7 @@ export function OrgBadges({
   org,
   translations,
 }: {
-  org: OrgListItemData;
+  org: Organization;
   translations: typeof defaultTranslations;
 }) {
   if (org.isBanned) {
@@ -413,7 +403,7 @@ export function OrgStats({
   org,
   translations,
 }: {
-  org: OrgListItemData;
+  org: Organization;
   translations: typeof defaultTranslations;
 }) {
   return (

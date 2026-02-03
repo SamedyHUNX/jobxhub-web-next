@@ -1,13 +1,16 @@
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";
 import { useRouter } from "next/navigation";
-import OrgsList, { OrgListItemData, OrgListTranslations } from "./OrgList";
+import OrgsList, { OrgListTranslations } from "./OrgList";
 import type { Organization, User } from "@/types";
 import { ReactNode } from "react";
 
 interface OrgListContainerProps {
   // Navigation callbacks (optional)
-  afterSelectOrganizationUrl?: string | ((org: OrgListItemData) => string);
+  afterSelectOrganizationUrl?:
+    | string
+    | ((org: Organization) => string)
+    | undefined;
   afterSelectPersonalUrl?: string | ((user: User) => string);
 
   // Query params for create org flow
@@ -31,25 +34,11 @@ export default function OrgsListContainer({
 }: OrgListContainerProps) {
   const { user: currentUser } = useProfile();
   const { selectOrganization, navigateToCreateOrg, allOrgs, isLoading } =
-    useOrgs({
-      userId: currentUser?.id,
-    });
+    useOrgs();
   const router = useRouter();
-  // Map to display format
-  const mappedOrganizations: OrgListItemData[] = allOrgs.map(
-    (org: Organization) => ({
-      id: org.id,
-      name: org.orgName,
-      imageUrl: org.imageUrl,
-      isVerified: org.isVerified,
-      isBanned: org.isBanned,
-      membersCount: org.membersCount,
-      jobsCount: org.jobsCount,
-    })
-  );
 
   // Handlers
-  const handleSelectOrganization = (org: OrgListItemData) => {
+  const handleSelectOrganization = (org: Organization) => {
     // Use the hook's navigation logic
     selectOrganization(org.id, {
       redirectUrl: afterSelectOrganizationUrl,
@@ -77,7 +66,7 @@ export default function OrgsListContainer({
 
   return (
     <OrgsList
-      organizations={mappedOrganizations}
+      organizations={allOrgs}
       currentUser={currentUser}
       isLoading={isLoading}
       onSelectOrganization={handleSelectOrganization}

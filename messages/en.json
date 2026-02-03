@@ -244,6 +244,7 @@
     "temporaryLocked": "Account temporarily locked due to multiple failed login attempts. Please try again later or reset your password.",
     "accountDisabled": "Account has been disabled. Please contact support team",
     "tooManyRequest": "Too many request. Please try again in 1 hour",
-    "unauthorized": "You are not authorized to do this action"
+    "unauthorized": "You are not authorized to do this action",
+    "profileUpdateFailed": "Failed to update profile"
   }
 }

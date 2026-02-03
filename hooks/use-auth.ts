@@ -38,7 +38,7 @@ export function useAuth() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"], exact: true });
       toast.success(successT("signInSuccess"));
-      router.push(`/${locale}`);
+      router.push("/");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -54,7 +54,7 @@ export function useAuth() {
     mutationFn: ({ formData, locale }) => authApi.signUp(formData, locale),
     onSuccess: () => {
       toast.success(successT("signUpSuccess"));
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -70,7 +70,7 @@ export function useAuth() {
     mutationFn: (token) => authApi.verifyEmail(token),
     onSuccess: () => {
       toast.success(successT("verifyEmailSuccess"));
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -107,7 +107,7 @@ export function useAuth() {
       authApi.resetPassword(token, newPassword, confirmNewPassword),
     onSuccess: () => {
       toast.success(successT("resetPasswordSuccess"));
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -123,12 +123,12 @@ export function useAuth() {
       dispatch(clearAuth());
       queryClient.clear();
 
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     } catch (error) {
       console.error("Sign out failed:", error);
       dispatch(clearAuth());
       queryClient.clear();
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     }
   };
 
