@@ -26,7 +26,7 @@ import { LoadingSwap } from "../LoadingSwap";
 import { states } from "@/data/australia-state";
 import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
-
+import SubmitButton from "../SubmitButton";
 
 export interface JobListingFormProps {
   // Core functionality
@@ -82,6 +82,7 @@ export default function JobListingForm({
   className,
   buttonClassName,
   showBorder = true,
+  isLoading,
   fields,
   children,
   hideSubmitButton = false,
@@ -100,13 +101,13 @@ export default function JobListingForm({
     defaultValues: {
       title: "",
       description: "",
-      stateAbbreviation: "",
-      city: "",
-      experienceLevel: "junior",
+      stateAbbreviation: "" as string | null,
+      city: "" as string | null,
+      experienceLevel: "junior" as const,
       wage: undefined,
-      wageInterval: "yearly",
-      type: "full-time",
-      locationRequirement: "in-office",
+      wageInterval: "yearly" as const,
+      type: "full-time" as const,
+      locationRequirement: "in-office" as const,
       ...defaultValues,
     },
     onSubmit: async ({ value }) => {
@@ -352,24 +353,7 @@ export default function JobListingForm({
 
       {!hideSubmitButton && (
         <div className={cn("pt-4 mt-4", showBorder && "border-t")}>
-          <form.Subscribe
-            selector={(state) => ({
-              isSubmitting: state.isSubmitting,
-              canSubmit: state.canSubmit,
-            })}
-          >
-            {({ isSubmitting, canSubmit }) => (
-              <Button
-                type="submit"
-                disabled={isSubmitting || !canSubmit}
-                className={cn("yellow-btn w-full", buttonClassName)}
-              >
-                <LoadingSwap isLoading={isSubmitting}>
-                  {submitButtonText}
-                </LoadingSwap>
-              </Button>
-            )}
-          </form.Subscribe>
+          <SubmitButton isCreating={isLoading || form.state.isSubmitting} />
         </div>
       )}
     </form>

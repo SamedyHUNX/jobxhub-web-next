@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import { generateSlug } from "@/lib/utils";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function CreateNewOrgPage() {
   // Translations
@@ -154,15 +155,10 @@ export default function CreateNewOrgPage() {
           />
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            disabled={isCreating}
-            className="yellow-btn w-full font-semibold py-3 px-4 rounded-xl"
-          >
-            <LoadingSwap isLoading={isCreating}>
-              {newOrgT("create")}
-            </LoadingSwap>
-          </Button>
+          <SubmitButton
+            isCreating={isCreating}
+            buttonText={newOrgT("create")}
+          />
         </form>
 
         {/* Footer Branding */}

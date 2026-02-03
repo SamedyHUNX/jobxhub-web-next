@@ -27,8 +27,8 @@ export default function SidebarNavMenuGroup({
     <SidebarGroup className={className}>
       <SidebarMenu>
         {items.map((item) => (
-          <div className="py-1">
-            <SidebarMenuItem key={item.href}>
+          <div className="py-1" key={item.href}>
+            <SidebarMenuItem >
               <SidebarMenuButton asChild isActive={pathname === item.href}>
                 <Link href={item.href}>
                   {item.icon}
