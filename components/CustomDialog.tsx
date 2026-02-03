@@ -22,7 +22,7 @@ interface CustomDialogProps {
   buttonText?: string;
 }
 
-export const CustomDialog = ({
+export default function CustomDialog({
   title,
   open,
   onOpenChange,
@@ -33,7 +33,7 @@ export const CustomDialog = ({
   cancelButtonText = "Nevermind",
   href,
   buttonText,
-}: CustomDialogProps) => {
+}: CustomDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -82,4 +82,4 @@ export const CustomDialog = ({
       </DialogContent>
     </Dialog>
   );
-};
+}

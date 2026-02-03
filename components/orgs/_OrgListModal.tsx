@@ -1,4 +1,4 @@
-import { CustomDialog } from "../CustomDialog";
+import CustomDialog from "../CustomDialog";
 import { defaultTranslations } from "./_DefaultTranslation";
 
 export function OrgListModal({

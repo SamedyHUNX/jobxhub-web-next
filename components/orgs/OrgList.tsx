@@ -4,7 +4,7 @@ import type { Organization, User } from "@/types";
 import { defaultTranslations } from "./_DefaultTranslation";
 import OrgListHeader from "./_OrgListHeader";
 import { OrgListModal } from "./_OrgListModal";
-import OrgPersonalAccountItem from "./_0rgPersonalAccountItem";
+import OrgPersonalAccountItem from "./_OrgPersonalAccountItem";
 import CreateOrgButton from "./_CreateOrgButton";
 import OrganizationItem from "./_OrganizationItem";
 
