@@ -1,6 +1,6 @@
 "use client";
 
-import { OrgListTranslations } from "@/components/orgs/OrgList";
+import { OrgListTranslations } from "@/components/orgs/_DefaultTranslation";
 import OrgsListContainer from "@/components/orgs/OrgListContainer";
 import { useTranslations } from "next-intl";
 

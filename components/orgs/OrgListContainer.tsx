@@ -3,7 +3,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { useRouter } from "next/navigation";
 import OrgsList, { OrgListTranslations } from "./OrgList";
 import type { Organization, User } from "@/types";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 interface OrgListContainerProps {
   // Navigation callbacks (optional)
@@ -36,6 +36,7 @@ export default function OrgsListContainer({
   const { selectOrganization, navigateToCreateOrg, allOrgs, isLoading } =
     useOrgs();
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // Handlers
   const handleSelectOrganization = (org: Organization) => {
