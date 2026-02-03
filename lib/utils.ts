@@ -52,3 +52,13 @@ export function extractErrorMessage(
   }
   return error.message || "An unknown error occurred";
 }
+
+// Auto-generate slug from organization name
+export const generateSlug = (name: string) => {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
+};

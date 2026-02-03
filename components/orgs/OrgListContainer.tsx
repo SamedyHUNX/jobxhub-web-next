@@ -37,7 +37,6 @@ export default function OrgsListContainer({
   const { selectOrganization, navigateToCreateOrg, allOrgs, isLoading } =
     useOrgs();
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // Handlers
   const handleSelectOrganization = (org: Organization) => {

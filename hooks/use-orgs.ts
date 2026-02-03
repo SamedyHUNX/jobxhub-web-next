@@ -128,15 +128,6 @@ export function useOrgs(params?: UseOrgsParams) {
     [allOrgs, selectedOrganization]
   );
 
-  // Create new organization with navigation
-  const createOrganization = useCallback(
-    (formData: CreateOrgFormData, redirectUrl?: string) => {
-      createOrganizationMutation.mutate(formData);
-      // Navigation happens in onSuccess
-    },
-    [createOrganizationMutation]
-  );
-
   // Navigate to create organization page
   const navigateToCreateOrg = useCallback(
     (options?: { hideSlug?: boolean; skipInvitationScreen?: boolean }) => {
@@ -175,7 +166,7 @@ export function useOrgs(params?: UseOrgsParams) {
 
     // Actions
     selectOrganization,
-    createOrganization,
+    createOrganization: createOrganizationMutation.mutate,
     navigateToCreateOrg,
     clearSelectedOrganization,
 

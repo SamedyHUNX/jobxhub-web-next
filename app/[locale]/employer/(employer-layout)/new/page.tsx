@@ -11,6 +11,7 @@ import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { toast } from "sonner";
+import { generateSlug } from "@/lib/utils";
 
 export default function CreateNewOrgPage() {
   // Translations
@@ -52,18 +53,8 @@ export default function CreateNewOrgPage() {
     },
   });
 
-  // Auto-generate slug from organization name
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "") // Remove special characters
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/-+/g, "-"); // Replace multiple hyphens with single hyphen
-  };
-
   return (
-    <div className="min-h-[calc(100vh-68px)] bg-[#fdfbf7] dark:bg-black flex items-center justify-center p-4">
+    <div className="min-h-[calc(100vh-68px)] bg-white dark:bg-black flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl p-12 border border-gray-300 dark:border-gray-700">
         <h1 className="text-4xl font-bold mb-12 text-black dark:text-white tracking-tighter">
           {newOrgT("newPageTitle")}
