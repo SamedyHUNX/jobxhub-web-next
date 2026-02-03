@@ -9,6 +9,7 @@
     "employerDashboard": "Employer Dashboard",
     "superAdminDashboard": "Super-Admin Dashboard",
     "jobs": {
+      "overview": "Overview",
       "createJob": "Create Job Listing",
       "allJobs": "All Jobs"
     }

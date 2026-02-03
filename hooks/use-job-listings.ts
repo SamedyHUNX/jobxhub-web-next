@@ -79,7 +79,7 @@ export function useJobListings(params?: UseJobListingsParams) {
       return jobListingsApi.create(dto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobListings"], exact: true });
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
 
       toast(successT("createJobListingSuccess"));
     },

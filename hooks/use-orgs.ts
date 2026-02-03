@@ -79,10 +79,9 @@ export function useOrgs(params?: UseOrgsParams) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["organizations"],
-        exact: true,
       });
       toast.success(successT("createOrgSuccess"));
-      router.push(`/${locale}/employer/select`);
+      router.push(`/employer/select`);
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));

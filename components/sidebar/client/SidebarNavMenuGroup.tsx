@@ -27,14 +27,16 @@ export default function SidebarNavMenuGroup({
     <SidebarGroup className={className}>
       <SidebarMenu>
         {items.map((item) => (
-          <SidebarMenuItem key={item.href}>
-            <SidebarMenuButton asChild isActive={pathname === item.href}>
-              <Link href={item.href}>
-                {item.icon}
-                <span>{item.label}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <div className="py-1">
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton asChild isActive={pathname === item.href}>
+                <Link href={item.href}>
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </div>
         ))}
       </SidebarMenu>
     </SidebarGroup>
