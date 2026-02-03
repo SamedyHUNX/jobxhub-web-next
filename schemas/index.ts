@@ -60,15 +60,19 @@ export const createResetPasswordSchema = (t: (key: string) => string) => {
 export const createOrganizationSchema = (t: (key: string) => string) => {
   return z.object({
     orgName: z.string().min(1, t("orgNameRequired")),
-    slug: z.string().min(1, t("slugRequired")),
-    image: z.any().refine((file) => file instanceof File, t("imageRequired")),
+    orgDescription: z.string().min(10, t("orgDescriptionTooShort")),
+    orgSlug: z.string().min(1, t("orgSlugRequired")),
+    orgImage: z
+      .any()
+      .refine((file) => file instanceof File, t("orgImageRequired")),
   });
 };
 
 export type CreateOrgFormData = {
   orgName: string;
-  slug: string;
-  image: File | null;
+  orgSlug: string;
+  orgDescription: string;
+  orgImage: File | null;
 };
 
 export const createUpdateProfileSchema = (t: (key: string) => string) => {
@@ -95,7 +99,6 @@ export const createUpdateProfileSchema = (t: (key: string) => string) => {
 export const createJobListingSchema = (t: (key: string) => string) => {
   return z
     .object({
-      organizationId: z.string().min(1),
       title: z.string().min(1, t("jobTitleRequired")),
       description: z
         .string()
@@ -105,7 +108,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
         message: t("experienceLevelRequired"),
       }),
       wage: z
-        .string()
+        .number()
         .optional()
         .nullable()
         .transform((val) => val ?? undefined),

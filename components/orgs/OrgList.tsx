@@ -4,7 +4,6 @@ import type { Organization, User } from "@/types";
 import { defaultTranslations } from "./_DefaultTranslation";
 import OrgListHeader from "./_OrgListHeader";
 import { OrgListModal } from "./_OrgListModal";
-import OrgPersonalAccountItem from "./_OrgPersonalAccountItem";
 import CreateOrgButton from "./_CreateOrgButton";
 import OrganizationItem from "./_OrganizationItem";
 
@@ -16,23 +15,18 @@ export interface OrgListProps {
 
   // Callbacks
   onSelectOrganization: (org: Organization) => void;
-  onSelectPersonal?: () => void;
   onCreateOrganization: () => void;
 
   // UI options
-  hidePersonal?: boolean;
   fallback?: React.ReactNode;
   translations?: typeof defaultTranslations;
 }
 
 export default function OrgsList({
   organizations,
-  currentUser,
   isLoading = false,
   onSelectOrganization,
-  onSelectPersonal,
   onCreateOrganization,
-  hidePersonal = false,
   fallback,
   translations = defaultTranslations,
 }: OrgListProps) {
@@ -90,14 +84,6 @@ export default function OrgsList({
             onClose={closeModal}
             translations={translations}
           />
-
-          {/* Personal Account */}
-          {!hidePersonal && currentUser && onSelectPersonal && (
-            <OrgPersonalAccountItem
-              user={currentUser}
-              onClick={onSelectPersonal}
-            />
-          )}
 
           {/* Organizations */}
           {organizations.map((org, index) => (

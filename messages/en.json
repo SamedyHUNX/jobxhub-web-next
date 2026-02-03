@@ -64,7 +64,10 @@
     "newPageTitle": "Create New Organization",
     "uploadPhoto": "Upload the organization logo",
     "orgName": "Organization name",
-    "slugName": "Your org's unique identifier (visible to others)",
+    "orgDescription": "Organization description",
+    "orgDescriptionPlaceholder": "Tell others about your organization",
+    "orgNamePlaceholder": "For example: Microsoft Corporation",
+    "orgSlugName": "Your org's unique identifier (visible to others)",
     "create": "Create"
   },
   "employer": {
@@ -198,7 +201,8 @@
     "passwordUppercase": "Required at least 1 uppercase letter",
     "passwordMustMatch": "Passwords must match",
     "orgNameRequired": "Please provide the organization name",
-    "slugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)",
+    "orgImageRequired": "Please upload the org logo",
+    "orgSlugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)",
     "usernameTooShort": "Please provide at least 3 characters",
     "usernameTooLong": "Username cannot be more than 20 characters long",
     "usernameInvalid": "Invalid username",

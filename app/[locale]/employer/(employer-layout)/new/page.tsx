@@ -29,19 +29,21 @@ export default function CreateNewOrgPage() {
   const form = useForm({
     defaultValues: {
       orgName: "",
-      slug: "",
-      image: null,
+      orgDescription: "",
+      orgSlug: "",
+      orgImage: null,
     } as CreateOrgFormData,
     onSubmit: async ({ value }) => {
-      if (!value.image) {
+      if (!value.orgImage) {
         toast.error(validationT("photoRequired"));
         return;
       }
 
       const formData = new FormData();
       formData.append("orgName", value.orgName);
-      formData.append("slug", value.slug);
-      formData.append("image", value.image);
+      formData.append("orgDescription", value.orgDescription);
+      formData.append("orgSlug", value.orgSlug);
+      formData.append("image", value.orgImage);
 
       createOrganization(formData as unknown as CreateOrgFormData);
     },
@@ -71,11 +73,11 @@ export default function CreateNewOrgPage() {
           {/* Profile Image Upload */}
           <div className="mb-8">
             <form.Field
-              name="image"
+              name="orgImage"
               validators={{
                 onChange: ({ value }) => {
                   const result =
-                    createOrganizationFormSchema.shape.image.safeParse(value);
+                    createOrganizationFormSchema.shape.orgImage.safeParse(value);
                   return result.success
                     ? undefined
                     : result.error.issues[0].message;
@@ -102,7 +104,7 @@ export default function CreateNewOrgPage() {
           <FormField
             form={form}
             name="orgName"
-            placeholder="For example: Microsoft Corporation"
+            placeholder={newOrgT("orgNamePlaceholder")}
             label={newOrgT("orgName")}
             validator={(value) => {
               const result =
@@ -112,20 +114,39 @@ export default function CreateNewOrgPage() {
                 : result.error.issues[0].message;
             }}
             onChange={(value) => {
-              // Auto-generate slug when org name changes
-              form.setFieldValue("slug", generateSlug(value));
+              // Auto-generate orgSlug when org name changes
+              form.setFieldValue("orgSlug", generateSlug(value));
             }}
           />
 
-          {/* Slug Input */}
+          {/* Organization Description Input */}
           <FormField
             form={form}
-            name="slug"
-            label={newOrgT("slugName")}
+            name="orgDescription"
+            placeholder={newOrgT("orgDescriptionPlaceholder")}
+            label={newOrgT("orgDescription")}
+            validator={(value) => {
+              const result =
+                createOrganizationFormSchema.shape.orgName.safeParse(value);
+              return result.success
+                ? undefined
+                : result.error.issues[0].message;
+            }}
+            onChange={(value) => {
+              // Auto-generate orgSlug when org name changes
+              form.setFieldValue("orgSlug", generateSlug(value));
+            }}
+          />
+
+          {/* orgSlug Input */}
+          <FormField
+            form={form}
+            name="orgSlug"
+            label={newOrgT("orgSlugName")}
             placeholder="Auto-generated"
             validator={(value) => {
               const result =
-                createOrganizationFormSchema.shape.slug.safeParse(value);
+                createOrganizationFormSchema.shape.orgSlug.safeParse(value);
               return result.success
                 ? undefined
                 : result.error.issues[0].message;

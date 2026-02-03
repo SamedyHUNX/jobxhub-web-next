@@ -19,7 +19,6 @@ export default function EmployerOrgsDashboardLayout({
 }: {
   children: ReactNode;
 }) {
-  const locale = useLocale();
   const employerT = useTranslations("sidebar.jobs");
   const { user: currentUser } = useProfile();
   const { selectedOrgData, isLoading } = useOrgs();

@@ -88,7 +88,6 @@ export default function CreateJobPage() {
             translations={translations}
             orgId={selectedOrganization}
             isLoading={isCreating}
-            redirectOnSuccess={`/employer/orgs/${selectedOrganization}/jobs`}
           />
         </CardContent>
       </Card>

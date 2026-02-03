@@ -36,7 +36,7 @@ export function useAuth() {
   >({
     mutationFn: (credentials) => authApi.signIn(credentials),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"], exact: true });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success(successT("signInSuccess"));
       router.push("/");
     },

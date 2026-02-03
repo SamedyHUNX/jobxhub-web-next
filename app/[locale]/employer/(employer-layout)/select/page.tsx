@@ -38,5 +38,5 @@ export default function OrganizationSelectPage() {
     },
   };
 
-  return <OrgsListContainer hidePersonal translations={translations} />;
+  return <OrgsListContainer translations={translations} />;
 }
