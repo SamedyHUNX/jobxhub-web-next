@@ -2,10 +2,8 @@
 
 import AuthLeftHeader from "@/components/AuthLeftHeader";
 import { FormField } from "@/components/FormField";
-import { LoadingSwap } from "@/components/LoadingSwap";
 import ProfileImage from "@/components/ProfileImage";
 import SubmitButton from "@/components/SubmitButton";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { countries } from "@/lib/constants";
 import { createSignUpSchema } from "@/schemas";

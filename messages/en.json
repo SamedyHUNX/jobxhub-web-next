@@ -156,7 +156,9 @@
       "buttonText": "Create Job Listing",
       "creatingText": "Creating...",
       "buttons": {
-        "updateText": "Update Job Listing"
+        "updateText": "Update Job Listing",
+        "submitText": "Create Job Listing",
+        "submittingText": "Submitting..."
       },
       "options": {
         "wageIntervals": {

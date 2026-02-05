@@ -11,9 +11,8 @@ export default function CreateJobPage() {
   // Translations
   const pageT = useTranslations("jobListings");
   const formT = useTranslations("jobListings.form");
-  const optionsT = useTranslations("jobListings.form.options");
 
-  const formTranslations = translations(formT, optionsT);
+  const formTranslations = translations(formT);
 
   const { selectedOrganization } = useOrgs();
 

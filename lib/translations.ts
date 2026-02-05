@@ -1,4 +1,4 @@
-export const translations = (formT: any, optionsT: any) => ({
+export const translations = (formT: any) => ({
   labels: {
     title: formT("title"),
     wage: formT("wage"),
@@ -14,35 +14,35 @@ export const translations = (formT: any, optionsT: any) => ({
   },
   options: {
     wageIntervals: {
-      yearly: optionsT("wageIntervals.yearly"),
-      hourly: optionsT("wageIntervals.hourly"),
-      monthly: optionsT("wageIntervals.monthly"),
+      yearly: formT("options.wageIntervals.yearly"),
+      hourly: formT("options.wageIntervals.hourly"),
+      monthly: formT("options.wageIntervals.monthly"),
     },
     locationRequirements: {
-      "in-office": optionsT("locationRequirements.inOffice"),
-      remote: optionsT("locationRequirements.remote"),
-      hybrid: optionsT("locationRequirements.hybrid"),
+      "in-office": formT("options.locationRequirements.inOffice"),
+      remote: formT("options.locationRequirements.remote"),
+      hybrid: formT("options.locationRequirements.hybrid"),
     },
     jobTypes: {
-      "full-time": optionsT("jobTypes.fullTime"),
-      "part-time": optionsT("jobTypes.partTime"),
-      internship: optionsT("jobTypes.internship"),
-      contract: optionsT("jobTypes.contract"),
-      freelance: optionsT("jobTypes.freelance"),
+      "full-time": formT("options.jobTypes.fullTime"),
+      "part-time": formT("options.jobTypes.partTime"),
+      internship: formT("options.jobTypes.internship"),
+      contract: formT("options.jobTypes.contract"),
+      freelance: formT("options.jobTypes.freelance"),
     },
     experienceLevels: {
-      junior: optionsT("experienceLevels.junior"),
-      mid: optionsT("experienceLevels.mid"),
-      senior: optionsT("experienceLevels.senior"),
-      lead: optionsT("experienceLevels.lead"),
-      manager: optionsT("experienceLevels.manager"),
-      ceo: optionsT("experienceLevels.ceo"),
-      director: optionsT("experienceLevels.director"),
+      junior: formT("options.experienceLevels.junior"),
+      mid: formT("options.experienceLevels.mid"),
+      senior: formT("options.experienceLevels.senior"),
+      lead: formT("options.experienceLevels.lead"),
+      manager: formT("options.experienceLevels.manager"),
+      ceo: formT("options.experienceLevels.ceo"),
+      director: formT("options.experienceLevels.director"),
     },
   },
   buttons: {
     update: formT("buttons.updateText"),
-    submit: formT("buttons.buttonText"),
-    submitting: formT("buttons.creatingText"),
+    submit: formT("buttons.submitText"),
+    submitting: formT("buttons.submittingText"),
   },
 });
