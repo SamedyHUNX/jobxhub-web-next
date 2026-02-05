@@ -1,6 +1,5 @@
 "use client";
 
-import PageLoader from "@/components/PageLoader";
 import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
 import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
 import SidebarUserButton from "@/components/sidebar/client/SidebarUserButton";
@@ -10,14 +9,13 @@ import {
   ClipboardListIcon,
   LayoutDashboard,
 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 export default function JobSeekerLayout({ children }: { children: ReactNode }) {
   const { user: currentUser, isLoading } = useProfile();
   const isSuperAdmin = currentUser?.userRole === "SUPER-ADMIN";
   const sidebarT = useTranslations("sidebar");
-  const locale = useLocale();
 
   return (
     <AppSidebar
@@ -27,23 +25,23 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
           items={
             [
               {
-                href: `/${locale}`,
+                href: `/`,
                 icon: <ClipboardListIcon />,
                 label: sidebarT("findJobs"),
               },
               {
-                href: `/${locale}/ai-search`,
+                href: `/ai-search`,
                 icon: <BrainCircuitIcon />,
                 label: sidebarT("aiSearch"),
               },
               {
-                href: `/${locale}/employer`,
+                href: `/employer`,
                 icon: <LayoutDashboard />,
                 label: sidebarT("employerDashboard"),
                 authStatus: currentUser ? "signedIn" : "signedOut",
               },
               isSuperAdmin && {
-                href: `/${locale}/super-admin/dashboard`,
+                href: `/super-admin/dashboard`,
                 icon: <LayoutDashboard />,
                 label: sidebarT("superAdminDashboard"),
                 authStatus: currentUser ? "signedIn" : "signedOut",

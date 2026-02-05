@@ -11,7 +11,7 @@ import {
   ClipboardMinusIcon,
   SquareChartGanttIcon,
 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 export default function EmployerOrgsDashboardLayout({

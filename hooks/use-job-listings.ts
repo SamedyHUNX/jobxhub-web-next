@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface UseJobListingsParams {
   search?: string;
@@ -20,8 +21,12 @@ export function useJobListings(params?: UseJobListingsParams) {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   const selectedJobListing = useAppSelector(
-    (state) => state.jobListings.selectedJobListing
+    (state) => state.jobListings.selectedJobListing,
   );
+  const selectedOrganization = useAppSelector(
+    (state) => state.organizations.selectedOrgId,
+  );
+  const router = useRouter();
 
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
@@ -49,7 +54,7 @@ export function useJobListings(params?: UseJobListingsParams) {
         params?.status,
         params?.type,
         params?.locationRequirement,
-        params?.experienceLevel
+        params?.experienceLevel,
       ),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -74,6 +79,8 @@ export function useJobListings(params?: UseJobListingsParams) {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
 
       toast(successT("createJobListingSuccess"));
+
+      router.push(`/employer/orgs/${selectedOrganization}/jobs`);
     },
 
     onError: (error: AxiosError) => {
