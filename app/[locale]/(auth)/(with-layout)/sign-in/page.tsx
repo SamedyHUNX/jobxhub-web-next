@@ -24,7 +24,7 @@ export default function SignInPage() {
   // Define schema
   const signInSchema = useMemo(
     () => createSignInSchema(validationT),
-    [validationT]
+    [validationT],
   );
 
   // Initialize TanStack Form

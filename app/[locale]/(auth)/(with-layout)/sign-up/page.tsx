@@ -4,6 +4,7 @@ import AuthLeftHeader from "@/components/AuthLeftHeader";
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import ProfileImage from "@/components/ProfileImage";
+import SubmitButton from "@/components/SubmitButton";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { countries } from "@/lib/constants";
@@ -24,7 +25,7 @@ export default function SignUpPage() {
 
   const signUpSchema = useMemo(
     () => createSignUpSchema(validationT),
-    [validationT]
+    [validationT],
   );
 
   // Initialize Tanstack Form
@@ -229,13 +230,7 @@ export default function SignUpPage() {
         </div>
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          disabled={isSigningUp}
-          className="yellow-btn w-full"
-        >
-          <LoadingSwap isLoading={isSigningUp}>{authT("signUp")}</LoadingSwap>
-        </Button>
+        <SubmitButton isCreating={isSigningUp} buttonText={authT("signUp")} />
 
         {/* Sign In Link */}
         <div className="text-center">

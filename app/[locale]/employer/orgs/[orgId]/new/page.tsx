@@ -20,7 +20,7 @@ export default function CreateJobPage() {
   const { saveJobListing, jobListingLoading } = useJobListings();
 
   return (
-    <div className="w-[95%] mx-auto px-4 pt-8 h-fit flex flex-col">
+    <div className="w-full p-8 mx-auto h-fit flex flex-col">
       <h1 className="text-4xl font-bold mb-2 shrink-0 tracking-tighter">
         {pageT("title")}
       </h1>
