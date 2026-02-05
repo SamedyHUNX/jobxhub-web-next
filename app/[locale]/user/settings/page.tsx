@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import PageLoader from "@/components/PageLoader";
 import { useTranslations } from "next-intl";
-import { LoadingSwap } from "@/components/LoadingSwap";
 import { useForm } from "@tanstack/react-form";
 import { createUpdateProfileSchema } from "@/schemas";
 import ProfileImage from "@/components/ProfileImage";
@@ -12,20 +11,18 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/FormField";
 import ProfileItem from "@/components/ProfileItem";
 import { Modal } from "@/components/Modal";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function UserSettingsPage() {
   const { user: currentUser, updateProfile, isUpdating } = useProfile();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const t = useTranslations();
   const profileT = (key: string) => t(`user.settings.profile.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
 
   // Define validation schema
-  const updateProfileSchema = useMemo(
-    () => createUpdateProfileSchema(validationT),
-    [validationT]
-  );
+  const updateProfileSchema = createUpdateProfileSchema(validationT);
 
   // Initialize TanStack Form with current user data
   const form = useForm({
@@ -290,18 +287,12 @@ export default function UserSettingsPage() {
                   : result.error.issues[0].message;
               }}
             />
+            <SubmitButton
+              isCreating={isUpdating}
+              buttonText={profileT("saveChanges")}
+            />
           </form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant={"destructive"} onClick={() => setIsModalOpen(false)}>
-            Cancel
-          </Button>
-          <Button onClick={() => form.handleSubmit()}>
-            <LoadingSwap isLoading={isUpdating}>
-              {profileT("saveChanges")}
-            </LoadingSwap>
-          </Button>
-        </Modal.Footer>
       </Modal>
     </div>
   );
