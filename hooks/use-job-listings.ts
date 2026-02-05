@@ -59,8 +59,8 @@ export function useJobListings(params?: UseJobListingsParams) {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const jobListings = jobListingsData?.data?.jobListings || [];
-  const count = jobListingsData?.count || 0;
+  const jobListings = jobListingsData?.data || [];
+  const count = jobListings.length || 0;
 
   const fetchJobListingByJobId = (id: string) =>
     useQuery({
@@ -80,7 +80,7 @@ export function useJobListings(params?: UseJobListingsParams) {
 
       toast(successT("createJobListingSuccess"));
 
-      router.push(`/employer/orgs/${selectedOrganization}/jobs`);
+      router.push(`/employer/orgs/${selectedOrganization}/all-jobs`);
     },
 
     onError: (error: AxiosError) => {

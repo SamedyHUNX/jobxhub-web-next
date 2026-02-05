@@ -44,7 +44,7 @@ export default function EmployerOrgsDashboardLayout({
                 label: `${selectedOrgData?.orgName} ${employerT("overview")}`,
               },
               {
-                href: `/employer/orgs/${selectedOrgData?.id}/jobs`,
+                href: `/employer/orgs/${selectedOrgData?.id}/all-jobs`,
                 icon: <ClipboardMinusIcon />,
                 label: employerT("allJobs"),
               },
