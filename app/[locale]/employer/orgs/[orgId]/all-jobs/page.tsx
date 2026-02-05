@@ -14,6 +14,9 @@ import {
   ChevronDown,
   Star,
 } from "lucide-react";
+import { JobListing } from "@/types";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 
@@ -27,7 +30,7 @@ type FilterType = {
 };
 
 export default function AllJobsByOrgPage() {
-  const { jobListings: allJobListings } = useJobListings();
+  const { jobListings: allJobListings, isLoading } = useJobListings();
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [showFilters, setShowFilters] = useState(false);
@@ -39,6 +42,10 @@ export default function AllJobsByOrgPage() {
     status: [],
     state: [],
   });
+
+  if (allJobListings === undefined) {
+    return notFound();
+  }
 
   // Extract unique filter values
   const filterOptions = useMemo(() => {
@@ -62,7 +69,7 @@ export default function AllJobsByOrgPage() {
   }, [allJobListings]);
 
   // Filter and sort jobs
-  const filteredAndSortedJobs = useMemo(() => {
+  const filteredAndSortedJobs: JobListing[] = useMemo(() => {
     if (!allJobListings) return [];
 
     let filtered = allJobListings.filter((job) => {
@@ -478,7 +485,7 @@ export default function AllJobsByOrgPage() {
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     {/* Location */}
                     <div className="flex items-start gap-2">
-                      <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <MapPin className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
                       <div className="text-sm">
                         <p className="text-gray-600 capitalize">
                           {job.locationRequirement.replace(/_/g, " ")}
@@ -493,7 +500,7 @@ export default function AllJobsByOrgPage() {
 
                     {/* Wage */}
                     <div className="flex items-start gap-2">
-                      <DollarSign className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <DollarSign className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
                       <div className="text-sm">
                         <p className="text-gray-900 font-medium">
                           {formatWage(job.wage, job.wageInterval)}
@@ -503,7 +510,7 @@ export default function AllJobsByOrgPage() {
 
                     {/* Job Type */}
                     <div className="flex items-start gap-2">
-                      <Briefcase className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <Briefcase className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
                       <div className="text-sm">
                         <p className="text-gray-600 capitalize">
                           {job.type.replace(/_/g, " ")}
@@ -513,7 +520,7 @@ export default function AllJobsByOrgPage() {
 
                     {/* Experience Level */}
                     <div className="flex items-start gap-2">
-                      <TrendingUp className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <TrendingUp className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
                       <div className="text-sm">
                         <p className="text-gray-600 capitalize">
                           {job.experienceLevel.replace(/_/g, " ")}
@@ -532,9 +539,12 @@ export default function AllJobsByOrgPage() {
                         <span>Created {formatDate(job.createdAt)}</span>
                       )}
                     </div>
-                    <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                    <Link
+                      href={`/employer/orgs/${job.organizationId}/all-jobs/${job.id}`}
+                      className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+                    >
                       View Details →
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

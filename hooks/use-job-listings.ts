@@ -62,13 +62,14 @@ export function useJobListings(params?: UseJobListingsParams) {
   const jobListings = jobListingsData?.data || [];
   const count = jobListings.length || 0;
 
-  const fetchJobListingByJobId = (id: string) =>
-    useQuery({
+  const fetchJobListingByJobId = async (id: string) => {
+    const result = await queryClient.fetchQuery({
       queryKey: ["jobListing", id],
       queryFn: () => jobListingsApi.findOne(id),
-      enabled: !!id,
-      select: (data) => data.data.jobListings[0],
     });
+
+    return result.data[0];
+  };
 
   // Create job listing mutation
   const createJobListingMutation = useMutation({
