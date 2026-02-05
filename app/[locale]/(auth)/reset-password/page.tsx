@@ -3,14 +3,13 @@
 import AuthLeftHeader from "@/components/AuthLeftHeader";
 import BrandLogo from "@/components/BrandLogo";
 import { FormField } from "@/components/FormField";
-import { LoadingSwap } from "@/components/LoadingSwap";
-import { Button } from "@/components/ui/button";
+import SubmitButton from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
 import { createResetPasswordSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 export default function ResetPasswordPage() {
   // Translations
@@ -26,20 +25,13 @@ export default function ResetPasswordPage() {
   const { resetPassword, isResettingPassword } = useAuth();
 
   // Define schema
-  const resetPasswordFormSchema = useMemo(
-    () => createResetPasswordSchema(validationT),
-    [validationT]
-  );
+  const resetPasswordFormSchema = createResetPasswordSchema(validationT);
 
   // Initialize TanStack Form
   const form = useForm({
     defaultValues: { newPassword: "", confirmNewPassword: "" },
     onSubmit: async ({ value }) => {
-      try {
-        resetPassword({ token, ...value });
-      } catch (error: any) {
-        console.error("Failed to reset password", error);
-      }
+      resetPassword({ token, ...value });
     },
     validators: {
       onSubmit: ({ value }) => {
@@ -60,7 +52,7 @@ export default function ResetPasswordPage() {
   // Redirect if no token provided
   useEffect(() => {
     if (!token) {
-      router.push(`/reset-password`);
+      router.push(`/auth/reset-password`);
     }
   }, [token, router, locale]);
 
@@ -108,7 +100,7 @@ export default function ResetPasswordPage() {
             validator={(value) => {
               const result =
                 resetPasswordFormSchema.shape.confirmNewPassword.safeParse(
-                  value
+                  value,
                 );
               return result.success
                 ? undefined
@@ -117,15 +109,10 @@ export default function ResetPasswordPage() {
           />
         </div>
 
-        <Button
-          type="submit"
-          disabled={isResettingPassword}
-          className="yellow-btn w-full mt-5"
-        >
-          <LoadingSwap isLoading={isResettingPassword}>
-            {authT("resetPassword")}
-          </LoadingSwap>
-        </Button>
+        <SubmitButton
+          isCreating={isResettingPassword}
+          buttonText={authT("resetPassword")}
+        />
       </form>
     </div>
   );

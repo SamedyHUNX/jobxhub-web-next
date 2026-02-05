@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { FormField } from "@/components/FormField";
 import { LoadingSwap } from "@/components/LoadingSwap";
 import { Button } from "@/components/ui/button";
@@ -17,10 +16,7 @@ export default function ForgotPasswordPage() {
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
 
-  const forgotPasswordFormSchema = useMemo(
-    () => forgotPasswordSchema(validationT),
-    [validationT]
-  );
+  const forgotPasswordFormSchema = forgotPasswordSchema(validationT);
 
   const locale = useLocale();
   const { forgotPassword, isRequestingForgotPassword } = useAuth();

@@ -34,7 +34,7 @@ export const authApi = {
       credentials,
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
     return data;
   },
@@ -42,7 +42,7 @@ export const authApi = {
   // Signup
   signUp: async (
     formData: SignUpFormData,
-    locale: string
+    locale: string,
   ): Promise<SignUpResponse> => {
     assertApiUrl();
 
@@ -76,25 +76,25 @@ export const authApi = {
   // Forgot password
   forgotPassword: async (
     email: string,
-    locale: string
+    locale: string,
   ): Promise<ForgotPasswordResponse> => {
     const { data } = await api.post<ForgotPasswordResponse>(
       "/auth/forgot-password",
       { email },
-      { headers: { "Accept-Language": locale } }
+      { headers: { "Accept-Language": locale } },
     );
     return data;
   },
 
   // Reset password
   resetPassword: async (
-    token: string,
+    token: string | null,
     newPassword: string,
-    confirmNewPassword: string
+    confirmNewPassword: string,
   ): Promise<ResetPasswordResponse> => {
     const { data } = await api.post<ResetPasswordResponse>(
       "/auth/reset-password",
-      { token, newPassword, confirmNewPassword }
+      { token, newPassword, confirmNewPassword },
     );
     return data;
   },

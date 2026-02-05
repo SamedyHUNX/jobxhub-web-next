@@ -88,8 +88,8 @@ export function useAuth() {
       toast.success(successT("forgotPasswordSuccess"));
       router.push(
         `/${locale}/forgot-password/email-sent?email=${encodeURIComponent(
-          variables.email
-        )}`
+          variables.email,
+        )}`,
       );
     },
     onError: (error) => {

@@ -3,7 +3,6 @@
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo } from "react";
 import { SignInFormData } from "@/types";
 import { createSignInSchema } from "@/schemas";
 import { FormField } from "@/components/FormField";
@@ -21,11 +20,7 @@ export default function SignInPage() {
 
   const { signIn, isSigningIn } = useAuth();
 
-  // Define schema
-  const signInSchema = useMemo(
-    () => createSignInSchema(validationT),
-    [validationT],
-  );
+  const signInSchema = createSignInSchema(validationT);
 
   // Initialize TanStack Form
   const form = useForm({

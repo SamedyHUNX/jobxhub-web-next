@@ -10,7 +10,6 @@ import { createSignUpSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { useMemo } from "react";
 
 export default function SignUpPage() {
   // Translations
@@ -21,10 +20,7 @@ export default function SignUpPage() {
 
   const { signUp, isSigningUp } = useAuth();
 
-  const signUpSchema = useMemo(
-    () => createSignUpSchema(validationT),
-    [validationT],
-  );
+  const signUpSchema = createSignUpSchema(validationT);
 
   // Initialize Tanstack Form
   const form = useForm({
@@ -45,12 +41,7 @@ export default function SignUpPage() {
         ...value,
         phoneNumber: `${value.countryCode}${value.phoneNumber}`,
       };
-      try {
-        signUp({ formData, locale });
-      } catch (error: any) {
-        // Already handled toast in useEffect
-        console.error("Failed to sign up", error);
-      }
+      signUp({ formData, locale });
     },
     validators: {
       onSubmit: ({ value }) => {

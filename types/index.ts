@@ -62,7 +62,7 @@ export type ResetPasswordFormData = {
 };
 
 export interface ResetPasswordVariables extends ResetPasswordFormData {
-  token: string;
+  token: string | null;
 }
 
 // Organizations

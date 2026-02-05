@@ -29,7 +29,7 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     if (!token) {
       // Force navigate to signin
-      router.push(`/sign-in`);
+      router.push(`/auth/sign-in`);
       return;
     }
 
@@ -131,7 +131,7 @@ export default function VerifyEmailPage() {
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("havingTrouble")}{" "}
             <Link
-              href={`/${locale}/support`}
+              href={`/support`}
               className="font-medium text-blue-500 hover:text-blue-400 transition-colors"
             >
               {authT("contactSupport")}

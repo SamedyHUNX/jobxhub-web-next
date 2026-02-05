@@ -14,8 +14,7 @@ import {
   ChevronDown,
   Star,
 } from "lucide-react";
-import { JobListing } from "@/types";
-import { notFound } from "next/navigation";
+import type { JobListing } from "@/types";
 import Link from "next/link";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
@@ -43,8 +42,8 @@ export default function AllJobsByOrgPage() {
     state: [],
   });
 
-  if (allJobListings === undefined) {
-    return notFound();
+  if (!allJobListings) {
+    return null;
   }
 
   // Extract unique filter values
@@ -52,17 +51,25 @@ export default function AllJobsByOrgPage() {
     if (!allJobListings) return null;
 
     return {
-      types: [...new Set(allJobListings.map((job) => job.type))],
+      types: [...new Set(allJobListings.map((job: JobListing) => job.type))],
       locationRequirements: [
-        ...new Set(allJobListings.map((job) => job.locationRequirement)),
+        ...new Set(
+          allJobListings.map((job: JobListing) => job.locationRequirement),
+        ),
       ],
       experienceLevels: [
-        ...new Set(allJobListings.map((job) => job.experienceLevel)),
+        ...new Set(
+          allJobListings.map((job: JobListing) => job.experienceLevel),
+        ),
       ],
-      statuses: [...new Set(allJobListings.map((job) => job.status))],
+      statuses: [
+        ...new Set(allJobListings.map((job: JobListing) => job.status)),
+      ],
       states: [
         ...new Set(
-          allJobListings.map((job) => job.stateAbbreviation).filter(Boolean),
+          allJobListings
+            .map((job: JobListing) => job.stateAbbreviation)
+            .filter(Boolean),
         ),
       ],
     };
@@ -72,7 +79,7 @@ export default function AllJobsByOrgPage() {
   const filteredAndSortedJobs: JobListing[] = useMemo(() => {
     if (!allJobListings) return [];
 
-    let filtered = allJobListings.filter((job) => {
+    let filtered = allJobListings.filter((job: JobListing) => {
       // Search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
