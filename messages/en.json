@@ -142,6 +142,7 @@
   },
   "jobListings": {
     "title": "Create Job",
+    "editFormTitle": "Edit Job Listing",
     "description": "Fill the necessary information below",
     "form": {
       "title": "Job listing title",
@@ -154,6 +155,9 @@
       "description": "Job Description",
       "buttonText": "Create Job Listing",
       "creatingText": "Creating...",
+      "buttons": {
+        "updateText": "Update Job Listing"
+      },
       "options": {
         "wageIntervals": {
           "yearly": "Yearly",
@@ -226,7 +230,8 @@
     "resetPasswordSuccess": "Your password has been reset successfully",
     "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team",
     "profileUpdated": "Profile updated successfully",
-    "createJobListingSuccess": "Created job listing successfully"
+    "createJobListingSuccess": "Created job listing successfully",
+    "updateJobListingSuccess": "Updated job listing successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

@@ -41,7 +41,8 @@ export const translations = (formT: any, optionsT: any) => ({
     },
   },
   buttons: {
-    submit: formT("buttonText"),
-    submitting: formT("creatingText"),
+    update: formT("buttons.updateText"),
+    submit: formT("buttons.buttonText"),
+    submitting: formT("buttons.creatingText"),
   },
 });

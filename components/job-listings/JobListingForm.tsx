@@ -114,7 +114,7 @@ export default function JobListingForm({
 
   const submitButtonText =
     mode === "edit"
-      ? (translations?.buttons?.submit ?? "Update Job Listing")
+      ? (translations?.buttons?.update ?? "Update Job Listing")
       : (translations?.buttons?.submit ?? "Create Job Listing");
 
   return (

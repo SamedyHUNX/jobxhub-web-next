@@ -17,10 +17,10 @@ export default function EditJobIdPage() {
     useJobListings();
   const jobId = useParams().jobId as string;
   const pageT = useTranslations("jobListings");
-  const formT = useTranslations("jobListings.form");
+  const editFormT = useTranslations("jobListings.form");
   const optionsT = useTranslations("jobListings.form.options");
 
-  const formTranslations = translations(formT, optionsT);
+  const formTranslations = translations(editFormT, optionsT);
 
   useEffect(() => {
     if (jobId) {
@@ -37,7 +37,7 @@ export default function EditJobIdPage() {
   return (
     <div className="w-[95%] mx-auto px-4 pt-8 h-fit flex flex-col">
       <h1 className="text-4xl font-bold mb-2 shrink-0 tracking-tighter">
-        {pageT("title")}
+        {pageT("editFormTitle")}
       </h1>
       <p className="text-muted-foreground mb-6 shrink-0 tracking-tighter">
         {pageT("description")}
@@ -50,6 +50,7 @@ export default function EditJobIdPage() {
             translations={formTranslations}
             orgId={selectedOrganization}
             isLoading={jobListingLoading}
+            mode="edit"
           />
         </CardContent>
       </Card>

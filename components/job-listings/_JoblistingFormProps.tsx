@@ -16,6 +16,7 @@ export interface JobListingFormProps {
     descriptions?: Partial<Record<keyof CreateJobListingFormData, string>>;
     buttons?: {
       submit?: string;
+      update?: string;
       submitting?: string;
     };
     options?: {
