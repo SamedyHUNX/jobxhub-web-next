@@ -1,26 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { JobListing } from "@/types";
 
 interface JobListingsState {
-  selectedJobListing: JobListing | null;
+  selectedJobListingId: string | null;
 }
 
 const initialState: JobListingsState = {
-  selectedJobListing: null,
+  selectedJobListingId: null,
 };
 
 const jobListingsSlice = createSlice({
   name: "jobListings",
   initialState,
   reducers: {
-    setSelectedJobListing: (
-      state,
-      action: PayloadAction<JobListing | null>
-    ) => {
-      state.selectedJobListing = action.payload;
+    setSelectedJobListing: (state, action: PayloadAction<string | null>) => {
+      state.selectedJobListingId = action.payload;
     },
     clearSelection: (state) => {
-      state.selectedJobListing = null;
+      state.selectedJobListingId = null;
     },
   },
 });

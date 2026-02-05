@@ -1,7 +1,9 @@
 import { CreateJobListingFormData } from "@/schemas";
+import type { JobListing } from "@/types";
 import { ReactNode } from "react";
 
 export interface JobListingFormProps {
+  jobListing?: JobListing;
   // Core functionality
   onSubmit: (data: CreateJobListingFormData) => void;
   defaultValues?: Partial<CreateJobListingFormData>;

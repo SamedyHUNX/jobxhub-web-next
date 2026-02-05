@@ -143,7 +143,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       {
         message: t("nonRemoteRequired"),
         path: ["city"],
-      }
+      },
     )
     .refine(
       (listing) => {
@@ -156,13 +156,17 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       {
         message: t("nonRemoteRequired"),
         path: ["stateAbbreviation"],
-      }
+      },
     );
 };
 
 export type CreateJobListingFormData = z.infer<
   ReturnType<typeof createJobListingSchema>
 >;
+
+export type UpdateJobListingFormData = Partial<CreateJobListingFormData>;
+
+export type JobListingFormData = CreateJobListingFormData;
 
 // JobListings
 export const wageIntervals = ["hourly", "yearly", "monthly", "weekly"] as const;

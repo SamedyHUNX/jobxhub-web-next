@@ -28,6 +28,7 @@ import SubmitButton from "../SubmitButton";
 import { JobListingFormProps } from "./_JoblistingFormProps";
 
 export default function JobListingForm({
+  jobListing,
   onSubmit,
   defaultValues,
   mode = "create",
@@ -46,22 +47,25 @@ export default function JobListingForm({
   // Define schema
   const jobListingSchema = useMemo(
     () => createJobListingSchema(validationT),
-    [validationT]
+    [validationT],
   );
 
   // Initialize TanStack Form
   const form = useForm({
     defaultValues: {
-      title: "",
-      description: "",
-      stateAbbreviation: "" as string | null,
-      city: "" as string | null,
-      experienceLevel: "junior" as const,
-      wage: undefined,
-      wageInterval: "yearly" as const,
-      type: "full-time" as const,
-      locationRequirement: "in-office" as const,
+      ...{
+        title: "",
+        description: "",
+        stateAbbreviation: "" as string | null,
+        city: "" as string | null,
+        experienceLevel: "junior" as const,
+        wage: undefined,
+        wageInterval: "yearly" as const,
+        type: "full-time" as const,
+        locationRequirement: "in-office" as const,
+      },
       ...defaultValues,
+      ...jobListing,
     },
     onSubmit: async ({ value }) => {
       onSubmit(value);
@@ -76,7 +80,7 @@ export default function JobListingForm({
 
   const getLabel = (
     field: keyof CreateJobListingFormData,
-    defaultLabel: string
+    defaultLabel: string,
   ) => translations?.labels?.[field] ?? defaultLabel;
 
   const getDescription = (field: keyof CreateJobListingFormData) =>
@@ -94,7 +98,7 @@ export default function JobListingForm({
     formatWageInterval(interval);
 
   const getLocationRequirementLabel = (
-    requirement: (typeof locationRequirements)[number]
+    requirement: (typeof locationRequirements)[number],
   ) =>
     translations?.options?.locationRequirements?.[requirement] ??
     formatLocationRequirement(requirement);
@@ -110,8 +114,8 @@ export default function JobListingForm({
 
   const submitButtonText =
     mode === "edit"
-      ? translations?.buttons?.submit ?? "Update Job Listing"
-      : translations?.buttons?.submit ?? "Create Job Listing";
+      ? (translations?.buttons?.submit ?? "Update Job Listing")
+      : (translations?.buttons?.submit ?? "Create Job Listing");
 
   return (
     <form

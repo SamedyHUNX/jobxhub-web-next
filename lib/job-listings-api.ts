@@ -1,4 +1,4 @@
-import { CreateJobListingFormData } from "@/schemas";
+import { JobListingFormData } from "@/schemas";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -23,7 +23,7 @@ export const jobListingsApi = {
     status?: string,
     type?: string,
     locationRequirement?: string,
-    experienceLevel?: string
+    experienceLevel?: string,
   ) => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
@@ -45,9 +45,16 @@ export const jobListingsApi = {
   },
 
   // Create job listing
-  create: async (dto: CreateJobListingFormData) => {
+  // Adjust API service
+  create: async (dto: JobListingFormData) => {
     assertApiUrl();
     const { data } = await api.post("/job-listings", dto);
+    return data;
+  },
+
+  update: async (id: string, dto: JobListingFormData) => {
+    assertApiUrl();
+    const { data } = await api.put(`/job-listings/${id}`, dto);
     return data;
   },
 };

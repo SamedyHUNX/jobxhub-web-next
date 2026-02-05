@@ -38,6 +38,7 @@ export type VerifyEmailResponse = ApiResponse<[]>;
 export type ForgotPasswordResponse = ApiResponse<[]>;
 export type ResetPasswordResponse = ApiResponse<[]>;
 export type UpdateProfileResponse = ApiResponse<User[]>;
+export type JobListingFormResponse = ApiResponse<[]>;
 
 export interface SignInFormData {
   email: string;

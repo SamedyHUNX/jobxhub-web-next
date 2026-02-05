@@ -4,7 +4,6 @@ import JobListingForm from "@/components/job-listings/JobListingForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useOrgs } from "@/hooks/use-orgs";
-import { CreateJobListingFormData } from "@/schemas";
 import { useTranslations } from "next-intl";
 
 export default function CreateJobPage() {
@@ -15,7 +14,7 @@ export default function CreateJobPage() {
 
   const { selectedOrganization } = useOrgs();
 
-  const { createJobListing, isCreating } = useJobListings();
+  const { saveJobListing, jobListingLoading } = useJobListings();
 
   const translations = {
     labels: {
@@ -65,14 +64,6 @@ export default function CreateJobPage() {
     },
   };
 
-  const handleSubmit = (data: CreateJobListingFormData) => {
-    try {
-      createJobListing(data);
-    } catch (error) {
-      console.error("Error creating job", error);
-    }
-  };
-
   return (
     <div className="w-[95%] mx-auto px-4 pt-8 h-fit flex flex-col">
       <h1 className="text-4xl font-bold mb-2 shrink-0 tracking-tighter">
@@ -84,10 +75,10 @@ export default function CreateJobPage() {
       <Card className="flex-1 flex flex-col">
         <CardContent className="flex-1 min-h-0 p-6">
           <JobListingForm
-            onSubmit={handleSubmit}
+            onSubmit={(data) => saveJobListing(undefined, data)}
             translations={translations}
             orgId={selectedOrganization}
-            isLoading={isCreating}
+            isLoading={jobListingLoading}
           />
         </CardContent>
       </Card>
