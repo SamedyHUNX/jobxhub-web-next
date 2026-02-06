@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Label } from "../ui/label";
 
 interface SelectFieldProps {
   form: any;
@@ -47,12 +48,12 @@ export default function SelectField({
     >
       {(field: any) => (
         <div className="space-y-2">
-          <label
+          <Label
             htmlFor={name}
             className="text-lg font-medium text-gray-700 tracking-tighter"
           >
             {label}
-          </label>
+          </Label>
           <Select
             value={field.state.value ?? ""}
             onValueChange={(val) => {

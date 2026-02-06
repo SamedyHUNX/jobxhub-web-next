@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
+import { Label } from "../ui/label";
 
 interface TextAreaFieldProps {
   form: any;
@@ -37,12 +38,12 @@ export default function TextAreaField({
     >
       {(field: any) => (
         <div className="space-y-2">
-          <label
+          <Label
             htmlFor={name}
             className="text-lg font-medium text-gray-700 tracking-tighter"
           >
             {label}
-          </label>
+          </Label>
           <div className={cn(disabled && "opacity-50 pointer-events-none")}>
             <MarkdownEditor
               markdown={field.state.value ?? ""}
