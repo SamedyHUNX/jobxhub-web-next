@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 
@@ -217,15 +216,15 @@ export default function AllJobsByOrgPage() {
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
-              <Input
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
+              <input
                 type="text"
                 placeholder="Search by title, description, or location..."
                 value={filters.search}
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, search: e.target.value }))
                 }
-                className="pl-10"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
 
@@ -301,7 +300,7 @@ export default function AllJobsByOrgPage() {
                         key={type}
                         className="flex items-center cursor-pointer"
                       >
-                        <Input
+                        <input
                           type="checkbox"
                           checked={filters.type.includes(type)}
                           onChange={() => toggleFilter("type", type)}
@@ -326,7 +325,7 @@ export default function AllJobsByOrgPage() {
                         key={location}
                         className="flex items-center cursor-pointer"
                       >
-                        <Input
+                        <input
                           type="checkbox"
                           checked={filters.locationRequirement.includes(
                             location,
@@ -355,7 +354,7 @@ export default function AllJobsByOrgPage() {
                         key={level}
                         className="flex items-center cursor-pointer"
                       >
-                        <Input
+                        <input
                           type="checkbox"
                           checked={filters.experienceLevel.includes(level)}
                           onChange={() =>
@@ -382,7 +381,7 @@ export default function AllJobsByOrgPage() {
                         key={status}
                         className="flex items-center cursor-pointer"
                       >
-                        <Input
+                        <input
                           type="checkbox"
                           checked={filters.status.includes(status)}
                           onChange={() => toggleFilter("status", status)}
@@ -408,7 +407,7 @@ export default function AllJobsByOrgPage() {
                           key={state}
                           className="flex items-center cursor-pointer"
                         >
-                          <Input
+                          <input
                             type="checkbox"
                             checked={filters.state.includes(state)}
                             onChange={() => toggleFilter("state", state)}
@@ -457,12 +456,12 @@ export default function AllJobsByOrgPage() {
               Try adjusting your filters or search terms
             </p>
             {activeFilterCount > 0 && (
-              <Button
+              <button
                 onClick={clearFilters}
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
               >
                 Clear all filters
-              </Button>
+              </button>
             )}
           </div>
         ) : (

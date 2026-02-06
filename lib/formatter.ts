@@ -1,5 +1,6 @@
 import {
   ExperienceLevel,
+  JobListing,
   JobListingStatus,
   JobListingType,
   LocationRequirement,
@@ -141,15 +142,33 @@ export function formatJobListingLocation(
   return locationParts.join(", ");
 }
 
-// const formatWage = (wage: string | null, interval: string | null) => {
-//   if (!wage) return "Wage not specified";
-//   return `$${Number(wage).toLocaleString()}${interval ? `/${interval}` : ""}`;
-// };
-
 export const formatDate = (date: Date | string) => {
   return new Date(date).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
+  });
+};
+
+export const sortJobs = (jobs: JobListing[], sortBy: string): JobListing[] => {
+  return [...jobs].sort((a, b) => {
+    switch (sortBy) {
+      case "newest":
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case "oldest":
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case "wage-high":
+        return (Number(b.wage) || 0) - (Number(a.wage) || 0);
+      case "wage-low":
+        return (Number(a.wage) || 0) - (Number(b.wage) || 0);
+      case "title":
+        return a.title.localeCompare(b.title);
+      default:
+        return 0;
+    }
   });
 };
