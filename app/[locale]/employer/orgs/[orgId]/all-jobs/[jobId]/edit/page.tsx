@@ -18,9 +18,8 @@ export default function EditJobIdPage() {
   const jobId = useParams().jobId as string;
   const pageT = useTranslations("jobListings");
   const editFormT = useTranslations("jobListings.form");
-  const optionsT = useTranslations("jobListings.form.options");
 
-  const formTranslations = translations(editFormT, optionsT);
+  const formTranslations = translations(editFormT);
 
   useEffect(() => {
     if (jobId) {

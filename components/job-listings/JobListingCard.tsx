@@ -15,21 +15,21 @@ export default function JobListingCard({ job }: { job: JobListing }) {
   return (
     <div
       key={job.id}
-      className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow overflow-hidden"
+      className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden"
     >
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 {job.title}
               </h3>
               {job.isFeatured && (
                 <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
               )}
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <Building2 className="w-4 h-4" />
               <span>Organization ID: {job.organizationId}</span>
             </div>
@@ -37,10 +37,10 @@ export default function JobListingCard({ job }: { job: JobListing }) {
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${
               job.status === "published"
-                ? "bg-green-100 text-green-800"
+                ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
                 : job.status === "draft"
-                  ? "bg-gray-100 text-gray-800"
-                  : "bg-yellow-100 text-yellow-800"
+                  ? "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300"
+                  : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300"
             }`}
           >
             {job.status}
@@ -48,19 +48,21 @@ export default function JobListingCard({ job }: { job: JobListing }) {
         </div>
 
         {/* Description */}
-        <p className="text-gray-700 mb-4 line-clamp-2">{job.description}</p>
+        <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">
+          {job.description}
+        </p>
 
         {/* Details Grid */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           {/* Location */}
           <div className="flex items-start gap-2">
-            <MapPin className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+            <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
             <div className="text-sm">
-              <p className="text-gray-600 capitalize">
+              <p className="text-gray-600 dark:text-gray-400 capitalize">
                 {job.locationRequirement.replace(/_/g, " ")}
               </p>
               {job.city && job.stateAbbreviation && (
-                <p className="text-gray-500">
+                <p className="text-gray-500 dark:text-gray-500">
                   {job.city}, {job.stateAbbreviation}
                 </p>
               )}
@@ -69,9 +71,9 @@ export default function JobListingCard({ job }: { job: JobListing }) {
 
           {/* Wage */}
           <div className="flex items-start gap-2">
-            <DollarSign className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+            <DollarSign className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
             <div className="text-sm">
-              <p className="text-gray-900 font-medium">
+              <p className="text-gray-900 dark:text-gray-100 font-medium">
                 {formatWage(job.wage, job.wageInterval)}
               </p>
             </div>
@@ -79,9 +81,9 @@ export default function JobListingCard({ job }: { job: JobListing }) {
 
           {/* Job Type */}
           <div className="flex items-start gap-2">
-            <Briefcase className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+            <Briefcase className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
             <div className="text-sm">
-              <p className="text-gray-600 capitalize">
+              <p className="text-gray-600 dark:text-gray-400 capitalize">
                 {job.type.replace(/_/g, " ")}
               </p>
             </div>
@@ -89,9 +91,9 @@ export default function JobListingCard({ job }: { job: JobListing }) {
 
           {/* Experience Level */}
           <div className="flex items-start gap-2">
-            <TrendingUp className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+            <TrendingUp className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
             <div className="text-sm">
-              <p className="text-gray-600 capitalize">
+              <p className="text-gray-600 dark:text-gray-400 capitalize">
                 {job.experienceLevel.replace(/_/g, " ")}
               </p>
             </div>
@@ -99,8 +101,8 @@ export default function JobListingCard({ job }: { job: JobListing }) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <Calendar className="w-4 h-4" />
             {job.postedAt ? (
               <span>Posted {formatDate(job.postedAt)}</span>
@@ -110,7 +112,7 @@ export default function JobListingCard({ job }: { job: JobListing }) {
           </div>
           <Link
             href={`/employer/orgs/${job.organizationId}/all-jobs/${job.id}`}
-            className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm"
           >
             Details →
           </Link>
