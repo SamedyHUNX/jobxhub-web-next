@@ -12,6 +12,25 @@ import {
 import Link from "next/link";
 import { ComponentType } from "react";
 
+const JobListingCardTitle = ({
+  title,
+  isFeatured,
+}: {
+  title: string;
+  isFeatured?: boolean;
+}) => {
+  return (
+    <div className="flex items-center gap-2 mb-2">
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        {title}
+      </h3>
+      {isFeatured && (
+        <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+      )}
+    </div>
+  );
+};
+
 const JobListingCardItem = ({
   icon: Icon,
   text,
@@ -36,25 +55,6 @@ const JobListingCardItem = ({
   );
 };
 
-const JobListingTitle = ({
-  title,
-  isFeatured,
-}: {
-  title: string;
-  isFeatured?: boolean;
-}) => {
-  return (
-    <div className="flex items-center gap-2 mb-2">
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-        {title}
-      </h3>
-      {isFeatured && (
-        <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-      )}
-    </div>
-  );
-};
-
 export default function JobListingCard({ job }: { job: JobListing }) {
   return (
     <div
@@ -65,7 +65,10 @@ export default function JobListingCard({ job }: { job: JobListing }) {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <JobListingTitle title={job.title} isFeatured={job.isFeatured} />
+            <JobListingCardTitle
+              title={job.title}
+              isFeatured={job.isFeatured}
+            />
             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <Building2 className="w-4 h-4" />
               <span>Organization ID: {job.organizationId}</span>
@@ -127,13 +130,11 @@ export default function JobListingCard({ job }: { job: JobListing }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <Calendar className="w-4 h-4" />
-            {job.postedAt ? (
-              <span>Posted {formatDate(job.postedAt)}</span>
-            ) : (
-              <span>Created {formatDate(job.createdAt)}</span>
-            )}
+          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
+            <JobListingCardItem
+              icon={Calendar}
+              text={`Posted on ${formatDate(job.postedAt!)}`}
+            />
           </div>
           <Link
             href={`/employer/orgs/${job.organizationId}/all-jobs/${job.id}`}
