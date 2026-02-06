@@ -129,7 +129,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
         .transform((val) => (val.trim() === "" ? null : val))
         .optional()
         .nullable(),
-      locationRequirement: z.enum(["in-office", "hybrid", "remote"], {
+      locationRequirement: z.enum(locationRequirements, {
         message: t("locationRequirementRequired"),
       }),
     })
@@ -163,9 +163,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
 export type CreateJobListingFormData = z.infer<
   ReturnType<typeof createJobListingSchema>
 >;
-
 export type UpdateJobListingFormData = Partial<CreateJobListingFormData>;
-
 export type JobListingFormData = CreateJobListingFormData;
 
 // JobListings

@@ -133,3 +133,16 @@ export function formatJobListingLocation(
 
   return locationParts.join(", ");
 }
+
+// const formatWage = (wage: string | null, interval: string | null) => {
+//   if (!wage) return "Wage not specified";
+//   return `$${Number(wage).toLocaleString()}${interval ? `/${interval}` : ""}`;
+// };
+
+export const formatDate = (date: Date | string) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};

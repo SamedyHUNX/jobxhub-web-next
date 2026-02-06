@@ -17,7 +17,6 @@ import {
 import { locationRequirements } from "@/types";
 import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
-import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import TextField from "../form/TextField";
 import SelectField from "../form/SelectField";
@@ -45,10 +44,7 @@ export default function JobListingForm({
   const isMobile = useIsMobile();
 
   // Define schema
-  const jobListingSchema = useMemo(
-    () => createJobListingSchema(validationT),
-    [validationT],
-  );
+  const jobListingSchema = createJobListingSchema(validationT);
 
   // Initialize TanStack Form
   const form = useForm({
@@ -156,8 +152,11 @@ export default function JobListingForm({
                   name="wage"
                   label={getLabel("wage", "Wage")}
                   description={getDescription("wage")}
-                  type="text"
+                  type="number"
                   validator={(value) => {
+                    if (value === "") {
+                      return undefined;
+                    }
                     const result = jobListingSchema.shape.wage.safeParse(value);
                     return result.success
                       ? undefined

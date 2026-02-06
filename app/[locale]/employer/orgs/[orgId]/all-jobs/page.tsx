@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { JobListing } from "@/types";
 import Link from "next/link";
+import { formatDate, formatWage } from "@/lib/formatter";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 
@@ -176,19 +177,6 @@ export default function AllJobsByOrgPage() {
     });
   };
 
-  const formatWage = (wage: string | null, interval: string | null) => {
-    if (!wage) return "Wage not specified";
-    return `$${Number(wage).toLocaleString()}${interval ? `/${interval}` : ""}`;
-  };
-
-  const formatDate = (date: Date | string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
   if (!allJobListings) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -208,10 +196,10 @@ export default function AllJobsByOrgPage() {
     filters.state.length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen w-full p-8 bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mx-auto sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
@@ -233,7 +221,7 @@ export default function AllJobsByOrgPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto">
         {/* Search and Controls */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
           <div className="flex flex-col lg:flex-row gap-4">

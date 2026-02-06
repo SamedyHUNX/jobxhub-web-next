@@ -33,7 +33,7 @@ export default function JobIdPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl max-auto p-4 @container">
+    <div className="space-y-6 w-full max-auto p-8 @container">
       <div className="flex items-center justify-between gap-4 @max-4xl:flex-col @max-4xl:items-start">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
