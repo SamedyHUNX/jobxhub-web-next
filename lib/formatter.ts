@@ -91,7 +91,14 @@ export function formatJobListingStatus(status?: JobListingStatus) {
   }
 }
 
-export function formatWage(wage: number, wageInterval: WageInterval) {
+export function formatWage(
+  wage: number | null | undefined,
+  wageInterval?: WageInterval | null,
+) {
+  if (wage == null || isNaN(wage) || !wageInterval) {
+    return "N/A";
+  }
+
   const wageFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -109,7 +116,7 @@ export function formatWage(wage: number, wageInterval: WageInterval) {
     case "weekly":
       return `${wageFormatter.format(wage)} / wk`;
     default:
-      throw new Error(`Invalid wage interval: ${wageInterval satisfies never}`);
+      return "N/A";
   }
 }
 

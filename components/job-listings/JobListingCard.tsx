@@ -10,6 +10,31 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
+import { ComponentType } from "react";
+
+const JobListingCardItem = ({
+  icon: Icon,
+  text,
+  secondaryText,
+  className = "text-gray-600 dark:text-gray-400",
+}: {
+  icon: ComponentType<{ className?: string }>;
+  text: string;
+  secondaryText?: string;
+  className?: string;
+}) => {
+  return (
+    <div className="flex items-start gap-2">
+      <Icon className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
+      <div className="text-sm">
+        <p className={className}>{text}</p>
+        {secondaryText && (
+          <p className="text-gray-500 dark:text-gray-500">{secondaryText}</p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default function JobListingCard({ job }: { job: JobListing }) {
   return (
@@ -55,49 +80,37 @@ export default function JobListingCard({ job }: { job: JobListing }) {
         {/* Details Grid */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           {/* Location */}
-          <div className="flex items-start gap-2">
-            <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
-            <div className="text-sm">
-              <p className="text-gray-600 dark:text-gray-400 capitalize">
-                {job.locationRequirement.replace(/_/g, " ")}
-              </p>
-              {job.city && job.stateAbbreviation && (
-                <p className="text-gray-500 dark:text-gray-500">
-                  {job.city}, {job.stateAbbreviation}
-                </p>
-              )}
-            </div>
-          </div>
+          <JobListingCardItem
+            icon={MapPin}
+            text={job.locationRequirement.replace(/_/g, " ")}
+            secondaryText={
+              job.city && job.stateAbbreviation
+                ? `${job.city}, ${job.stateAbbreviation}`
+                : undefined
+            }
+            className="text-gray-600 dark:text-gray-400 capitalize"
+          />
 
           {/* Wage */}
-          <div className="flex items-start gap-2">
-            <DollarSign className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
-            <div className="text-sm">
-              <p className="text-gray-900 dark:text-gray-100 font-medium">
-                {formatWage(job.wage, job.wageInterval)}
-              </p>
-            </div>
-          </div>
+          <JobListingCardItem
+            icon={DollarSign}
+            text={formatWage(job.wage, job.wageInterval)}
+            className="text-gray-900 dark:text-gray-100 font-medium"
+          />
 
           {/* Job Type */}
-          <div className="flex items-start gap-2">
-            <Briefcase className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
-            <div className="text-sm">
-              <p className="text-gray-600 dark:text-gray-400 capitalize">
-                {job.type.replace(/_/g, " ")}
-              </p>
-            </div>
-          </div>
+          <JobListingCardItem
+            icon={Briefcase}
+            text={job.type.replace(/_/g, " ")}
+            className="text-gray-600 dark:text-gray-400 capitalize"
+          />
 
           {/* Experience Level */}
-          <div className="flex items-start gap-2">
-            <TrendingUp className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
-            <div className="text-sm">
-              <p className="text-gray-600 dark:text-gray-400 capitalize">
-                {job.experienceLevel.replace(/_/g, " ")}
-              </p>
-            </div>
-          </div>
+          <JobListingCardItem
+            icon={TrendingUp}
+            text={job.experienceLevel.replace(/_/g, " ")}
+            className="text-gray-600 dark:text-gray-400 capitalize"
+          />
         </div>
 
         {/* Footer */}
