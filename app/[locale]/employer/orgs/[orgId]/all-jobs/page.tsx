@@ -14,6 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 
@@ -215,15 +217,15 @@ export default function AllJobsByOrgPage() {
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
-              <input
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
+              <Input
                 type="text"
                 placeholder="Search by title, description, or location..."
                 value={filters.search}
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, search: e.target.value }))
                 }
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                className="pl-10"
               />
             </div>
 
@@ -290,16 +292,16 @@ export default function AllJobsByOrgPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Job Type */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Job Type
-                  </label>
+                  </Label>
                   <div className="space-y-2">
                     {filterOptions.types.map((type) => (
-                      <label
+                      <Label
                         key={type}
                         className="flex items-center cursor-pointer"
                       >
-                        <input
+                        <Input
                           type="checkbox"
                           checked={filters.type.includes(type)}
                           onChange={() => toggleFilter("type", type)}
@@ -308,23 +310,23 @@ export default function AllJobsByOrgPage() {
                         <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
                           {type.replace(/_/g, " ")}
                         </span>
-                      </label>
+                      </Label>
                     ))}
                   </div>
                 </div>
 
                 {/* Location Requirement */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Location
-                  </label>
+                  </Label>
                   <div className="space-y-2">
                     {filterOptions.locationRequirements.map((location) => (
-                      <label
+                      <Label
                         key={location}
                         className="flex items-center cursor-pointer"
                       >
-                        <input
+                        <Input
                           type="checkbox"
                           checked={filters.locationRequirement.includes(
                             location,
@@ -337,23 +339,23 @@ export default function AllJobsByOrgPage() {
                         <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
                           {location.replace(/_/g, " ")}
                         </span>
-                      </label>
+                      </Label>
                     ))}
                   </div>
                 </div>
 
                 {/* Experience Level */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Experience Level
-                  </label>
+                  </Label>
                   <div className="space-y-2">
                     {filterOptions.experienceLevels.map((level) => (
-                      <label
+                      <Label
                         key={level}
                         className="flex items-center cursor-pointer"
                       >
-                        <input
+                        <Input
                           type="checkbox"
                           checked={filters.experienceLevel.includes(level)}
                           onChange={() =>
@@ -364,23 +366,23 @@ export default function AllJobsByOrgPage() {
                         <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
                           {level.replace(/_/g, " ")}
                         </span>
-                      </label>
+                      </Label>
                     ))}
                   </div>
                 </div>
 
                 {/* Status */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Status
-                  </label>
+                  </Label>
                   <div className="space-y-2">
                     {filterOptions.statuses.map((status) => (
-                      <label
+                      <Label
                         key={status}
                         className="flex items-center cursor-pointer"
                       >
-                        <input
+                        <Input
                           type="checkbox"
                           checked={filters.status.includes(status)}
                           onChange={() => toggleFilter("status", status)}
@@ -389,7 +391,7 @@ export default function AllJobsByOrgPage() {
                         <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
                           {status}
                         </span>
-                      </label>
+                      </Label>
                     ))}
                   </div>
                 </div>
@@ -397,16 +399,16 @@ export default function AllJobsByOrgPage() {
                 {/* States */}
                 {filterOptions.states.length > 0 && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       State
-                    </label>
+                    </Label>
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {filterOptions.states.map((state) => (
-                        <label
+                        <Label
                           key={state}
                           className="flex items-center cursor-pointer"
                         >
-                          <input
+                          <Input
                             type="checkbox"
                             checked={filters.state.includes(state)}
                             onChange={() => toggleFilter("state", state)}
@@ -415,7 +417,7 @@ export default function AllJobsByOrgPage() {
                           <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                             {state}
                           </span>
-                        </label>
+                        </Label>
                       ))}
                     </div>
                   </div>
@@ -455,12 +457,12 @@ export default function AllJobsByOrgPage() {
               Try adjusting your filters or search terms
             </p>
             {activeFilterCount > 0 && (
-              <button
+              <Button
                 onClick={clearFilters}
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
               >
                 Clear all filters
-              </button>
+              </Button>
             )}
           </div>
         ) : (

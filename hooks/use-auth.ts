@@ -3,14 +3,10 @@ import { extractErrorMessage } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { clearAuth } from "@/stores/slices/auth.slice";
 import {
-  ForgotPasswordResponse,
-  ResetPasswordResponse,
+  AuthResponse,
   ResetPasswordVariables,
   SignInFormData,
-  SignInResponse,
   SignUpFormData,
-  SignUpResponse,
-  VerifyEmailResponse,
 } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -29,11 +25,7 @@ export function useAuth() {
 
   // Sign in mutation
   // (data, error, variable)
-  const signInMutation = useMutation<
-    SignInResponse,
-    AxiosError,
-    SignInFormData
-  >({
+  const signInMutation = useMutation<AuthResponse, AxiosError, SignInFormData>({
     mutationFn: (credentials) => authApi.signIn(credentials),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
@@ -47,7 +39,7 @@ export function useAuth() {
 
   // Sign up mutation
   const signUpMutation = useMutation<
-    SignUpResponse,
+    AuthResponse,
     AxiosError,
     { formData: SignUpFormData; locale: string }
   >({
@@ -62,11 +54,7 @@ export function useAuth() {
   });
 
   // Verify email mutation
-  const verifyEmailMutation = useMutation<
-    VerifyEmailResponse,
-    AxiosError,
-    string
-  >({
+  const verifyEmailMutation = useMutation<AuthResponse, AxiosError, string>({
     mutationFn: (token) => authApi.verifyEmail(token),
     onSuccess: () => {
       toast.success(successT("verifyEmailSuccess"));
@@ -79,7 +67,7 @@ export function useAuth() {
 
   // Forgot password mutation
   const forgotPasswordMutation = useMutation<
-    ForgotPasswordResponse,
+    AuthResponse,
     AxiosError,
     { email: string; locale: string }
   >({
@@ -99,7 +87,7 @@ export function useAuth() {
 
   // Reset password mutation
   const resetPasswordMutation = useMutation<
-    ResetPasswordResponse, // mutation result type
+    AuthResponse, // mutation result type
     AxiosError, // error type
     ResetPasswordVariables // variables type
   >({

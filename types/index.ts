@@ -37,13 +37,9 @@ export interface ApiResponse<T = any> {
   data: T | [];
 }
 
-export type SignInResponse = ApiResponse<[]>;
-export type SignUpResponse = ApiResponse<[]>;
+export type AuthResponse = ApiResponse<[]>;
+
 export type GetProfileResponse = ApiResponse<User[]>;
-export type VerifyEmailResponse = ApiResponse<[]>;
-export type ForgotPasswordResponse = ApiResponse<[]>;
-export type ResetPasswordResponse = ApiResponse<[]>;
-export type UpdateProfileResponse = ApiResponse<User[]>;
 export type JobListingFormResponse = ApiResponse<[]>;
 
 export type SignInFormData = Pick<AuthRequest, "email" | "password">;
