@@ -256,6 +256,11 @@ export default function JobListingForm({
                 label: getLocationRequirementLabel(lr),
               }))}
               disabled={isFieldDisabled("locationRequirement")}
+              onChange={() => {
+                // Trigger validation on dependent fields
+                jobListingForm.validateField("city", "change");
+                jobListingForm.validateField("stateAbbreviation", "change");
+              }}
             />
           )}
         </div>
