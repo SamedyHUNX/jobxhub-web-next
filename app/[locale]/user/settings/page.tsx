@@ -7,11 +7,19 @@ import { useTranslations } from "next-intl";
 import { createUpdateProfileSchema } from "@/schemas";
 import ProfileImage from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/FormField";
-import ProfileItem from "@/components/ProfileItem";
-import { Modal } from "@/components/Modal";
-import SubmitButton from "@/components/SubmitButton";
 import { useCustomForm } from "@/hooks/use-custom-form";
+import SubmitButton from "@/components/SubmitButton";
+import { FormField } from "@/components/FormField";
+import { Modal } from "@/components/Modal";
+
+function ProfileItem({ title, value }: { title: string; value: any }) {
+  return (
+    <div className="flex justify-between items-center">
+      <span className="text-sm text-gray-600 dark:text-gray-400">{title}</span>
+      <span className="text-sm text-gray-900 dark:text-white">{value}</span>
+    </div>
+  );
+}
 
 export default function UserSettingsPage() {
   const { user: currentUser, updateProfile } = useProfile();
