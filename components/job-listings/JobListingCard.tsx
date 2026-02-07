@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import MarkdownPartial from "../markdown/MarkdownPartial";
+import MarkdownRenderer from "../markdown/MarkdownRenderer";
 
 const JobListingCardItem = ({
   icon: Icon,
@@ -76,9 +78,13 @@ export default function JobListingCard({ job }: { job: JobListing }) {
 
       <CardContent className="space-y-4">
         {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {job.description}
-        </p>
+        <MarkdownPartial
+          dialogMarkdown={<MarkdownRenderer source={job.description} />}
+          mainMarkdown={
+            <MarkdownRenderer className="prose-sm" source={job.description} />
+          }
+          dialogTitle="Description"
+        />
 
         {/* Details Grid */}
         <div className="grid grid-cols-2 gap-4">

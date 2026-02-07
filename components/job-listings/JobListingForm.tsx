@@ -8,11 +8,11 @@ import {
   formatWageInterval,
 } from "@/lib/formatter";
 import {
-  CreateJobListingFormData,
-  createJobListingSchema,
+  JobListingFormData,
   experienceLevels,
   jobListingTypes,
   wageIntervals,
+  createOrUpdateJobListingSchema,
 } from "@/schemas";
 import { locationRequirements } from "@/types";
 import { useTranslations } from "next-intl";
@@ -44,7 +44,7 @@ export default function JobListingForm({
   const isMobile = useIsMobile();
 
   // Define schema
-  const jobListingSchema = createJobListingSchema(validationT);
+  const jobListingSchema = createOrUpdateJobListingSchema(validationT);
 
   const jobListingForm = useCustomForm({
     defaultValues: {
@@ -63,21 +63,22 @@ export default function JobListingForm({
       ...jobListing,
     },
     validationSchema: jobListingSchema,
-    onSubmit: (value) => onSubmit(value),
+    onSubmit: (value) => {
+      const { id, organizationId, createdAt, updatedAt, ...safeValues } = value;
+      onSubmit(safeValues);
+    },
   });
 
-  const getLabel = (
-    field: keyof CreateJobListingFormData,
-    defaultLabel: string,
-  ) => translations?.labels?.[field] ?? defaultLabel;
+  const getLabel = (field: keyof JobListingFormData, defaultLabel: string) =>
+    translations?.labels?.[field] ?? defaultLabel;
 
-  const getDescription = (field: keyof CreateJobListingFormData) =>
+  const getDescription = (field: keyof JobListingFormData) =>
     translations?.descriptions?.[field];
 
-  const shouldShowField = (field: keyof CreateJobListingFormData) =>
+  const shouldShowField = (field: keyof JobListingFormData) =>
     fields?.show?.[field] ?? true;
 
-  const isFieldDisabled = (field: keyof CreateJobListingFormData) =>
+  const isFieldDisabled = (field: keyof JobListingFormData) =>
     fields?.disabled?.[field] ?? false;
 
   // Option translation helpers

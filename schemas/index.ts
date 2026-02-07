@@ -96,7 +96,7 @@ export const createUpdateProfileSchema = (t: (key: string) => string) => {
 /**
  * Create Job Listing Schema
  */
-export const createJobListingSchema = (t: (key: string) => string) => {
+export const createOrUpdateJobListingSchema = (t: (key: string) => string) => {
   return z
     .object({
       title: z.string().min(1, t("jobTitleRequired")),
@@ -160,7 +160,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
 };
 
 export type CreateJobListingFormData = z.infer<
-  ReturnType<typeof createJobListingSchema>
+  ReturnType<typeof createOrUpdateJobListingSchema>
 >;
 export type UpdateJobListingFormData = Partial<CreateJobListingFormData>;
 export type JobListingFormData = CreateJobListingFormData;

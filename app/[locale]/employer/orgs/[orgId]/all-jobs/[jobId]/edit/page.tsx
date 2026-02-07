@@ -45,7 +45,7 @@ export default function EditJobIdPage() {
         <CardContent className="flex-1 min-h-0 p-6">
           <JobListingForm
             jobListing={currentJob}
-            onSubmit={(data) => saveJobListing(undefined, data)}
+            onSubmit={(data) => saveJobListing(currentJob.id, data)}
             translations={formTranslations}
             orgId={selectedOrganization}
             isLoading={jobListingLoading}

@@ -154,7 +154,7 @@ export default function CreateNewOrgPage() {
 
           {/* Submit Button */}
           <SubmitButton
-            isCreating={isCreating}
+            isSubmitting={isCreating}
             buttonText={newOrgT("create")}
           />
         </form>

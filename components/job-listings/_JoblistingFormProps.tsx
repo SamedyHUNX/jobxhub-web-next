@@ -1,19 +1,21 @@
-import { CreateJobListingFormData } from "@/schemas";
+import { JobListingFormData } from "@/schemas";
 import type { JobListing } from "@/types";
 import { ReactNode } from "react";
 
 export interface JobListingFormProps {
+  // Existing data for edit mode
   jobListing?: JobListing;
+
   // Core functionality
-  onSubmit: (data: CreateJobListingFormData) => void;
-  defaultValues?: Partial<CreateJobListingFormData>;
+  onSubmit: (data: JobListingFormData) => void;
+  defaultValues?: Partial<JobListingFormData>;
 
   // Customization
   mode?: "create" | "edit";
   translations?: {
     validations?: any;
-    labels?: Partial<Record<keyof CreateJobListingFormData, string>>;
-    descriptions?: Partial<Record<keyof CreateJobListingFormData, string>>;
+    labels?: Partial<Record<keyof JobListingFormData, string>>;
+    descriptions?: Partial<Record<keyof JobListingFormData, string>>;
     buttons?: {
       submit?: string;
       update?: string;
@@ -35,8 +37,8 @@ export interface JobListingFormProps {
 
   // Field visibility/customization
   fields?: {
-    show?: Partial<Record<keyof CreateJobListingFormData, boolean>>;
-    disabled?: Partial<Record<keyof CreateJobListingFormData, boolean>>;
+    show?: Partial<Record<keyof JobListingFormData, boolean>>;
+    disabled?: Partial<Record<keyof JobListingFormData, boolean>>;
   };
 
   // Advanced
