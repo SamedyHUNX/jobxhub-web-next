@@ -11,31 +11,22 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ComponentType } from "react";
-
-const JobListingCardTitle = ({
-  title,
-  isFeatured,
-}: {
-  title: string;
-  isFeatured?: boolean;
-}) => {
-  return (
-    <div className="flex items-center gap-2 mb-2">
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-        {title}
-      </h3>
-      {isFeatured && (
-        <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-      )}
-    </div>
-  );
-};
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const JobListingCardItem = ({
   icon: Icon,
   text,
   secondaryText,
-  className = "text-gray-600 dark:text-gray-400",
+  className = "text-muted-foreground",
 }: {
   icon: ComponentType<{ className?: string }>;
   text: string;
@@ -44,11 +35,11 @@ const JobListingCardItem = ({
 }) => {
   return (
     <div className="flex items-start gap-2">
-      <Icon className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" />
+      <Icon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
       <div className="text-sm">
         <p className={className}>{text}</p>
         {secondaryText && (
-          <p className="text-gray-500 dark:text-gray-500">{secondaryText}</p>
+          <p className="text-muted-foreground">{secondaryText}</p>
         )}
       </div>
     </div>
@@ -56,45 +47,41 @@ const JobListingCardItem = ({
 };
 
 export default function JobListingCard({ job }: { job: JobListing }) {
+  const statusVariant = {
+    published: "default",
+    draft: "secondary",
+    archived: "outline",
+    delisted: "outline",
+  }[job.status] as "default" | "secondary" | "outline";
+
   return (
-    <div
-      key={job.id}
-      className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden"
-    >
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader>
+        <div className="flex items-start justify-between">
           <div className="flex-1">
-            <JobListingCardTitle
-              title={job.title}
-              isFeatured={job.isFeatured}
-            />
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <CardTitle className="flex items-center gap-2">
+              {job.title}
+              {job.isFeatured && (
+                <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+              )}
+            </CardTitle>
+            <CardDescription className="flex items-center gap-2 mt-2">
               <Building2 className="w-4 h-4" />
               <span>Organization ID: {job.organizationId}</span>
-            </div>
+            </CardDescription>
           </div>
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-medium ${
-              job.status === "published"
-                ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
-                : job.status === "draft"
-                  ? "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300"
-                  : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300"
-            }`}
-          >
-            {job.status}
-          </span>
+          <Badge variant={statusVariant}>{job.status}</Badge>
         </div>
+      </CardHeader>
 
+      <CardContent className="space-y-4">
         {/* Description */}
-        <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">
+        <p className="text-sm text-muted-foreground line-clamp-2">
           {job.description}
         </p>
 
         {/* Details Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          {/* Location */}
+        <div className="grid grid-cols-2 gap-4">
           <JobListingCardItem
             icon={MapPin}
             text={job.locationRequirement.replace(/_/g, " ")}
@@ -103,47 +90,42 @@ export default function JobListingCard({ job }: { job: JobListing }) {
                 ? `${job.city}, ${job.stateAbbreviation}`
                 : undefined
             }
-            className="text-gray-600 dark:text-gray-400 capitalize"
+            className="text-muted-foreground capitalize"
           />
 
-          {/* Wage */}
           <JobListingCardItem
             icon={DollarSign}
             text={formatWage(job.wage, job.wageInterval)}
-            className="text-gray-900 dark:text-gray-100 font-medium"
+            className="text-foreground font-medium"
           />
 
-          {/* Job Type */}
           <JobListingCardItem
             icon={Briefcase}
             text={job.type.replace(/_/g, " ")}
-            className="text-gray-600 dark:text-gray-400 capitalize"
+            className="text-muted-foreground capitalize"
           />
 
-          {/* Experience Level */}
           <JobListingCardItem
             icon={TrendingUp}
             text={job.experienceLevel.replace(/_/g, " ")}
-            className="text-gray-600 dark:text-gray-400 capitalize"
+            className="text-muted-foreground capitalize"
           />
         </div>
+      </CardContent>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
-            <JobListingCardItem
-              icon={Calendar}
-              text={`Posted on ${formatDate(job.postedAt!)}`}
-            />
-          </div>
+      <CardFooter className="flex items-center justify-between border-t pt-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Calendar className="w-4 h-4" />
+          <span>Posted on {formatDate(job.postedAt!)}</span>
+        </div>
+        <Button variant="link" asChild className="px-0">
           <Link
             href={`/employer/orgs/${job.organizationId}/all-jobs/${job.id}`}
-            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm"
           >
             Details →
           </Link>
-        </div>
-      </div>
-    </div>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
