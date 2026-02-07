@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import PageLoader from "@/components/PageLoader";
 import { useTranslations } from "next-intl";
-import { useForm } from "@tanstack/react-form";
 import { createUpdateProfileSchema } from "@/schemas";
 import ProfileImage from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
@@ -12,9 +11,10 @@ import { FormField } from "@/components/FormField";
 import ProfileItem from "@/components/ProfileItem";
 import { Modal } from "@/components/Modal";
 import SubmitButton from "@/components/SubmitButton";
+import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function UserSettingsPage() {
-  const { user: currentUser, updateProfile, isUpdating } = useProfile();
+  const { user: currentUser, updateProfile } = useProfile();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const t = useTranslations();
@@ -24,8 +24,7 @@ export default function UserSettingsPage() {
   // Define validation schema
   const updateProfileSchema = createUpdateProfileSchema(validationT);
 
-  // Initialize TanStack Form with current user data
-  const form = useForm({
+  const updateProfileForm = useCustomForm({
     defaultValues: {
       firstName: currentUser?.firstName || "",
       lastName: currentUser?.lastName || "",
@@ -34,49 +33,47 @@ export default function UserSettingsPage() {
       image: null as File | null,
       imageUrl: currentUser?.imageUrl || "",
     },
-    onSubmit: async ({ value }) => {
+    validationSchema: updateProfileSchema,
+    onSubmit: async (values) => {
       try {
-        // Always create FormData
         const formData = new FormData();
-        formData.append("firstName", value.firstName);
-        formData.append("lastName", value.lastName);
-        formData.append("username", value.username);
-        formData.append("phoneNumber", value.phoneNumber);
+        formData.append("firstName", values.firstName);
+        formData.append("lastName", values.lastName);
+        formData.append("username", values.username);
+        formData.append("phoneNumber", values.phoneNumber);
 
         // Add image only if it exists
-        if (value.image) {
-          formData.append("image", value.image);
+        if (values.image) {
+          formData.append("image", values.image);
         }
 
         await updateProfile(formData);
         setIsModalOpen(false);
-      } catch (error: any) {
-        console.error("Failed to update profile", error);
+      } catch (error) {
+        // Error handling is done in the hook
+        console.error("Failed to update profile:", error);
       }
-    },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = updateProfileSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
     },
   });
 
   // Re-populate form when modal opens
   useEffect(() => {
     if (currentUser && isModalOpen) {
-      form.setFieldValue("firstName", currentUser.firstName || "");
-      form.setFieldValue("lastName", currentUser.lastName || "");
-      form.setFieldValue("username", currentUser.username || "");
-      form.setFieldValue("phoneNumber", currentUser.phoneNumber || "");
-      form.setFieldValue("imageUrl", currentUser.imageUrl || "");
-      form.setFieldValue("image", null);
+      updateProfileForm.setFieldValue("firstName", currentUser.firstName || "");
+      updateProfileForm.setFieldValue("lastName", currentUser.lastName || "");
+      updateProfileForm.setFieldValue("username", currentUser.username || "");
+      updateProfileForm.setFieldValue(
+        "phoneNumber",
+        currentUser.phoneNumber || "",
+      );
+      updateProfileForm.setFieldValue("imageUrl", currentUser.imageUrl || "");
+      updateProfileForm.setFieldValue("image", null);
     }
-  }, [currentUser, isModalOpen, form]);
+  }, [currentUser, isModalOpen, updateProfileForm]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    form.reset();
+    updateProfileForm.reset();
   };
 
   if (!currentUser) {
@@ -197,16 +194,18 @@ export default function UserSettingsPage() {
             onSubmit={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              form.handleSubmit();
+              updateProfileForm.handleSubmit();
             }}
             className="p-6 space-y-6"
           >
             {/* Profile Image Upload */}
-            <form.Field name="image">
+            <updateProfileForm.Field name="image">
               {(field) => (
                 <ProfileImage
                   editable={true}
-                  value={field.state.value || form.state.values.imageUrl}
+                  value={
+                    field.state.value || updateProfileForm.state.values.imageUrl
+                  }
                   onChange={(file) => field.handleChange(file)}
                   fallbackInitials={`${currentUser.firstName?.[0] || ""}${
                     currentUser.lastName?.[0] || ""
@@ -216,12 +215,12 @@ export default function UserSettingsPage() {
                   size="lg"
                 />
               )}
-            </form.Field>
+            </updateProfileForm.Field>
 
             {/* First Name & Last Name */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
-                form={form}
+                form={updateProfileForm}
                 name="firstName"
                 label={profileT("firstName")}
                 type="text"
@@ -236,7 +235,7 @@ export default function UserSettingsPage() {
               />
 
               <FormField
-                form={form}
+                form={updateProfileForm}
                 name="lastName"
                 label={profileT("lastName")}
                 type="text"
@@ -257,7 +256,7 @@ export default function UserSettingsPage() {
                 @
               </span>
               <FormField
-                form={form}
+                form={updateProfileForm}
                 name="username"
                 label={profileT("username")}
                 type="text"
@@ -274,7 +273,7 @@ export default function UserSettingsPage() {
 
             {/* Phone Number */}
             <FormField
-              form={form}
+              form={updateProfileForm}
               name="phoneNumber"
               label={profileT("phoneNumber")}
               type="tel"
@@ -288,7 +287,7 @@ export default function UserSettingsPage() {
               }}
             />
             <SubmitButton
-              isCreating={isUpdating}
+              isSubmitting={updateProfileForm.state.isSubmitting}
               buttonText={profileT("saveChanges")}
             />
           </form>

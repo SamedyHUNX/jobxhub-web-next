@@ -39,7 +39,7 @@ export interface ApiResponse<T = any> {
 
 export type AuthResponse = ApiResponse<[]>;
 
-export type GetProfileResponse = ApiResponse<User[]>;
+export type ProfileResponse = ApiResponse<User[]>;
 export type JobListingFormResponse = ApiResponse<[]>;
 
 export type SignInFormData = Pick<AuthRequest, "email" | "password">;
