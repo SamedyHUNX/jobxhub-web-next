@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import { jobListingsApi } from "@/lib/job-listings-api";
-import { CreateJobListingFormData, JobListingFormData } from "@/schemas";
+import { jobListingsApi } from "@/lib/apis/job-listings-api";
+import { JobListingFormData } from "@/schemas";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";

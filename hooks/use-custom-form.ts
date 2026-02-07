@@ -5,7 +5,7 @@ interface FormConfig<T> {
   onSubmit: (value: T) => void | Promise<void>;
   validationSchema?: any;
   transformBeforeSubmit?: (value: T) => any;
-  validateOnChange?: boolean | ((value: T) => boolean); // New option
+  validateOnChange?: boolean | ((value: T) => boolean);
 }
 
 export function useCustomForm<T>({
