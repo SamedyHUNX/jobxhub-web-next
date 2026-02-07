@@ -21,7 +21,7 @@ export default function CreateNewOrgPage() {
 
   const createOrganizationFormSchema = useMemo(
     () => createOrganizationSchema(validationT),
-    [validationT]
+    [validationT],
   );
 
   // Initialize TanStack Form
@@ -55,7 +55,7 @@ export default function CreateNewOrgPage() {
   });
 
   return (
-    <div className="min-h-[calc(100vh-68px)] bg-white dark:bg-black flex items-center justify-center p-4">
+    <div className="min-h-[calc(100vh-68px)]  flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl p-12 border border-gray-300 dark:border-gray-700">
         <h1 className="text-4xl font-bold mb-12 text-black dark:text-white tracking-tighter">
           {newOrgT("newPageTitle")}
@@ -77,7 +77,7 @@ export default function CreateNewOrgPage() {
                 onChange: ({ value }) => {
                   const result =
                     createOrganizationFormSchema.shape.orgImage.safeParse(
-                      value
+                      value,
                     );
                   return result.success
                     ? undefined
@@ -129,7 +129,7 @@ export default function CreateNewOrgPage() {
             validator={(value) => {
               const result =
                 createOrganizationFormSchema.shape.orgDescription.safeParse(
-                  value
+                  value,
                 );
               return result.success
                 ? undefined

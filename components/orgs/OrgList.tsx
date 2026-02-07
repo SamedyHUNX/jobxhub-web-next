@@ -71,7 +71,7 @@ export default function OrgsList({
   }
 
   return (
-    <div className="min-h-[calc(100vh-68px)] bg-white dark:bg-black flex items-center justify-center p-4">
+    <div className="min-h-[calc(100vh-68px)] flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl border border-gray-300 dark:border-gray-700 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <OrgListHeader translations={translations} />
