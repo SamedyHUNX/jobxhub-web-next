@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useJobListings } from "@/hooks/use-job-listings";
-import { Search, Filter, Briefcase, ChevronDown } from "lucide-react";
+import { Search, Filter, Briefcase } from "lucide-react";
 import type { JobListing } from "@/types";
 import PageLoader from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 
@@ -183,263 +194,240 @@ export default function AllJobsByOrgPage() {
     filters.state.length;
 
   return (
-    <div className="min-h-screen w-full p-8 bg-white dark:bg-black">
+    <div className="min-h-screen w-full p-8 bg-background">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 rounded-xl">
-        <div className="mx-auto sm:px-6 lg:px-8 py-8">
+      <Card className="mb-6">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                All Job Listings
-              </h1>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">
+              <CardTitle className="text-3xl">All Job Listings</CardTitle>
+              <CardDescription className="mt-2">
                 Manage and view all positions across your organization
+              </CardDescription>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-muted-foreground">Total Listings</p>
+              <p className="text-2xl font-bold text-primary">
+                {allJobListings.length}
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Total Listings
-                </p>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {allJobListings.length}
-                </p>
-              </div>
-            </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
       <div className="mx-auto">
         {/* Search and Controls */}
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
-              <input
-                type="text"
-                placeholder="Search by title, description, or location..."
-                value={filters.search}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, search: e.target.value }))
-                }
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500 dark:placeholder:text-gray-400"
-              />
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex flex-col lg:flex-row gap-4">
+              {/* Search */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search by title, description, or location..."
+                  value={filters.search}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, search: e.target.value }))
+                  }
+                  className="pl-9"
+                />
+              </div>
+
+              {/* Sort */}
+              <Select
+                value={sortBy}
+                onValueChange={(value) => setSortBy(value as SortOption)}
+              >
+                <SelectTrigger className="w-45">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest First</SelectItem>
+                  <SelectItem value="oldest">Oldest First</SelectItem>
+                  <SelectItem value="wage-high">Highest Wage</SelectItem>
+                  <SelectItem value="wage-low">Lowest Wage</SelectItem>
+                  <SelectItem value="title">Title (A-Z)</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Filter Toggle */}
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className="gap-2"
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+                {activeFilterCount > 0 && (
+                  <Badge variant="default" className="ml-1">
+                    {activeFilterCount}
+                  </Badge>
+                )}
+              </Button>
             </div>
 
-            {/* Sort */}
-            <Select
-              value={sortBy}
-              onValueChange={(value) => setSortBy(value as SortOption)}
-            >
-              <SelectTrigger className="w-45 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent className="dark:bg-gray-800 dark:border-gray-600">
-                <SelectItem
-                  value="newest"
-                  className="dark:text-gray-100 dark:focus:bg-gray-700"
-                >
-                  Newest First
-                </SelectItem>
-                <SelectItem
-                  value="oldest"
-                  className="dark:text-gray-100 dark:focus:bg-gray-700"
-                >
-                  Oldest First
-                </SelectItem>
-                <SelectItem
-                  value="wage-high"
-                  className="dark:text-gray-100 dark:focus:bg-gray-700"
-                >
-                  Highest Wage
-                </SelectItem>
-                <SelectItem
-                  value="wage-low"
-                  className="dark:text-gray-100 dark:focus:bg-gray-700"
-                >
-                  Lowest Wage
-                </SelectItem>
-                <SelectItem
-                  value="title"
-                  className="dark:text-gray-100 dark:focus:bg-gray-700"
-                >
-                  Title (A-Z)
-                </SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Filter Toggle */}
-            <Button
-              onClick={() => setShowFilters(!showFilters)}
-              className="px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
-            >
-              <Filter className="w-5 h-5" />
-              Filters
-              {activeFilterCount > 0 && (
-                <span className="bg-blue-600 dark:bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
-                  {activeFilterCount}
-                </span>
-              )}
-            </Button>
-          </div>
-
-          {/* Filter Panel */}
-          {showFilters && filterOptions && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Job Type */}
-                <div>
-                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Job Type
-                  </Label>
-                  <div className="space-y-2">
-                    {filterOptions.types.map((type) => (
-                      <Label
-                        key={type}
-                        className="flex items-center cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={filters.type.includes(type)}
-                          onChange={() => toggleFilter("type", type)}
-                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:bg-gray-700 focus:ring-blue-500 cursor-pointer"
-                        />
-                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
-                          {type.replace(/_/g, " ")}
-                        </span>
-                      </Label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Location Requirement */}
-                <div>
-                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Location
-                  </Label>
-                  <div className="space-y-2">
-                    {filterOptions.locationRequirements.map((location) => (
-                      <Label
-                        key={location}
-                        className="flex items-center cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={filters.locationRequirement.includes(
-                            location,
-                          )}
-                          onChange={() =>
-                            toggleFilter("locationRequirement", location)
-                          }
-                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:bg-gray-700 focus:ring-blue-500 cursor-pointer"
-                        />
-                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
-                          {location.replace(/_/g, " ")}
-                        </span>
-                      </Label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Experience Level */}
-                <div>
-                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Experience Level
-                  </Label>
-                  <div className="space-y-2">
-                    {filterOptions.experienceLevels.map((level) => (
-                      <Label
-                        key={level}
-                        className="flex items-center cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={filters.experienceLevel.includes(level)}
-                          onChange={() =>
-                            toggleFilter("experienceLevel", level)
-                          }
-                          className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer"
-                        />
-                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
-                          {level.replace(/_/g, " ")}
-                        </span>
-                      </Label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Status */}
-                <div>
-                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Status
-                  </Label>
-                  <div className="space-y-2">
-                    {filterOptions.statuses.map((status) => (
-                      <Label
-                        key={status}
-                        className="flex items-center cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={filters.status.includes(status)}
-                          onChange={() => toggleFilter("status", status)}
-                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:bg-gray-700 focus:ring-blue-500 cursor-pointer"
-                        />
-                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300 capitalize">
-                          {status}
-                        </span>
-                      </Label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* States */}
-                {filterOptions.states.length > 0 && (
-                  <div>
-                    <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      State
-                    </Label>
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      {filterOptions.states.map((state) => (
-                        <Label
-                          key={state}
-                          className="flex items-center cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={filters.state.includes(state)}
-                            onChange={() => toggleFilter("state", state)}
-                            className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:bg-gray-700 focus:ring-blue-500 cursor-pointer"
+            {/* Filter Panel */}
+            {showFilters && filterOptions && (
+              <>
+                <Separator className="my-4" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Job Type */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Job Type</Label>
+                    <div className="space-y-2">
+                      {filterOptions.types.map((type) => (
+                        <div key={type} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`type-${type}`}
+                            checked={filters.type.includes(type)}
+                            onCheckedChange={() => toggleFilter("type", type)}
                           />
-                          <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                            {state}
-                          </span>
-                        </Label>
+                          <Label
+                            htmlFor={`type-${type}`}
+                            className="text-sm font-normal cursor-pointer capitalize"
+                          >
+                            {type.replace(/_/g, " ")}
+                          </Label>
+                        </div>
                       ))}
                     </div>
                   </div>
-                )}
-              </div>
 
-              {activeFilterCount > 0 && (
-                <div className="mt-4 flex justify-end">
-                  <Button
-                    onClick={clearFilters}
-                    className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium bg-transparent"
-                  >
-                    Clear all filters
-                  </Button>
+                  {/* Location Requirement */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Location</Label>
+                    <div className="space-y-2">
+                      {filterOptions.locationRequirements.map((location) => (
+                        <div
+                          key={location}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            id={`location-${location}`}
+                            checked={filters.locationRequirement.includes(
+                              location,
+                            )}
+                            onCheckedChange={() =>
+                              toggleFilter("locationRequirement", location)
+                            }
+                          />
+                          <Label
+                            htmlFor={`location-${location}`}
+                            className="text-sm font-normal cursor-pointer capitalize"
+                          >
+                            {location.replace(/_/g, " ")}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Experience Level */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">
+                      Experience Level
+                    </Label>
+                    <div className="space-y-2">
+                      {filterOptions.experienceLevels.map((level) => (
+                        <div
+                          key={level}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            id={`experience-${level}`}
+                            checked={filters.experienceLevel.includes(level)}
+                            onCheckedChange={() =>
+                              toggleFilter("experienceLevel", level)
+                            }
+                          />
+                          <Label
+                            htmlFor={`experience-${level}`}
+                            className="text-sm font-normal cursor-pointer capitalize"
+                          >
+                            {level.replace(/_/g, " ")}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Status */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Status</Label>
+                    <div className="space-y-2">
+                      {filterOptions.statuses.map((status) => (
+                        <div
+                          key={status}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            id={`status-${status}`}
+                            checked={filters.status.includes(status)}
+                            onCheckedChange={() =>
+                              toggleFilter("status", status)
+                            }
+                          />
+                          <Label
+                            htmlFor={`status-${status}`}
+                            className="text-sm font-normal cursor-pointer capitalize"
+                          >
+                            {status}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* States */}
+                  {filterOptions.states.length > 0 && (
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">State</Label>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {filterOptions.states.map((state) => (
+                          <div
+                            key={state}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox
+                              id={`state-${state}`}
+                              checked={filters.state.includes(state)}
+                              onCheckedChange={() =>
+                                toggleFilter("state", state)
+                              }
+                            />
+                            <Label
+                              htmlFor={`state-${state}`}
+                              className="text-sm font-normal cursor-pointer"
+                            >
+                              {state}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          )}
-        </div>
+
+                {activeFilterCount > 0 && (
+                  <div className="mt-6 flex justify-end">
+                    <Button
+                      variant="ghost"
+                      onClick={clearFilters}
+                      className="text-sm"
+                    >
+                      Clear all filters
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Results Count */}
         <div className="mb-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground">
             Showing {filteredAndSortedJobs.length} of {allJobListings.length}{" "}
             jobs
           </p>
@@ -447,27 +435,24 @@ export default function AllJobsByOrgPage() {
 
         {/* Job Listings Grid */}
         {filteredAndSortedJobs.length === 0 ? (
-          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
-            <Briefcase className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-              No jobs found
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Try adjusting your filters or search terms
-            </p>
-            {activeFilterCount > 0 && (
-              <button
-                onClick={clearFilters}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
-              >
-                Clear all filters
-              </button>
-            )}
-          </div>
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Briefcase className="w-12 h-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium mb-2">No jobs found</h3>
+              <p className="text-muted-foreground mb-4">
+                Try adjusting your filters or search terms
+              </p>
+              {activeFilterCount > 0 && (
+                <Button variant="link" onClick={clearFilters}>
+                  Clear all filters
+                </Button>
+              )}
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredAndSortedJobs.map((job) => (
-              <JobListingCard job={job} />
+              <JobListingCard key={job.id} job={job} />
             ))}
           </div>
         )}

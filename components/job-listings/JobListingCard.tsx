@@ -59,7 +59,7 @@ export default function JobListingCard({ job }: { job: JobListing }) {
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-3xl py-2">
               {job.title}
               {job.isFeatured && (
                 <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
