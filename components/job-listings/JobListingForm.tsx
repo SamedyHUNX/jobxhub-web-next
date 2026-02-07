@@ -15,7 +15,6 @@ import {
   wageIntervals,
 } from "@/schemas";
 import { locationRequirements } from "@/types";
-import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import TextField from "../form/TextField";
@@ -25,6 +24,7 @@ import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import SubmitButton from "../SubmitButton";
 import { JobListingFormProps } from "./_JoblistingFormProps";
+import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function JobListingForm({
   jobListing,
@@ -46,8 +46,7 @@ export default function JobListingForm({
   // Define schema
   const jobListingSchema = createJobListingSchema(validationT);
 
-  // Initialize TanStack Form
-  const form = useForm({
+  const jobListingForm = useCustomForm({
     defaultValues: {
       ...{
         title: "",
@@ -63,15 +62,8 @@ export default function JobListingForm({
       ...defaultValues,
       ...jobListing,
     },
-    onSubmit: async ({ value }) => {
-      onSubmit(value);
-    },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = jobListingSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
-    },
+    validationSchema: jobListingSchema,
+    onSubmit: (value) => onSubmit(value),
   });
 
   const getLabel = (
@@ -118,7 +110,7 @@ export default function JobListingForm({
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        form.handleSubmit();
+        jobListingForm.handleSubmit();
       }}
       className={cn("h-full flex flex-col @container", className)}
     >
@@ -130,7 +122,7 @@ export default function JobListingForm({
         >
           {shouldShowField("title") && (
             <TextField
-              form={form}
+              form={jobListingForm}
               name="title"
               label={getLabel("title", "Job Title")}
               description={getDescription("title")}
@@ -148,7 +140,7 @@ export default function JobListingForm({
             <div className="space-y-2">
               <div className="flex gap-2">
                 <TextField
-                  form={form}
+                  form={jobListingForm}
                   name="wage"
                   label={getLabel("wage", "Wage")}
                   description={getDescription("wage")}
@@ -166,7 +158,7 @@ export default function JobListingForm({
 
                 {shouldShowField("wageInterval") && (
                   <SelectField
-                    form={form}
+                    form={jobListingForm}
                     name="wageInterval"
                     label={getLabel("wageInterval", "Wage")}
                     description={getDescription("wageInterval")}
@@ -192,7 +184,7 @@ export default function JobListingForm({
         >
           {shouldShowField("city") && (
             <TextField
-              form={form}
+              form={jobListingForm}
               name="city"
               label={getLabel("city", "City")}
               description={getDescription("city")}
@@ -208,7 +200,7 @@ export default function JobListingForm({
 
           {shouldShowField("stateAbbreviation") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="stateAbbreviation"
               label={getLabel("stateAbbreviation", "State")}
               description={getDescription("stateAbbreviation")}
@@ -224,7 +216,7 @@ export default function JobListingForm({
 
           {shouldShowField("locationRequirement") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="locationRequirement"
               label={getLabel("locationRequirement", "Location Requirement")}
               description={getDescription("locationRequirement")}
@@ -244,7 +236,7 @@ export default function JobListingForm({
         >
           {shouldShowField("type") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="type"
               label={getLabel("type", "Job Type")}
               description={getDescription("type")}
@@ -264,7 +256,7 @@ export default function JobListingForm({
 
           {shouldShowField("experienceLevel") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="experienceLevel"
               label={getLabel("experienceLevel", "Experience Level")}
               description={getDescription("experienceLevel")}
@@ -286,7 +278,7 @@ export default function JobListingForm({
 
         {shouldShowField("description") && (
           <FormField
-            form={form}
+            form={jobListingForm}
             name="description"
             label={getLabel("description", "Description")}
             component={MarkdownEditor}
@@ -300,13 +292,13 @@ export default function JobListingForm({
             }}
           />
         )}
-        {children?.(form)}
+        {children?.(jobListingForm)}
       </div>
 
       {!hideSubmitButton && (
         <div className={cn("pt-4 mt-4", showBorder && "border-t")}>
           <SubmitButton
-            isSubmitting={isLoading || form.state.isSubmitting}
+            isSubmitting={isLoading || jobListingForm.state.isSubmitting}
             buttonText={submitButtonText}
             buttonClassname={buttonClassName}
           />
