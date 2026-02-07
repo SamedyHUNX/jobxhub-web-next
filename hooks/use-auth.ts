@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { toast } from "sonner";
 
 export function useAuth() {
@@ -103,22 +104,18 @@ export function useAuth() {
   });
 
   // Sign out
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     localStorage.removeItem("selectedOrganization");
     try {
       await authApi.signOut();
-
-      dispatch(clearAuth());
-      queryClient.clear();
-
-      router.push("/sign-in");
     } catch (error) {
       console.error("Sign out failed:", error);
+    } finally {
       dispatch(clearAuth());
       queryClient.clear();
       router.push("/sign-in");
     }
-  };
+  }, [dispatch, queryClient, router]);
 
   return {
     // Auth state

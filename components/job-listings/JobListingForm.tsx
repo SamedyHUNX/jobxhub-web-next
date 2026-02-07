@@ -306,7 +306,7 @@ export default function JobListingForm({
       {!hideSubmitButton && (
         <div className={cn("pt-4 mt-4", showBorder && "border-t")}>
           <SubmitButton
-            isCreating={isLoading || form.state.isSubmitting}
+            isSubmitting={isLoading || form.state.isSubmitting}
             buttonText={submitButtonText}
             buttonClassname={buttonClassName}
           />
