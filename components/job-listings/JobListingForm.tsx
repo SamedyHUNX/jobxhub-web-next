@@ -190,10 +190,24 @@ export default function JobListingForm({
               description={getDescription("city")}
               type="text"
               validator={(value) => {
-                const result = jobListingSchema.shape.city.safeParse(value);
-                return result.success
-                  ? undefined
-                  : result.error.issues[0].message;
+                // Get current form state to check locationRequirement
+                const currentValues = jobListingForm.state.values;
+
+                // Run full schema validation to catch cross-field rules
+                const result = jobListingSchema.safeParse({
+                  ...currentValues,
+                  city: value, // Use the current value being validated
+                });
+
+                if (!result.success) {
+                  // Find error specific to city field
+                  const cityError = result.error.issues.find((issue) =>
+                    issue.path.includes("city"),
+                  );
+                  return cityError?.message;
+                }
+
+                return undefined;
               }}
             />
           )}
@@ -211,6 +225,23 @@ export default function JobListingForm({
               disabled={isFieldDisabled("stateAbbreviation")}
               allowClear
               clearLabel={getClearStateLabel()}
+              validator={(value) => {
+                const currentValues = jobListingForm.state.values;
+
+                const result = jobListingSchema.safeParse({
+                  ...currentValues,
+                  stateAbbreviation: value,
+                });
+
+                if (!result.success) {
+                  const stateError = result.error.issues.find((issue) =>
+                    issue.path.includes("stateAbbreviation"),
+                  );
+                  return stateError?.message;
+                }
+
+                return undefined;
+              }}
             />
           )}
 

@@ -220,7 +220,7 @@
     "experienceLevelRequired": "Please provide experience level",
     "jobTypeRequired": "Please provide job type",
     "locationRequirementRequired": "Please provide the required location",
-    "nonRemoteRequired": "Non-remote",
+    "nonRemoteRequired": "Required field for non-remote",
     "passwordsMustMatch": "Passwords must match",
     "passwordsDoNotMatch": "Passwords must match"
   },

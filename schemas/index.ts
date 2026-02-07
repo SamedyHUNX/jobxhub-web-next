@@ -127,7 +127,6 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       city: z
         .string()
         .transform((val) => (val.trim() === "" ? null : val))
-        .optional()
         .nullable(),
       locationRequirement: z.enum(locationRequirements, {
         message: t("locationRequirementRequired"),
@@ -137,7 +136,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       (listing) => {
         return (
           listing.locationRequirement === "remote" ||
-          (listing.city != null && listing.city.trim() !== "")
+          (listing.city != null && listing.city !== "")
         );
       },
       {
@@ -150,7 +149,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
         return (
           listing.locationRequirement === "remote" ||
           (listing.stateAbbreviation != null &&
-            listing.stateAbbreviation.trim() !== "")
+            listing.stateAbbreviation !== "")
         );
       },
       {
