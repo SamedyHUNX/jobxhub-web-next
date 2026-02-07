@@ -6,9 +6,9 @@
 
 :root {
   --radius: 0.625rem;
-  --background: 60 100% 98.8%;
+  --background: 220 14.3% 95.9%; /* Tailwind gray-100 */
   --foreground: 222.2 84% 4.9%;
-  --sidebar-background: 60 100% 98.8%;
+  --sidebar-background: 220 14.3% 95.9%; /* Tailwind gray-100 */
   --sidebar-foreground: 222.2 84% 4.9%;
   --sidebar-border: 220 13% 91%;
   --sidebar-accent: 220 13% 91%;
@@ -47,9 +47,9 @@
 }
 
 .dark {
-  --background: 220 13% 36%;
+  --background: 215 20.2% 15.3%; /* Tailwind gray-800 */
   --foreground: 210 40% 98%;
-  --sidebar-background: 220 13% 36%;
+  --sidebar-background: 215 20.2% 15.3%; /* Tailwind gray-800 */
   --sidebar-foreground: 210 40% 98%;
   --sidebar-border: 220 13% 28%;
   --sidebar-accent: 220 13% 28%;
