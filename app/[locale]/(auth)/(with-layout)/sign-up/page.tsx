@@ -8,7 +8,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { countries } from "@/lib/constants";
 import { createSignUpSchema } from "@/schemas";
-import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
@@ -36,6 +35,11 @@ export default function SignUpPage() {
       image: null as File | null,
     },
     validationSchema: signUpSchema,
+    validateOnChange: false,
+    transformBeforeSubmit: (value) => ({
+      ...value,
+      phoneNumber: `${value.countryCode}${value.phoneNumber}`,
+    }),
     onSubmit: (formData) => signUp({ formData, locale }),
   });
 

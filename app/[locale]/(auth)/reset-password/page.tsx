@@ -5,6 +5,7 @@ import BrandLogo from "@/components/BrandLogo";
 import { FormField } from "@/components/FormField";
 import SubmitButton from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
+import { useCustomForm } from "@/hooks/use-custom-form";
 import { createResetPasswordSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
@@ -27,26 +28,17 @@ export default function ResetPasswordPage() {
   // Define schema
   const resetPasswordFormSchema = createResetPasswordSchema(validationT);
 
-  // Initialize TanStack Form
-  const form = useForm({
-    defaultValues: { newPassword: "", confirmNewPassword: "" },
-    onSubmit: async ({ value }) => {
-      resetPassword({ token, ...value });
+  const resetPasswordForm = useCustomForm({
+    defaultValues: {
+      newPassword: "",
+      confirmNewPassword: "",
     },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = resetPasswordFormSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
-      onChange: ({ value }) => {
-        // Only validate if both fields have values
-        if (value.newPassword && value.confirmNewPassword) {
-          const result = resetPasswordFormSchema.safeParse(value);
-          return result.success ? undefined : result.error.format();
-        }
-        return undefined;
-      },
+    validationSchema: resetPasswordFormSchema,
+    validateOnChange: (value) => {
+      // Only validate if both fields have values
+      return !!(value.newPassword && value.confirmNewPassword);
     },
+    onSubmit: (value) => resetPassword({ token, ...value }),
   });
 
   // Redirect if no token provided
@@ -70,14 +62,14 @@ export default function ResetPasswordPage() {
         onSubmit={async (e) => {
           e.preventDefault();
           e.stopPropagation();
-          await form.handleSubmit();
+          await resetPasswordForm.handleSubmit();
         }}
         className="space-y-6 w-full"
       >
         <div className="space-y-5 w-full rounded-lg bg-white dark:bg-gray-900 p-8 shadow-xl border border-gray-200 dark:border-gray-800">
           {/* New Password Field */}
           <FormField
-            form={form}
+            form={resetPasswordForm}
             name="newPassword"
             label={authT("newPassword")}
             type="password"
@@ -92,7 +84,7 @@ export default function ResetPasswordPage() {
           />
 
           <FormField
-            form={form}
+            form={resetPasswordForm}
             name="confirmNewPassword"
             label={authT("confirmNewPassword")}
             type="password"

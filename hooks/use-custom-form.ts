@@ -5,6 +5,7 @@ interface FormConfig<T> {
   onSubmit: (value: T) => void | Promise<void>;
   validationSchema?: any;
   transformBeforeSubmit?: (value: T) => any;
+  validateOnChange?: boolean | ((value: T) => boolean); // New option
 }
 
 export function useCustomForm<T>({
@@ -12,6 +13,7 @@ export function useCustomForm<T>({
   onSubmit,
   validationSchema,
   transformBeforeSubmit,
+  validateOnChange = false,
 }: FormConfig<T>) {
   return useForm({
     defaultValues,
@@ -26,6 +28,19 @@ export function useCustomForm<T>({
           onSubmit: ({ value }) => {
             const result = validationSchema.safeParse(value);
             return result.success ? undefined : result.error.format();
+          },
+          onChange: ({ value }) => {
+            // Check if onChange validation is enabled
+            const shouldValidate =
+              typeof validateOnChange === "function"
+                ? validateOnChange(value)
+                : validateOnChange;
+
+            if (shouldValidate) {
+              const result = validationSchema.safeParse(value);
+              return result.success ? undefined : result.error.format();
+            }
+            return undefined;
           },
         }
       : undefined,
