@@ -5,6 +5,7 @@ import { FormField } from "@/components/FormField";
 import ProfileImage from "@/components/ProfileImage";
 import SubmitButton from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
+import { useCustomForm } from "@/hooks/use-custom-form";
 import { countries } from "@/lib/constants";
 import { createSignUpSchema } from "@/schemas";
 import { useForm } from "@tanstack/react-form";
@@ -22,8 +23,7 @@ export default function SignUpPage() {
 
   const signUpSchema = createSignUpSchema(validationT);
 
-  // Initialize Tanstack Form
-  const form = useForm({
+  const signUpForm = useCustomForm({
     defaultValues: {
       username: "",
       firstName: "",
@@ -35,20 +35,8 @@ export default function SignUpPage() {
       dateOfBirth: "",
       image: null as File | null,
     },
-    onSubmit: async ({ value }) => {
-      // Combine country code with phone number
-      const formData = {
-        ...value,
-        phoneNumber: `${value.countryCode}${value.phoneNumber}`,
-      };
-      signUp({ formData, locale });
-    },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = signUpSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
-    },
+    validationSchema: signUpSchema,
+    onSubmit: (formData) => signUp({ formData, locale }),
   });
 
   return (
@@ -59,14 +47,14 @@ export default function SignUpPage() {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          form.handleSubmit();
+          signUpForm.handleSubmit();
         }}
         className="space-y-6 w-full"
       >
         <div className="rounded-xl bg-white dark:bg-gray-900 p-8 shadow-xl border border-gray-200 dark:border-gray-800">
           {/* Profile Image Upload */}
           <div className="mb-8 flex justify-center">
-            <form.Field
+            <signUpForm.Field
               name="image"
               validators={{
                 onChange: ({ value }) => {
@@ -87,13 +75,13 @@ export default function SignUpPage() {
                   editable={true}
                 />
               )}
-            </form.Field>
+            </signUpForm.Field>
           </div>
 
           {/* Two Column Layout for Name Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
             <FormField
-              form={form}
+              form={signUpForm}
               name="firstName"
               label={authT("firstName")}
               placeholder={authT("firstNamePlaceholder")}
@@ -105,7 +93,7 @@ export default function SignUpPage() {
               }}
             />
             <FormField
-              form={form}
+              form={signUpForm}
               name="lastName"
               label={authT("lastName")}
               placeholder={authT("lastNamePlaceholder")}
@@ -121,7 +109,7 @@ export default function SignUpPage() {
           {/* Single Column Fields */}
           <div className="space-y-5">
             <FormField
-              form={form}
+              form={signUpForm}
               name="username"
               label={authT("username")}
               placeholder={authT("usernamePlaceholder")}
@@ -134,7 +122,7 @@ export default function SignUpPage() {
             />
 
             <FormField
-              form={form}
+              form={signUpForm}
               name="email"
               label={authT("email")}
               type="email"
@@ -148,7 +136,7 @@ export default function SignUpPage() {
             />
 
             <FormField
-              form={form}
+              form={signUpForm}
               name="password"
               label={authT("password")}
               type="password"
@@ -168,7 +156,7 @@ export default function SignUpPage() {
               </label>
               {/* Phone Number Input */}
               <div className="flex gap-3 w-full">
-                <form.Field name="countryCode">
+                <signUpForm.Field name="countryCode">
                   {(field: any) => (
                     <select
                       value={field.state.value}
@@ -182,11 +170,11 @@ export default function SignUpPage() {
                       ))}
                     </select>
                   )}
-                </form.Field>
+                </signUpForm.Field>
                 <div className="flex-1 h-10.5">
                   <FormField
                     label=""
-                    form={form}
+                    form={signUpForm}
                     name="phoneNumber"
                     type="tel"
                     placeholder="123456789"
@@ -203,7 +191,7 @@ export default function SignUpPage() {
             </div>
 
             <FormField
-              form={form}
+              form={signUpForm}
               name="dateOfBirth"
               label={authT("dateOfBirth")}
               type="date"

@@ -1,14 +1,13 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
-import { SignInFormData } from "@/types";
 import { createSignInSchema } from "@/schemas";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
 import AuthLeftHeader from "@/components/AuthLeftHeader";
 import SubmitButton from "@/components/SubmitButton";
+import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function SignInPage() {
   // Translations
@@ -22,21 +21,13 @@ export default function SignInPage() {
 
   const signInSchema = createSignInSchema(validationT);
 
-  // Initialize TanStack Form
-  const form = useForm({
+  const signInForm = useCustomForm({
     defaultValues: {
       email: "",
       password: "",
     },
-    onSubmit: ({ value }: { value: SignInFormData }) => {
-      signIn(value);
-    },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = signInSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
-    },
+    validationSchema: signInSchema,
+    onSubmit: (formData) => signIn(formData),
   });
 
   return (
@@ -48,14 +39,14 @@ export default function SignInPage() {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          form.handleSubmit();
+          signInForm.handleSubmit();
         }}
         className="space-y-6 w-full"
       >
         <div className="space-y-5 w-full rounded-lg bg-white dark:bg-gray-900 p-8 shadow-xl border border-gray-200 dark:border-gray-800">
           {/* Email Field */}
           <FormField
-            form={form}
+            form={signInForm}
             name="email"
             label={authT("email")}
             type="email"
@@ -70,7 +61,7 @@ export default function SignInPage() {
 
           {/* Password Field */}
           <FormField
-            form={form}
+            form={signInForm}
             name="password"
             label={authT("password")}
             type="password"
