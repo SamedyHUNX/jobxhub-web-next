@@ -84,7 +84,7 @@ export default function SignInPage() {
           </div>
         </div>
 
-        <SubmitButton isCreating={isSigningIn} buttonText={authT("signIn")} />
+        <SubmitButton isSubmitting={isSigningIn} buttonText={authT("signIn")} />
 
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">

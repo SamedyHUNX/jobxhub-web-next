@@ -7,7 +7,6 @@ import SubmitButton from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { createResetPasswordSchema } from "@/schemas";
-import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -102,7 +101,7 @@ export default function ResetPasswordPage() {
         </div>
 
         <SubmitButton
-          isCreating={isResettingPassword}
+          isSubmitting={isResettingPassword}
           buttonText={authT("resetPassword")}
         />
       </form>

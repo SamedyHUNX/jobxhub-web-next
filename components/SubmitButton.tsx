@@ -3,24 +3,24 @@ import { LoadingSwap } from "./LoadingSwap";
 import { Button } from "./ui/button";
 
 export default function SubmitButton({
-  isCreating,
+  isSubmitting,
   buttonText = "Submit",
   buttonClassname,
 }: {
-  isCreating: boolean;
+  isSubmitting: boolean;
   buttonText?: string;
   buttonClassname?: string;
 }) {
   return (
     <Button
       type="submit"
-      disabled={isCreating}
+      disabled={isSubmitting}
       className={cn(
         "yellow-btn w-full font-semibold py-3 px-4 rounded-xl",
-        buttonClassname
+        buttonClassname,
       )}
     >
-      <LoadingSwap isLoading={isCreating}>{buttonText}</LoadingSwap>
+      <LoadingSwap isLoading={isSubmitting}>{buttonText}</LoadingSwap>
     </Button>
   );
 }

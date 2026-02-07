@@ -211,7 +211,7 @@ export default function SignUpPage() {
         </div>
 
         {/* Submit Button */}
-        <SubmitButton isCreating={isSigningUp} buttonText={authT("signUp")} />
+        <SubmitButton isSubmitting={isSigningUp} buttonText={authT("signUp")} />
 
         {/* Sign In Link */}
         <div className="text-center">

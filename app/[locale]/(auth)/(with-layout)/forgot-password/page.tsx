@@ -9,6 +9,8 @@ import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import AuthLeftHeader from "@/components/AuthLeftHeader";
+import { useCustomForm } from "@/hooks/use-custom-form";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function ForgotPasswordPage() {
   // Translations
@@ -21,20 +23,12 @@ export default function ForgotPasswordPage() {
   const locale = useLocale();
   const { forgotPassword, isRequestingForgotPassword } = useAuth();
 
-  // Initialize Transtack Form
-  const form = useForm({
+  const forgotPasswordForm = useCustomForm({
     defaultValues: {
       email: "",
     },
-    onSubmit: async ({ value }) => {
-      forgotPassword({ email: value.email, locale });
-    },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = forgotPasswordFormSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
-    },
+    validationSchema: forgotPasswordFormSchema,
+    onSubmit: (value) => forgotPassword({ email: value.email, locale }),
   });
 
   return (
@@ -45,14 +39,14 @@ export default function ForgotPasswordPage() {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          form.handleSubmit();
+          forgotPasswordForm.handleSubmit();
         }}
         className="space-y-6 w-full"
       >
         <div className="space-y-5 w-full rounded-lg bg-white dark:bg-gray-900 p-8 shadow-xl border border-gray-200 dark:border-gray-800">
           {/* Email Field */}
           <FormField
-            form={form}
+            form={forgotPasswordForm}
             name="email"
             label={authT("email")}
             type="email"
@@ -67,15 +61,10 @@ export default function ForgotPasswordPage() {
           />
         </div>
 
-        <Button
-          type="submit"
-          disabled={isRequestingForgotPassword}
-          className="yellow-btn w-full mt-5"
-        >
-          <LoadingSwap isLoading={isRequestingForgotPassword}>
-            {authT("sendResetLink")}
-          </LoadingSwap>
-        </Button>
+        <SubmitButton
+          isSubmitting={isRequestingForgotPassword}
+          buttonText={authT("sendResetLink")}
+        />
 
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
