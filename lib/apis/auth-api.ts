@@ -1,14 +1,10 @@
 import axios from "axios";
 import {
-  ForgotPasswordResponse,
-  GetProfileResponse,
-  ResetPasswordResponse,
   SignInFormData,
-  SignInResponse,
   SignUpFormData,
-  SignUpResponse,
+  AuthResponse,
   User,
-  VerifyEmailResponse,
+  ProfileResponse,
 } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -27,14 +23,14 @@ function assertApiUrl() {
 
 export const authApi = {
   // Sign In
-  signIn: async (credentials: SignInFormData): Promise<SignInResponse> => {
+  signIn: async (credentials: SignInFormData): Promise<AuthResponse> => {
     assertApiUrl();
-    const { data } = await api.post<SignInResponse>(
+    const { data } = await api.post<AuthResponse>(
       "/auth/sign-in",
       credentials,
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
     return data;
   },
@@ -42,8 +38,8 @@ export const authApi = {
   // Signup
   signUp: async (
     formData: SignUpFormData,
-    locale: string
-  ): Promise<SignUpResponse> => {
+    locale: string,
+  ): Promise<AuthResponse> => {
     assertApiUrl();
 
     const form = new FormData();
@@ -53,7 +49,7 @@ export const authApi = {
       }
     });
 
-    const { data } = await api.post<SignUpResponse>("/auth/sign-up", form, {
+    const { data } = await api.post<AuthResponse>("/auth/sign-up", form, {
       headers: { "Accept-Language": locale },
     });
     return data;
@@ -61,13 +57,13 @@ export const authApi = {
 
   // Get user info
   getProfile: async (): Promise<User | null> => {
-    const { data } = await api.get<GetProfileResponse>("/auth/me");
+    const { data } = await api.get<ProfileResponse>("/auth/me");
     return data.data?.[0] ?? undefined;
   },
 
   // Verify Email
-  verifyEmail: async (token: string): Promise<VerifyEmailResponse> => {
-    const { data } = await api.post<VerifyEmailResponse>("/auth/verify-email", {
+  verifyEmail: async (token: string): Promise<AuthResponse> => {
+    const { data } = await api.post<AuthResponse>("/auth/verify-email", {
       token,
     });
     return data;
@@ -76,26 +72,27 @@ export const authApi = {
   // Forgot password
   forgotPassword: async (
     email: string,
-    locale: string
-  ): Promise<ForgotPasswordResponse> => {
-    const { data } = await api.post<ForgotPasswordResponse>(
+    locale: string,
+  ): Promise<AuthResponse> => {
+    const { data } = await api.post<AuthResponse>(
       "/auth/forgot-password",
       { email },
-      { headers: { "Accept-Language": locale } }
+      { headers: { "Accept-Language": locale } },
     );
     return data;
   },
 
   // Reset password
   resetPassword: async (
-    token: string,
+    token: string | null,
     newPassword: string,
-    confirmNewPassword: string
-  ): Promise<ResetPasswordResponse> => {
-    const { data } = await api.post<ResetPasswordResponse>(
-      "/auth/reset-password",
-      { token, newPassword, confirmNewPassword }
-    );
+    confirmNewPassword: string,
+  ): Promise<AuthResponse> => {
+    const { data } = await api.post<AuthResponse>("/auth/reset-password", {
+      token,
+      newPassword,
+      confirmNewPassword,
+    });
     return data;
   },
 

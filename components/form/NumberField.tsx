@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Label } from "../ui/label";
 
 interface NumberFieldProps {
   form: any;
@@ -27,23 +28,27 @@ export default function NumberField({
     <form.Field
       name={name}
       validators={{
-        onChange: validator ? ({ value }: { value: any }) => validator(value) : undefined,
+        onChange: validator
+          ? ({ value }: { value: any }) => validator(value)
+          : undefined,
       }}
     >
       {(field: any) => (
         <div className="space-y-2">
-          <label
+          <Label
             htmlFor={name}
             className="text-lg font-medium text-gray-700 tracking-tighter"
           >
             {label}
-          </label>
+          </Label>
           <input
             id={name}
             type="number"
             value={field.state.value ?? ""}
             onChange={(e) => {
-              const value = isNaN(e.target.valueAsNumber) ? null : e.target.valueAsNumber;
+              const value = isNaN(e.target.valueAsNumber)
+                ? null
+                : e.target.valueAsNumber;
               field.handleChange(value);
               if (onChange) {
                 onChange(value);
@@ -54,18 +59,17 @@ export default function NumberField({
             disabled={disabled}
             className={cn(
               "w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500",
-              field.state.meta.errors.length > 0 && "border-red-500 focus:ring-red-500",
+              field.state.meta.errors.length > 0 &&
+                "border-red-500 focus:ring-red-500",
               disabled && "opacity-50 cursor-not-allowed",
-              className
+              className,
             )}
           />
           {description && (
             <p className="text-sm text-gray-500">{description}</p>
           )}
           {field.state.meta.errors.length > 0 && (
-            <p className="text-sm text-red-500">
-              {field.state.meta.errors[0]}
-            </p>
+            <p className="text-sm text-red-500">{field.state.meta.errors[0]}</p>
           )}
         </div>
       )}

@@ -3,14 +3,13 @@
 import { FormField } from "@/components/FormField";
 import FormFooter from "@/components/FormFooter";
 import ImageUpload from "@/components/ProfileImage";
-import { LoadingSwap } from "@/components/LoadingSwap";
-import { Button } from "@/components/ui/button";
 import { useOrgs } from "@/hooks/use-orgs";
 import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
-import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
-import { useMemo } from "react";
 import { toast } from "sonner";
+import { generateSlug } from "@/lib/utils";
+import SubmitButton from "@/components/SubmitButton";
+import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function CreateNewOrgPage() {
   // Translations
@@ -19,51 +18,33 @@ export default function CreateNewOrgPage() {
   const validationT = (key: string) => t(`validations.${key}`);
   const { createOrganization, isCreating } = useOrgs();
 
-  const createOrganizationFormSchema = useMemo(
-    () => createOrganizationSchema(validationT),
-    [validationT]
-  );
-
-  // Initialize TanStack Form
-  const form = useForm({
+  const createOrganizationFormSchema = createOrganizationSchema(validationT);
+  const createOrgForm = useCustomForm({
     defaultValues: {
       orgName: "",
-      slug: "",
-      image: null,
+      orgDescription: "",
+      orgSlug: "",
+      orgImage: null,
     } as CreateOrgFormData,
-    onSubmit: async ({ value }) => {
-      if (!value.image) {
+    validationSchema: createOrganizationFormSchema,
+    onSubmit: async (values) => {
+      if (!values.orgImage) {
         toast.error(validationT("photoRequired"));
         return;
       }
 
       const formData = new FormData();
-      formData.append("orgName", value.orgName);
-      formData.append("slug", value.slug);
-      formData.append("image", value.image);
+      formData.append("orgName", values.orgName);
+      formData.append("orgDescription", values.orgDescription);
+      formData.append("orgSlug", values.orgSlug);
+      formData.append("image", values.orgImage);
 
       createOrganization(formData as unknown as CreateOrgFormData);
     },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = createOrganizationFormSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
-    },
   });
 
-  // Auto-generate slug from organization name
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "") // Remove special characters
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/-+/g, "-"); // Replace multiple hyphens with single hyphen
-  };
-
   return (
-    <div className="min-h-[calc(100vh-68px)] bg-[#fdfbf7] dark:bg-black flex items-center justify-center p-4">
+    <div className="min-h-[calc(100vh-68px)]  flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-800 rounded-3xl w-[95%] max-w-2xl p-12 border border-gray-300 dark:border-gray-700">
         <h1 className="text-4xl font-bold mb-12 text-black dark:text-white tracking-tighter">
           {newOrgT("newPageTitle")}
@@ -73,18 +54,20 @@ export default function CreateNewOrgPage() {
           onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            form.handleSubmit();
+            createOrgForm.handleSubmit();
           }}
           className="space-y-6 w-full"
         >
           {/* Profile Image Upload */}
           <div className="mb-8">
-            <form.Field
-              name="image"
+            <createOrgForm.Field
+              name="orgImage"
               validators={{
                 onChange: ({ value }) => {
                   const result =
-                    createOrganizationFormSchema.shape.image.safeParse(value);
+                    createOrganizationFormSchema.shape.orgImage.safeParse(
+                      value,
+                    );
                   return result.success
                     ? undefined
                     : result.error.issues[0].message;
@@ -104,14 +87,14 @@ export default function CreateNewOrgPage() {
                   size="md"
                 />
               )}
-            </form.Field>
+            </createOrgForm.Field>
           </div>
 
           {/* Organization Name Input */}
           <FormField
-            form={form}
+            form={createOrgForm}
             name="orgName"
-            placeholder="For example: Microsoft Corporation"
+            placeholder={newOrgT("orgNamePlaceholder")}
             label={newOrgT("orgName")}
             validator={(value) => {
               const result =
@@ -121,20 +104,37 @@ export default function CreateNewOrgPage() {
                 : result.error.issues[0].message;
             }}
             onChange={(value) => {
-              // Auto-generate slug when org name changes
-              form.setFieldValue("slug", generateSlug(value));
+              // Auto-generate orgSlug when org name changes
+              createOrgForm.setFieldValue("orgSlug", generateSlug(value));
             }}
           />
 
-          {/* Slug Input */}
+          {/* Organization Description Input */}
           <FormField
-            form={form}
-            name="slug"
-            label={newOrgT("slugName")}
+            form={createOrgForm}
+            name="orgDescription"
+            placeholder={newOrgT("orgDescriptionPlaceholder")}
+            label={newOrgT("orgDescription")}
+            validator={(value) => {
+              const result =
+                createOrganizationFormSchema.shape.orgDescription.safeParse(
+                  value,
+                );
+              return result.success
+                ? undefined
+                : result.error.issues[0].message;
+            }}
+          />
+
+          {/* orgSlug Input */}
+          <FormField
+            form={createOrgForm}
+            name="orgSlug"
+            label={newOrgT("orgSlugName")}
             placeholder="Auto-generated"
             validator={(value) => {
               const result =
-                createOrganizationFormSchema.shape.slug.safeParse(value);
+                createOrganizationFormSchema.shape.orgSlug.safeParse(value);
               return result.success
                 ? undefined
                 : result.error.issues[0].message;
@@ -142,15 +142,10 @@ export default function CreateNewOrgPage() {
           />
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            disabled={isCreating}
-            className="yellow-btn w-full font-semibold py-3 px-4 rounded-xl"
-          >
-            <LoadingSwap isLoading={isCreating}>
-              {newOrgT("create")}
-            </LoadingSwap>
-          </Button>
+          <SubmitButton
+            isSubmitting={isCreating}
+            buttonText={newOrgT("create")}
+          />
         </form>
 
         {/* Footer Branding */}

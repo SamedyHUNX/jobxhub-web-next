@@ -7,12 +7,11 @@ import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
-import "./globals.css";
-
 import { Inter, Geist } from "next/font/google";
 import { ReduxProvider } from "@/providers/ReduxProvider";
 import ReactQueryProvider from "@/providers/QueryClientProvider";
 import AuthGuard from "@/components/guards/AuthGuard";
+import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],

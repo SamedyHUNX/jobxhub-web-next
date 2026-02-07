@@ -9,6 +9,7 @@
     "employerDashboard": "Employer Dashboard",
     "superAdminDashboard": "Super-Admin Dashboard",
     "jobs": {
+      "overview": "Overview",
       "createJob": "Create Job Listing",
       "allJobs": "All Jobs"
     }
@@ -63,7 +64,10 @@
     "newPageTitle": "Create New Organization",
     "uploadPhoto": "Upload the organization logo",
     "orgName": "Organization name",
-    "slugName": "Your org's unique identifier (visible to others)",
+    "orgDescription": "Organization description",
+    "orgDescriptionPlaceholder": "Tell others about your organization",
+    "orgNamePlaceholder": "For example: Microsoft Corporation",
+    "orgSlugName": "Your org's unique identifier (visible to others)",
     "create": "Create"
   },
   "employer": {
@@ -138,6 +142,7 @@
   },
   "jobListings": {
     "title": "Create Job",
+    "editFormTitle": "Edit Job Listing",
     "description": "Fill the necessary information below",
     "form": {
       "title": "Job listing title",
@@ -150,6 +155,11 @@
       "description": "Job Description",
       "buttonText": "Create Job Listing",
       "creatingText": "Creating...",
+      "buttons": {
+        "updateText": "Update Job Listing",
+        "submitText": "Create Job Listing",
+        "submittingText": "Submitting..."
+      },
       "options": {
         "wageIntervals": {
           "yearly": "Yearly",
@@ -197,7 +207,9 @@
     "passwordUppercase": "Required at least 1 uppercase letter",
     "passwordMustMatch": "Passwords must match",
     "orgNameRequired": "Please provide the organization name",
-    "slugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)",
+    "orgImageRequired": "Please upload the org logo",
+    "orgSlugRequired": "Please provide a unique identifier (e.g, microsoft-corporation)",
+    "orgDescriptionTooShort": "Need at least 10 characters",
     "usernameTooShort": "Please provide at least 3 characters",
     "usernameTooLong": "Username cannot be more than 20 characters long",
     "usernameInvalid": "Invalid username",
@@ -208,7 +220,7 @@
     "experienceLevelRequired": "Please provide experience level",
     "jobTypeRequired": "Please provide job type",
     "locationRequirementRequired": "Please provide the required location",
-    "nonRemoteRequired": "Non-remote",
+    "nonRemoteRequired": "Required field for non-remote",
     "passwordsMustMatch": "Passwords must match",
     "passwordsDoNotMatch": "Passwords must match"
   },
@@ -220,7 +232,8 @@
     "resetPasswordSuccess": "Your password has been reset successfully",
     "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team",
     "profileUpdated": "Profile updated successfully",
-    "createJobListingSuccess": "Created job listing successfully"
+    "createJobListingSuccess": "Created job listing successfully",
+    "updateJobListingSuccess": "Updated job listing successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",
@@ -244,6 +257,7 @@
     "temporaryLocked": "Account temporarily locked due to multiple failed login attempts. Please try again later or reset your password.",
     "accountDisabled": "Account has been disabled. Please contact support team",
     "tooManyRequest": "Too many request. Please try again in 1 hour",
-    "unauthorized": "You are not authorized to do this action"
+    "unauthorized": "You are not authorized to do this action",
+    "profileUpdateFailed": "Failed to update profile"
   }
 }

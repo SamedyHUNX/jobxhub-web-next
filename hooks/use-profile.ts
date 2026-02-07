@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/lib/utils";
 import { AxiosError } from "axios";
-import { UpdateProfileResponse } from "@/types";
+import { ProfileResponse } from "@/types";
 
 export function useProfile() {
   const dispatch = useAppDispatch();
@@ -40,7 +40,7 @@ export function useProfile() {
 
   // Update profile mutation
   const updateProfileMutation = useMutation<
-    UpdateProfileResponse,
+    ProfileResponse,
     AxiosError,
     FormData
   >({
@@ -69,7 +69,6 @@ export function useProfile() {
     refetch,
 
     // Update profile
-    updateProfile: updateProfileMutation.mutate,
-    isUpdating: updateProfileMutation.isPending,
+    updateProfile: updateProfileMutation.mutateAsync,
   };
 }

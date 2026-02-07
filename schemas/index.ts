@@ -60,15 +60,19 @@ export const createResetPasswordSchema = (t: (key: string) => string) => {
 export const createOrganizationSchema = (t: (key: string) => string) => {
   return z.object({
     orgName: z.string().min(1, t("orgNameRequired")),
-    slug: z.string().min(1, t("slugRequired")),
-    image: z.any().refine((file) => file instanceof File, t("imageRequired")),
+    orgDescription: z.string().min(10, t("orgDescriptionTooShort")),
+    orgSlug: z.string().min(1, t("orgSlugRequired")),
+    orgImage: z
+      .any()
+      .refine((file) => file instanceof File, t("orgImageRequired")),
   });
 };
 
 export type CreateOrgFormData = {
   orgName: string;
-  slug: string;
-  image: File | null;
+  orgSlug: string;
+  orgDescription: string;
+  orgImage: File | null;
 };
 
 export const createUpdateProfileSchema = (t: (key: string) => string) => {
@@ -92,10 +96,9 @@ export const createUpdateProfileSchema = (t: (key: string) => string) => {
 /**
  * Create Job Listing Schema
  */
-export const createJobListingSchema = (t: (key: string) => string) => {
+export const createOrUpdateJobListingSchema = (t: (key: string) => string) => {
   return z
     .object({
-      organizationId: z.string().min(1),
       title: z.string().min(1, t("jobTitleRequired")),
       description: z
         .string()
@@ -105,7 +108,7 @@ export const createJobListingSchema = (t: (key: string) => string) => {
         message: t("experienceLevelRequired"),
       }),
       wage: z
-        .string()
+        .number()
         .optional()
         .nullable()
         .transform((val) => val ?? undefined),
@@ -124,9 +127,8 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       city: z
         .string()
         .transform((val) => (val.trim() === "" ? null : val))
-        .optional()
         .nullable(),
-      locationRequirement: z.enum(["in-office", "hybrid", "remote"], {
+      locationRequirement: z.enum(locationRequirements, {
         message: t("locationRequirementRequired"),
       }),
     })
@@ -134,32 +136,34 @@ export const createJobListingSchema = (t: (key: string) => string) => {
       (listing) => {
         return (
           listing.locationRequirement === "remote" ||
-          (listing.city != null && listing.city.trim() !== "")
+          (listing.city != null && listing.city !== "")
         );
       },
       {
         message: t("nonRemoteRequired"),
         path: ["city"],
-      }
+      },
     )
     .refine(
       (listing) => {
         return (
           listing.locationRequirement === "remote" ||
           (listing.stateAbbreviation != null &&
-            listing.stateAbbreviation.trim() !== "")
+            listing.stateAbbreviation !== "")
         );
       },
       {
         message: t("nonRemoteRequired"),
         path: ["stateAbbreviation"],
-      }
+      },
     );
 };
 
 export type CreateJobListingFormData = z.infer<
-  ReturnType<typeof createJobListingSchema>
+  ReturnType<typeof createOrUpdateJobListingSchema>
 >;
+export type UpdateJobListingFormData = Partial<CreateJobListingFormData>;
+export type JobListingFormData = CreateJobListingFormData;
 
 // JobListings
 export const wageIntervals = ["hourly", "yearly", "monthly", "weekly"] as const;

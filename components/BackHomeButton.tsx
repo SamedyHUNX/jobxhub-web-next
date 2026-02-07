@@ -1,5 +1,3 @@
-import { useAuth } from "@/hooks/use-auth";
-import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 

@@ -16,7 +16,6 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 
 interface UseOrgsParams {
-  userId?: string;
   search?: string;
   isVerified?: boolean;
 }
@@ -45,16 +44,9 @@ export function useOrgs(params?: UseOrgsParams) {
     isLoading,
     error,
   } = useQuery({
-    queryKey: [
-      "organizations",
-      params?.search,
-      params?.isVerified,
-      params?.userId,
-    ],
-    queryFn: () =>
-      orgsApi.findAll(params?.search, params?.isVerified, params?.userId),
+    queryKey: ["organizations", params?.search, params?.isVerified],
+    queryFn: () => orgsApi.findAll(params?.search, params?.isVerified),
     staleTime: 5 * 60 * 1000,
-    enabled: Boolean(params?.search || params?.isVerified || params?.userId),
   });
 
   const allOrgs = orgsData?.data || [];
@@ -87,10 +79,9 @@ export function useOrgs(params?: UseOrgsParams) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["organizations"],
-        exact: true,
       });
       toast.success(successT("createOrgSuccess"));
-      router.push(`/${locale}/employer/select`);
+      router.push(`/employer/select`);
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -136,15 +127,6 @@ export function useOrgs(params?: UseOrgsParams) {
     [allOrgs, selectedOrganization]
   );
 
-  // Create new organization with navigation
-  const createOrganization = useCallback(
-    (formData: CreateOrgFormData, redirectUrl?: string) => {
-      createOrganizationMutation.mutate(formData);
-      // Navigation happens in onSuccess
-    },
-    [createOrganizationMutation]
-  );
-
   // Navigate to create organization page
   const navigateToCreateOrg = useCallback(
     (options?: { hideSlug?: boolean; skipInvitationScreen?: boolean }) => {
@@ -183,7 +165,7 @@ export function useOrgs(params?: UseOrgsParams) {
 
     // Actions
     selectOrganization,
-    createOrganization,
+    createOrganization: createOrganizationMutation.mutate,
     navigateToCreateOrg,
     clearSelectedOrganization,
 

@@ -1,13 +1,14 @@
 @import "tailwindcss";
+@plugin '@tailwindcss/typography';
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
   --radius: 0.625rem;
-  --background: 60 100% 98.8%;
+  --background: 220 14.3% 95.9%; /* Tailwind gray-100 */
   --foreground: 222.2 84% 4.9%;
-  --sidebar-background: 60 100% 98.8%;
+  --sidebar-background: 220 14.3% 95.9%; /* Tailwind gray-100 */
   --sidebar-foreground: 222.2 84% 4.9%;
   --sidebar-border: 220 13% 91%;
   --sidebar-accent: 220 13% 91%;
@@ -22,8 +23,10 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
+  --featured: oklch(0.7275 0.1697 308.49);
+  --featured-foreground: oklch(0.985 0 0);
   --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -44,9 +47,9 @@
 }
 
 .dark {
-  --background: 220 13% 36%;
+  --background: 215 20.2% 15.3%; /* Tailwind gray-800 */
   --foreground: 210 40% 98%;
-  --sidebar-background: 220 13% 36%;
+  --sidebar-background: 215 20.2% 15.3%; /* Tailwind gray-800 */
   --sidebar-foreground: 210 40% 98%;
   --sidebar-border: 220 13% 28%;
   --sidebar-accent: 220 13% 28%;
@@ -61,6 +64,8 @@
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
+  --featured: oklch(0.7275 0.1697 308.49);
+  --featured-foreground: oklch(0.985 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
@@ -83,8 +88,8 @@
 }
 
 @theme {
-  --font-family-sans: var(--font-inter), var(--font-geist), system-ui,
-    sans-serif;
+  --font-family-sans:
+    var(--font-inter), var(--font-geist), system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -118,6 +123,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-featured: var(--featured);
+  --color-featured-foreground: var(--featured-foreground);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -131,6 +140,7 @@
   --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -196,7 +206,7 @@
   }
 
   .auth-blockquote {
-    @apply text-sm md:text-xl lg:text-2xl font-medium  mb-1 md:mb-6 lg:mb-8;
+    @apply text-sm md:text-xl lg:text-2xl font-medium mb-1 md:mb-6 lg:mb-8;
   }
 
   :root .auth-blockquote {
@@ -208,7 +218,7 @@
   }
 
   .auth-testimonial-author {
-    @apply text-xs md:text-lg font-bold  not-italic;
+    @apply text-xs md:text-lg font-bold not-italic;
   }
 
   :root .auth-testimonial-author {
@@ -220,7 +230,7 @@
   }
 
   .auth-dashboard-preview {
-    @apply border-6   left-0 hidden w-5xl h-auto max-w-none lg:block rounded-xl shadow-2xl;
+    @apply border-6 left-0 hidden w-5xl h-auto max-w-none lg:block rounded-xl shadow-2xl;
   }
 
   :root .auth-dashboard-preview {
@@ -236,12 +246,14 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 
   .mdxeditor-root-contenteditable {
-    @apply border-input has-focus-visible:border-ring has-focus-visible:ring-ring/50 dark:bg-input/30 rounded-md rounded-t-none border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none has-focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden;
+    @apply border-input has-focus-visible:border-ring has-focus-visible:ring-ring/50 dark:bg-input/30 rounded-md rounded-t-none border bg-transparent px-3 shadow-xs transition-colors transition-shadow
+ outline-none has-focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden;
 
     & * {
       outline: none;

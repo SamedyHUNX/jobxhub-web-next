@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Label } from "../ui/label";
 
 interface TextFieldProps {
   form: any;
@@ -36,12 +37,12 @@ export default function TextField({
     >
       {(field: any) => (
         <div className="space-y-2">
-          <label
+          <Label
             htmlFor={name}
             className="text-lg font-medium text-gray-700 tracking-tighter"
           >
             {label}
-          </label>
+          </Label>
           <input
             id={name}
             type={type}
@@ -60,7 +61,7 @@ export default function TextField({
               field.state.meta.errors.length > 0 &&
                 "border-red-500 focus:ring-red-500",
               disabled && "opacity-50 cursor-not-allowed",
-              className
+              className,
             )}
           />
           {description && (

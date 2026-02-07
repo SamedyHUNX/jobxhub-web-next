@@ -1,16 +1,13 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo } from "react";
-import { SignInFormData } from "@/types";
 import { createSignInSchema } from "@/schemas";
-import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/LoadingSwap";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
 import AuthLeftHeader from "@/components/AuthLeftHeader";
+import SubmitButton from "@/components/SubmitButton";
+import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function SignInPage() {
   // Translations
@@ -22,31 +19,15 @@ export default function SignInPage() {
 
   const { signIn, isSigningIn } = useAuth();
 
-  // Define schema
-  const signInSchema = useMemo(
-    () => createSignInSchema(validationT),
-    [validationT]
-  );
+  const signInSchema = createSignInSchema(validationT);
 
-  // Initialize TanStack Form
-  const form = useForm({
+  const signInForm = useCustomForm({
     defaultValues: {
       email: "",
       password: "",
     },
-    onSubmit: async ({ value }: {value: SignInFormData}) => {
-      try {
-        await signIn(value);
-      } catch (error) {
-        console.error("Failed to sign in", error);
-      }
-    },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = signInSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
-      },
-    },
+    validationSchema: signInSchema,
+    onSubmit: (formData) => signIn(formData),
   });
 
   return (
@@ -58,14 +39,14 @@ export default function SignInPage() {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          form.handleSubmit();
+          signInForm.handleSubmit();
         }}
         className="space-y-6 w-full"
       >
         <div className="space-y-5 w-full rounded-lg bg-white dark:bg-gray-900 p-8 shadow-xl border border-gray-200 dark:border-gray-800">
           {/* Email Field */}
           <FormField
-            form={form}
+            form={signInForm}
             name="email"
             label={authT("email")}
             type="email"
@@ -80,7 +61,7 @@ export default function SignInPage() {
 
           {/* Password Field */}
           <FormField
-            form={form}
+            form={signInForm}
             name="password"
             label={authT("password")}
             type="password"
@@ -103,19 +84,13 @@ export default function SignInPage() {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          disabled={isSigningIn}
-          className="yellow-btn w-full mt-5"
-        >
-          <LoadingSwap isLoading={isSigningIn}>{authT("signIn")}</LoadingSwap>
-        </Button>
+        <SubmitButton isSubmitting={isSigningIn} buttonText={authT("signIn")} />
 
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("dontHaveAnAccount")}{" "}
             <Link
-              href={`/${locale}/sign-up`}
+              href={`/sign-up`}
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signUp")}

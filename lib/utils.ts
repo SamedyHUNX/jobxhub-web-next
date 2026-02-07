@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const apiErrorMapping = (
-  t: (key: string) => string
+  t: (key: string) => string,
 ): Record<string, string> => ({
   "Invalid credentials": t("invalidCredentials"),
   "User not found": t("userNotFound"),
@@ -37,7 +37,7 @@ const apiErrorMapping = (
 
 export function extractErrorMessage(
   error: AxiosError,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): string {
   if (
     error.response &&
@@ -52,3 +52,13 @@ export function extractErrorMessage(
   }
   return error.message || "An unknown error occurred";
 }
+
+// Auto-generate slug from organization name
+export const generateSlug = (name: string) => {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // Remove special characters
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-"); // Replace multiple hyphens with single hyphen
+};

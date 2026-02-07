@@ -1,5 +1,6 @@
 import {
   ExperienceLevel,
+  JobListing,
   JobListingStatus,
   JobListingType,
   LocationRequirement,
@@ -22,7 +23,7 @@ export function formatWageInterval(interval: WageInterval) {
 }
 
 export function formatLocationRequirement(
-  locationRequirement: LocationRequirement
+  locationRequirement: LocationRequirement,
 ) {
   switch (locationRequirement) {
     case "remote":
@@ -33,7 +34,7 @@ export function formatLocationRequirement(
       return "Hybrid";
     default:
       throw new Error(
-        `Unknown location requirement: ${locationRequirement satisfies never}`
+        `Unknown location requirement: ${locationRequirement satisfies never}`,
       );
   }
 }
@@ -56,7 +57,7 @@ export function formatExperienceLevel(experienceLevel: ExperienceLevel) {
       return "Director";
     default:
       throw new Error(
-        `Unknown experience level: ${experienceLevel satisfies never}`
+        `Unknown experience level: ${experienceLevel satisfies never}`,
       );
   }
 }
@@ -78,7 +79,7 @@ export function formatJobType(type: JobListingType) {
   }
 }
 
-export function formatJobListingStatus(status: JobListingStatus) {
+export function formatJobListingStatus(status?: JobListingStatus) {
   switch (status) {
     case "draft":
       return "Draft";
@@ -87,6 +88,87 @@ export function formatJobListingStatus(status: JobListingStatus) {
     case "delisted":
       return "Delisted";
     default:
-      throw new Error(`Unknown job listing status: ${status satisfies never}`);
+      return "Unknown";
   }
 }
+
+export function formatWage(
+  wage: number | null | undefined,
+  wageInterval?: WageInterval | null,
+) {
+  if (wage == null || isNaN(wage) || !wageInterval) {
+    return "N/A";
+  }
+
+  const wageFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  switch (wageInterval) {
+    case "hourly":
+      return `${wageFormatter.format(wage)} / hr`;
+    case "yearly":
+      return `${wageFormatter.format(wage)} / yr`;
+    case "monthly":
+      return `${wageFormatter.format(wage)} / mo`;
+    case "weekly":
+      return `${wageFormatter.format(wage)} / wk`;
+    default:
+      return "N/A";
+  }
+}
+
+export function formatJobListingLocation(
+  stateAbbreviation?: string,
+  city?: string,
+) {
+  if (stateAbbreviation == null && city == null) {
+    return "None";
+  }
+
+  const locationParts: string[] = [];
+
+  if (city) {
+    locationParts.push(city);
+  }
+
+  if (stateAbbreviation) {
+    locationParts.push(stateAbbreviation.toUpperCase());
+  }
+
+  return locationParts.join(", ");
+}
+
+export const formatDate = (date: Date | string) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+export const sortJobs = (jobs: JobListing[], sortBy: string): JobListing[] => {
+  return [...jobs].sort((a, b) => {
+    switch (sortBy) {
+      case "newest":
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case "oldest":
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case "wage-high":
+        return (Number(b.wage) || 0) - (Number(a.wage) || 0);
+      case "wage-low":
+        return (Number(a.wage) || 0) - (Number(b.wage) || 0);
+      case "title":
+        return a.title.localeCompare(b.title);
+      default:
+        return 0;
+    }
+  });
+};

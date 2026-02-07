@@ -3,19 +3,16 @@ import { extractErrorMessage } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { clearAuth } from "@/stores/slices/auth.slice";
 import {
-  ForgotPasswordResponse,
-  ResetPasswordResponse,
+  AuthResponse,
   ResetPasswordVariables,
   SignInFormData,
-  SignInResponse,
   SignUpFormData,
-  SignUpResponse,
-  VerifyEmailResponse,
 } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { toast } from "sonner";
 
 export function useAuth() {
@@ -29,16 +26,12 @@ export function useAuth() {
 
   // Sign in mutation
   // (data, error, variable)
-  const signInMutation = useMutation<
-    SignInResponse,
-    AxiosError,
-    SignInFormData
-  >({
+  const signInMutation = useMutation<AuthResponse, AxiosError, SignInFormData>({
     mutationFn: (credentials) => authApi.signIn(credentials),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"], exact: true });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success(successT("signInSuccess"));
-      router.push(`/${locale}`);
+      router.push("/");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -47,14 +40,14 @@ export function useAuth() {
 
   // Sign up mutation
   const signUpMutation = useMutation<
-    SignUpResponse,
+    AuthResponse,
     AxiosError,
     { formData: SignUpFormData; locale: string }
   >({
     mutationFn: ({ formData, locale }) => authApi.signUp(formData, locale),
     onSuccess: () => {
       toast.success(successT("signUpSuccess"));
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -62,15 +55,11 @@ export function useAuth() {
   });
 
   // Verify email mutation
-  const verifyEmailMutation = useMutation<
-    VerifyEmailResponse,
-    AxiosError,
-    string
-  >({
+  const verifyEmailMutation = useMutation<AuthResponse, AxiosError, string>({
     mutationFn: (token) => authApi.verifyEmail(token),
     onSuccess: () => {
       toast.success(successT("verifyEmailSuccess"));
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -79,7 +68,7 @@ export function useAuth() {
 
   // Forgot password mutation
   const forgotPasswordMutation = useMutation<
-    ForgotPasswordResponse,
+    AuthResponse,
     AxiosError,
     { email: string; locale: string }
   >({
@@ -88,8 +77,8 @@ export function useAuth() {
       toast.success(successT("forgotPasswordSuccess"));
       router.push(
         `/${locale}/forgot-password/email-sent?email=${encodeURIComponent(
-          variables.email
-        )}`
+          variables.email,
+        )}`,
       );
     },
     onError: (error) => {
@@ -99,7 +88,7 @@ export function useAuth() {
 
   // Reset password mutation
   const resetPasswordMutation = useMutation<
-    ResetPasswordResponse, // mutation result type
+    AuthResponse, // mutation result type
     AxiosError, // error type
     ResetPasswordVariables // variables type
   >({
@@ -107,7 +96,7 @@ export function useAuth() {
       authApi.resetPassword(token, newPassword, confirmNewPassword),
     onSuccess: () => {
       toast.success(successT("resetPasswordSuccess"));
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     },
     onError: (error) => {
       toast.error(extractErrorMessage(error, errorT));
@@ -115,22 +104,18 @@ export function useAuth() {
   });
 
   // Sign out
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     localStorage.removeItem("selectedOrganization");
     try {
       await authApi.signOut();
-
-      dispatch(clearAuth());
-      queryClient.clear();
-
-      router.push(`/${locale}/sign-in`);
     } catch (error) {
       console.error("Sign out failed:", error);
+    } finally {
       dispatch(clearAuth());
       queryClient.clear();
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     }
-  };
+  }, [dispatch, queryClient, router]);
 
   return {
     // Auth state

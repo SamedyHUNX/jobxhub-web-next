@@ -8,7 +8,7 @@ export default function PageLoader({
   showLogo?: boolean;
 }) {
   return (
-    <div className="fixed inset-0 bg-white dark:bg-gray-950 z-50 flex flex-col items-center justify-center">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center">
       {/* Logo at top */}
       {showLogo && (
         <div className="absolute top-8">

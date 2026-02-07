@@ -23,6 +23,12 @@ export interface AuthRequest {
   name: string;
   firstName: string;
   lastName: string;
+  username: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  image: File | null;
+  newPassword: string;
+  confirmNewPassword: string;
 }
 
 export interface ApiResponse<T = any> {
@@ -31,37 +37,31 @@ export interface ApiResponse<T = any> {
   data: T | [];
 }
 
-export type SignInResponse = ApiResponse<[]>;
-export type SignUpResponse = ApiResponse<[]>;
-export type GetProfileResponse = ApiResponse<User[]>;
-export type VerifyEmailResponse = ApiResponse<[]>;
-export type ForgotPasswordResponse = ApiResponse<[]>;
-export type ResetPasswordResponse = ApiResponse<[]>;
-export type UpdateProfileResponse = ApiResponse<User[]>;
+export type AuthResponse = ApiResponse<[]>;
 
-export interface SignInFormData {
-  email: string;
-  password: string;
-}
+export type ProfileResponse = ApiResponse<User[]>;
+export type JobListingFormResponse = ApiResponse<[]>;
 
-export interface SignUpFormData {
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  dateOfBirth: string;
-  image: File | null;
-}
+export type SignInFormData = Pick<AuthRequest, "email" | "password">;
+export type SignUpFormData = Pick<
+  AuthRequest,
+  | "username"
+  | "firstName"
+  | "lastName"
+  | "email"
+  | "password"
+  | "phoneNumber"
+  | "dateOfBirth"
+  | "image"
+>;
 
-export type ResetPasswordFormData = {
-  newPassword: string;
-  confirmNewPassword: string;
-};
+export type ResetPasswordFormData = Pick<
+  AuthRequest,
+  "newPassword" | "confirmNewPassword"
+>;
 
 export interface ResetPasswordVariables extends ResetPasswordFormData {
-  token: string;
+  token: string | null;
 }
 
 // Organizations

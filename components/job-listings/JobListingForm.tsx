@@ -8,74 +8,26 @@ import {
   formatWageInterval,
 } from "@/lib/formatter";
 import {
-  CreateJobListingFormData,
-  createJobListingSchema,
+  JobListingFormData,
   experienceLevels,
   jobListingTypes,
   wageIntervals,
+  createOrUpdateJobListingSchema,
 } from "@/schemas";
 import { locationRequirements } from "@/types";
-import { useForm } from "@tanstack/react-form";
 import { useTranslations } from "next-intl";
-import { ReactNode, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import TextField from "../form/TextField";
 import SelectField from "../form/SelectField";
-import { Button } from "../ui/button";
-import { LoadingSwap } from "../LoadingSwap";
 import { states } from "@/data/australia-state";
 import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
-import { useRouter } from "next/navigation";
-
-export interface JobListingFormProps {
-  // Core functionality
-  onSubmit: (data: CreateJobListingFormData) => void;
-  defaultValues?: Partial<CreateJobListingFormData>;
-
-  // Customization
-  mode?: "create" | "edit";
-  translations?: {
-    validations?: any;
-    labels?: Partial<Record<keyof CreateJobListingFormData, string>>;
-    descriptions?: Partial<Record<keyof CreateJobListingFormData, string>>;
-    buttons?: {
-      submit?: string;
-      submitting?: string;
-    };
-    options?: {
-      wageIntervals?: Record<string, string>;
-      locationRequirements?: Record<string, string>;
-      jobTypes?: Record<string, string>;
-      experienceLevels?: Record<string, string>;
-      clearState?: string;
-    };
-  };
-
-  // Layout & styling
-  className?: string;
-  buttonClassName?: string;
-  showBorder?: boolean;
-
-  // Field visibility/customization
-  fields?: {
-    show?: Partial<Record<keyof CreateJobListingFormData, boolean>>;
-    disabled?: Partial<Record<keyof CreateJobListingFormData, boolean>>;
-  };
-
-  // Advanced
-  validationSchema?: any;
-  children?: (form: any) => ReactNode;
-
-  // Additional props
-  isLoading?: boolean;
-  hideSubmitButton?: boolean;
-
-  orgId?: string;
-  redirectOnSuccess: string;
-}
+import SubmitButton from "../SubmitButton";
+import { JobListingFormProps } from "./_JoblistingFormProps";
+import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function JobListingForm({
+  jobListing,
   onSubmit,
   defaultValues,
   mode = "create",
@@ -87,63 +39,46 @@ export default function JobListingForm({
   fields,
   children,
   hideSubmitButton = false,
-  orgId,
-  redirectOnSuccess,
 }: JobListingFormProps) {
   const validationT = useTranslations("validations");
   const isMobile = useIsMobile();
-  const router = useRouter();
 
   // Define schema
-  const jobListingSchema = useMemo(
-    () => createJobListingSchema(validationT),
-    [validationT]
-  );
+  const jobListingSchema = createOrUpdateJobListingSchema(validationT);
 
-  // Initialize TanStack Form
-  const form = useForm({
+  const jobListingForm = useCustomForm({
     defaultValues: {
-      organizationId: orgId,
-      title: "",
-      description: "",
-      stateAbbreviation: "",
-      city: "",
-      experienceLevel: "junior",
-      wage: undefined,
-      wageInterval: "yearly",
-      type: "full-time",
-      locationRequirement: "in-office",
-      ...defaultValues,
-    },
-    onSubmit: async ({ value }) => {
-      try {
-        onSubmit(value);
-
-        router.push(redirectOnSuccess);
-      } catch (error) {
-        console.error("Failed to create the job", error);
-      }
-    },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = jobListingSchema.safeParse(value);
-        return result.success ? undefined : result.error.format();
+      ...{
+        title: "",
+        description: "",
+        stateAbbreviation: "" as string | null,
+        city: "" as string | null,
+        experienceLevel: "junior" as const,
+        wage: undefined,
+        wageInterval: "yearly" as const,
+        type: "full-time" as const,
+        locationRequirement: "in-office" as const,
       },
+      ...defaultValues,
+      ...jobListing,
+    },
+    validationSchema: jobListingSchema,
+    onSubmit: (value) => {
+      const { id, organizationId, createdAt, updatedAt, ...safeValues } = value;
+      onSubmit(safeValues);
     },
   });
 
-  const getLabel = (
-    field: keyof CreateJobListingFormData,
-    defaultLabel: string
-  ) => translations?.labels?.[field] ?? defaultLabel;
+  const getLabel = (field: keyof JobListingFormData, defaultLabel: string) =>
+    translations?.labels?.[field] ?? defaultLabel;
 
-  const getDescription = (field: keyof CreateJobListingFormData) =>
+  const getDescription = (field: keyof JobListingFormData) =>
     translations?.descriptions?.[field];
 
-  const shouldShowField = (field: keyof CreateJobListingFormData) =>
+  const shouldShowField = (field: keyof JobListingFormData) =>
     fields?.show?.[field] ?? true;
 
-  const isFieldDisabled = (field: keyof CreateJobListingFormData) =>
+  const isFieldDisabled = (field: keyof JobListingFormData) =>
     fields?.disabled?.[field] ?? false;
 
   // Option translation helpers
@@ -152,7 +87,7 @@ export default function JobListingForm({
     formatWageInterval(interval);
 
   const getLocationRequirementLabel = (
-    requirement: (typeof locationRequirements)[number]
+    requirement: (typeof locationRequirements)[number],
   ) =>
     translations?.options?.locationRequirements?.[requirement] ??
     formatLocationRequirement(requirement);
@@ -168,15 +103,15 @@ export default function JobListingForm({
 
   const submitButtonText =
     mode === "edit"
-      ? translations?.buttons?.submit ?? "Update Job Listing"
-      : translations?.buttons?.submit ?? "Create Job Listing";
+      ? (translations?.buttons?.update ?? "Update Job Listing")
+      : (translations?.buttons?.submit ?? "Create Job Listing");
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        form.handleSubmit();
+        jobListingForm.handleSubmit();
       }}
       className={cn("h-full flex flex-col @container", className)}
     >
@@ -188,7 +123,7 @@ export default function JobListingForm({
         >
           {shouldShowField("title") && (
             <TextField
-              form={form}
+              form={jobListingForm}
               name="title"
               label={getLabel("title", "Job Title")}
               description={getDescription("title")}
@@ -206,12 +141,15 @@ export default function JobListingForm({
             <div className="space-y-2">
               <div className="flex gap-2">
                 <TextField
-                  form={form}
+                  form={jobListingForm}
                   name="wage"
                   label={getLabel("wage", "Wage")}
                   description={getDescription("wage")}
-                  type="text"
+                  type="number"
                   validator={(value) => {
+                    if (value === "") {
+                      return undefined;
+                    }
                     const result = jobListingSchema.shape.wage.safeParse(value);
                     return result.success
                       ? undefined
@@ -221,7 +159,7 @@ export default function JobListingForm({
 
                 {shouldShowField("wageInterval") && (
                   <SelectField
-                    form={form}
+                    form={jobListingForm}
                     name="wageInterval"
                     label={getLabel("wageInterval", "Wage")}
                     description={getDescription("wageInterval")}
@@ -247,23 +185,37 @@ export default function JobListingForm({
         >
           {shouldShowField("city") && (
             <TextField
-              form={form}
+              form={jobListingForm}
               name="city"
               label={getLabel("city", "City")}
               description={getDescription("city")}
               type="text"
               validator={(value) => {
-                const result = jobListingSchema.shape.city.safeParse(value);
-                return result.success
-                  ? undefined
-                  : result.error.issues[0].message;
+                // Get current form state to check locationRequirement
+                const currentValues = jobListingForm.state.values;
+
+                // Run full schema validation to catch cross-field rules
+                const result = jobListingSchema.safeParse({
+                  ...currentValues,
+                  city: value, // Use the current value being validated
+                });
+
+                if (!result.success) {
+                  // Find error specific to city field
+                  const cityError = result.error.issues.find((issue) =>
+                    issue.path.includes("city"),
+                  );
+                  return cityError?.message;
+                }
+
+                return undefined;
               }}
             />
           )}
 
           {shouldShowField("stateAbbreviation") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="stateAbbreviation"
               label={getLabel("stateAbbreviation", "State")}
               description={getDescription("stateAbbreviation")}
@@ -274,12 +226,29 @@ export default function JobListingForm({
               disabled={isFieldDisabled("stateAbbreviation")}
               allowClear
               clearLabel={getClearStateLabel()}
+              validator={(value) => {
+                const currentValues = jobListingForm.state.values;
+
+                const result = jobListingSchema.safeParse({
+                  ...currentValues,
+                  stateAbbreviation: value,
+                });
+
+                if (!result.success) {
+                  const stateError = result.error.issues.find((issue) =>
+                    issue.path.includes("stateAbbreviation"),
+                  );
+                  return stateError?.message;
+                }
+
+                return undefined;
+              }}
             />
           )}
 
           {shouldShowField("locationRequirement") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="locationRequirement"
               label={getLabel("locationRequirement", "Location Requirement")}
               description={getDescription("locationRequirement")}
@@ -288,6 +257,11 @@ export default function JobListingForm({
                 label: getLocationRequirementLabel(lr),
               }))}
               disabled={isFieldDisabled("locationRequirement")}
+              onChange={() => {
+                // Trigger validation on dependent fields
+                jobListingForm.validateField("city", "change");
+                jobListingForm.validateField("stateAbbreviation", "change");
+              }}
             />
           )}
         </div>
@@ -299,7 +273,7 @@ export default function JobListingForm({
         >
           {shouldShowField("type") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="type"
               label={getLabel("type", "Job Type")}
               description={getDescription("type")}
@@ -319,7 +293,7 @@ export default function JobListingForm({
 
           {shouldShowField("experienceLevel") && (
             <SelectField
-              form={form}
+              form={jobListingForm}
               name="experienceLevel"
               label={getLabel("experienceLevel", "Experience Level")}
               description={getDescription("experienceLevel")}
@@ -341,7 +315,7 @@ export default function JobListingForm({
 
         {shouldShowField("description") && (
           <FormField
-            form={form}
+            form={jobListingForm}
             name="description"
             label={getLabel("description", "Description")}
             component={MarkdownEditor}
@@ -355,29 +329,16 @@ export default function JobListingForm({
             }}
           />
         )}
-        {children?.(form)}
+        {children?.(jobListingForm)}
       </div>
 
       {!hideSubmitButton && (
         <div className={cn("pt-4 mt-4", showBorder && "border-t")}>
-          <form.Subscribe
-            selector={(state) => ({
-              isSubmitting: state.isSubmitting,
-              canSubmit: state.canSubmit,
-            })}
-          >
-            {({ isSubmitting, canSubmit }) => (
-              <Button
-                type="submit"
-                disabled={isSubmitting || !canSubmit}
-                className={cn("yellow-btn w-full", buttonClassName)}
-              >
-                <LoadingSwap isLoading={isSubmitting}>
-                  {submitButtonText}
-                </LoadingSwap>
-              </Button>
-            )}
-          </form.Subscribe>
+          <SubmitButton
+            isSubmitting={isLoading || jobListingForm.state.isSubmitting}
+            buttonText={submitButtonText}
+            buttonClassname={buttonClassName}
+          />
         </div>
       )}
     </form>

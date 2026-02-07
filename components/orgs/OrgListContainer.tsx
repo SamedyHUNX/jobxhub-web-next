@@ -1,13 +1,16 @@
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";
-import { useRouter } from "next/navigation";
-import OrgsList, { OrgListItemData, OrgListTranslations } from "./OrgList";
+import OrgsList from "./OrgList";
 import type { Organization, User } from "@/types";
 import { ReactNode } from "react";
+import { OrgListTranslations } from "./_DefaultTranslation";
 
 interface OrgListContainerProps {
   // Navigation callbacks (optional)
-  afterSelectOrganizationUrl?: string | ((org: OrgListItemData) => string);
+  afterSelectOrganizationUrl?:
+    | string
+    | ((org: Organization) => string)
+    | undefined;
   afterSelectPersonalUrl?: string | ((user: User) => string);
 
   // Query params for create org flow
@@ -15,56 +18,27 @@ interface OrgListContainerProps {
   skipInvitationScreen?: boolean;
 
   // UI options (passed through to OrgsList)
-  hidePersonal?: boolean;
   fallback?: ReactNode;
   translations?: OrgListTranslations;
 }
 
 export default function OrgsListContainer({
   afterSelectOrganizationUrl,
-  afterSelectPersonalUrl,
   hideSlug = false,
   skipInvitationScreen = false,
-  hidePersonal = false,
   fallback,
   translations,
 }: OrgListContainerProps) {
   const { user: currentUser } = useProfile();
   const { selectOrganization, navigateToCreateOrg, allOrgs, isLoading } =
-    useOrgs({
-      userId: currentUser?.id,
-    });
-  const router = useRouter();
-  // Map to display format
-  const mappedOrganizations: OrgListItemData[] = allOrgs.map(
-    (org: Organization) => ({
-      id: org.id,
-      name: org.orgName,
-      imageUrl: org.imageUrl,
-      isVerified: org.isVerified,
-      isBanned: org.isBanned,
-      membersCount: org.membersCount,
-      jobsCount: org.jobsCount,
-    })
-  );
+    useOrgs();
 
   // Handlers
-  const handleSelectOrganization = (org: OrgListItemData) => {
+  const handleSelectOrganization = (org: Organization) => {
     // Use the hook's navigation logic
     selectOrganization(org.id, {
       redirectUrl: afterSelectOrganizationUrl,
     });
-  };
-
-  const handleSelectPersonal = () => {
-    if (!currentUser) return;
-
-    const url =
-      typeof afterSelectPersonalUrl === "function"
-        ? afterSelectPersonalUrl(currentUser)
-        : afterSelectPersonalUrl || "/";
-
-    router.push(url);
   };
 
   const handleCreateOrganization = () => {
@@ -77,13 +51,11 @@ export default function OrgsListContainer({
 
   return (
     <OrgsList
-      organizations={mappedOrganizations}
+      organizations={allOrgs}
       currentUser={currentUser}
       isLoading={isLoading}
       onSelectOrganization={handleSelectOrganization}
-      onSelectPersonal={handleSelectPersonal}
       onCreateOrganization={handleCreateOrganization}
-      hidePersonal={hidePersonal}
       fallback={fallback}
       translations={translations}
     />

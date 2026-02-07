@@ -8,13 +8,7 @@ export const store = configureStore({
     auth: authReducer,
     organizations: orgsReducer,
     jobListings: jobListingsReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
-      },
-    }),
+  }
 });
 
 export type RootState = ReturnType<typeof store.getState>;
