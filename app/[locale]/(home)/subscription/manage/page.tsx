@@ -1,6 +1,6 @@
-// app/subscription/manage/page.tsx
 "use client";
 
+import PageLoader from "@/components/PageLoader";
 import { useStripe } from "@/hooks/use-stripe";
 
 export default function ManageSubscriptionPage() {
@@ -16,7 +16,7 @@ export default function ManageSubscriptionPage() {
   } = useStripe();
 
   if (isLoadingSubscription) {
-    return <div className="container mx-auto py-12">Loading...</div>;
+    return <PageLoader />;
   }
 
   if (!subscription) {
