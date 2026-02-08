@@ -52,7 +52,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="mx-auto space-y-8 px-4 mt-auto max-w-4xl">
+    <div className="mx-auto space-y-8 px-4 mt-[25vh] max-w-4xl">
       <BrandLogo />
       <div className="pt-4">
         <AuthLeftHeader title={authT("yourNewPassword")} />
