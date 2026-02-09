@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SubscriptionButton } from "@/components/SubscriptionButton";
+import { SubscriptionButton } from "@/components/subscription/SubscriptionButton";
 
 export default function PricingPage() {
   const [interval, setInterval] = useState<"month" | "year">("month");
