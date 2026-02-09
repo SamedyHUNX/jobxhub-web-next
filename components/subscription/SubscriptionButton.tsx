@@ -1,6 +1,7 @@
 "use client";
 
 import { useStripe } from "@/hooks/use-stripe";
+import { Button } from "../ui/button";
 
 interface SubscriptionButtonProps {
   planName: "Basic" | "Growth" | "Enterprise";
@@ -17,7 +18,7 @@ export function SubscriptionButton({
   const handleSubscribe = () => {
     const baseUrl = window.location.origin;
 
-    // ✅ Send planName and interval instead of priceId
+    // Send planName and interval instead of priceId
     createCheckoutSession({
       planName, // 'basic', 'growth', or 'enterprise'
       interval, // 'month' or 'year'
@@ -28,7 +29,7 @@ export function SubscriptionButton({
   };
 
   return (
-    <button
+    <Button
       onClick={handleSubscribe}
       disabled={isCreatingCheckout}
       className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
@@ -58,6 +59,6 @@ export function SubscriptionButton({
       ) : (
         "Start Free Trial"
       )}
-    </button>
+    </Button>
   );
 }
