@@ -94,7 +94,7 @@ export default function PricingPage() {
               Advanced analytics
             </li>
           </ul>
-          <SubscriptionButton planName="basic" interval={interval} />
+          <SubscriptionButton planName="Basic" interval={interval} />
         </div>
 
         {/* Enterprise Plan */}
@@ -169,7 +169,7 @@ export default function PricingPage() {
               SLA guarantee
             </li>
           </ul>
-          <SubscriptionButton planName="enterprise" interval={interval} />
+          <SubscriptionButton planName="Enterprise" interval={interval} />
         </div>
       </div>
     </div>

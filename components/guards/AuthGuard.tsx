@@ -26,7 +26,7 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
 
     // Check if current path is a public auth route
     const isPublicAuthRoute = publicAuthRoutes.some((route) =>
-      pathname.startsWith(route)
+      pathname.startsWith(route),
     );
 
     // Redirect to sign-in if not authenticated AND not already on a public route

@@ -23,6 +23,8 @@
     "enterYourEmail": "Enter Your Email",
     "yourNewPassword": "Enter Your New Password",
     "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Enter your confirm password",
     "passwordPlaceholder": "Enter your password",
     "forgotPassword": "Forgot Password?",
     "signIn": "Sign In",

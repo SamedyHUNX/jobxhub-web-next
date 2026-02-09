@@ -3,7 +3,7 @@
 import { useStripe } from "@/hooks/use-stripe";
 
 interface SubscriptionButtonProps {
-  planName: "basic" | "enterprise";
+  planName: "Basic" | "Growth" | "Enterprise";
   interval: "month" | "year";
 }
 
@@ -14,29 +14,16 @@ export function SubscriptionButton({
   const { createCheckoutSession, isCreatingCheckout, hasActiveSubscription } =
     useStripe();
 
-  // Map plan names to Stripe Price IDs
-  const PRICE_IDS = {
-    basic: {
-      month: process.env.NEXT_PUBLIC_STRIPE_BASIC_MONTHLY_PRICE_ID!,
-      year: process.env.NEXT_PUBLIC_STRIPE_BASIC_YEARLY_PRICE_ID!,
-    },
-    enterprise: {
-      month: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_MONTHLY_PRICE_ID!,
-      year: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_YEARLY_PRICE_ID!,
-    },
-  };
-
   const handleSubscribe = () => {
-    const priceId = PRICE_IDS[planName][interval];
     const baseUrl = window.location.origin;
 
+    // ✅ Send planName and interval instead of priceId
     createCheckoutSession({
-      priceId,
+      planName, // 'basic', 'growth', or 'enterprise'
+      interval, // 'month' or 'year'
       successUrl: `${baseUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${baseUrl}/pricing`,
-      quantity: 1,
-      trialPeriodDays: 14,
-      allowPromotionCodes: true,
+      trialPeriod: true,
     });
   };
 

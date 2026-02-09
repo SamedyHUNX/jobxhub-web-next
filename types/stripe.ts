@@ -113,12 +113,15 @@ export interface PaymentHistory {
 
 // Create subscription DTO
 export interface CreateSubscriptionDto {
-  priceId: string;
+  planName: string; // 'basic', 'growth', or 'enterprise'
+  interval: "month" | "year";
+  // priceId?: string;
   quantity?: number;
   trialPeriodDays?: number;
   paymentMethodId?: string; // For direct subscription creation
   couponId?: string;
   metadata?: Record<string, string>;
+  trialPeriod?: boolean;
 }
 
 // Create checkout session DTO

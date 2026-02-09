@@ -8,7 +8,7 @@ export const store = configureStore({
     auth: authReducer,
     organizations: orgsReducer,
     jobListings: jobListingsReducer,
-  }
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
