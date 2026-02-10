@@ -3,13 +3,23 @@
 import SubmitButton from "@/components/SubmitButton";
 import PricingCard from "@/components/subscription/PricingCard";
 import { SubscriptionPlans } from "@/constants/subscription-plans";
+import { useProfile } from "@/hooks/use-profile";
 import { useStripe } from "@/hooks/use-stripe";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function PricingPage() {
   const [interval, setInterval] = useState<"month" | "year">("month");
   const { createCheckoutSession, isCreatingCheckout, hasActiveSubscription } =
     useStripe();
+  const { user: currentUser } = useProfile();
+  const router = useRouter();
+
+  if (currentUser?.hasSubscription) {
+    router.push("/employer");
+  } else {
+    router.push("/pricing");
+  }
 
   const plans = [
     {
@@ -48,7 +58,6 @@ export default function PricingPage() {
       trialPeriod: true,
     };
     try {
-      console.log("data being sent to createCheckoutSession:", data);
       createCheckoutSession(data);
     } catch (error) {
       console.error("Error creating checkout session:", error);
