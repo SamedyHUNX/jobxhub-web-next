@@ -2,7 +2,6 @@
 
 import SubmitButton from "@/components/SubmitButton";
 import PricingCard from "@/components/subscription/PricingCard";
-import { Button } from "@/components/ui/button";
 import { SubscriptionPlans } from "@/constants/subscription-plans";
 import { useStripe } from "@/hooks/use-stripe";
 import { useState } from "react";
@@ -14,40 +13,46 @@ export default function PricingPage() {
 
   const plans = [
     {
-      ...SubscriptionPlans.Basic,
+      ...SubscriptionPlans.basic,
       price:
         interval === "month"
-          ? SubscriptionPlans.Basic.priceMonthly
-          : SubscriptionPlans.Basic.priceAnnual,
+          ? SubscriptionPlans.basic.priceMonthly
+          : SubscriptionPlans.basic.priceAnnual,
       isPopular: false,
     },
     {
-      ...SubscriptionPlans.Growth,
+      ...SubscriptionPlans.growth,
       price:
         interval === "month"
-          ? SubscriptionPlans.Growth.priceMonthly
-          : SubscriptionPlans.Growth.priceAnnual,
+          ? SubscriptionPlans.growth.priceMonthly
+          : SubscriptionPlans.growth.priceAnnual,
       isPopular: true,
     },
     {
-      ...SubscriptionPlans.Enterprise,
+      ...SubscriptionPlans.enterprise,
       price:
         interval === "month"
-          ? SubscriptionPlans.Enterprise.priceMonthly
-          : SubscriptionPlans.Enterprise.priceAnnual,
+          ? SubscriptionPlans.enterprise.priceMonthly
+          : SubscriptionPlans.enterprise.priceAnnual,
       isPopular: false,
     },
   ];
 
   const handleSubscribe = (planName: string) => {
     const baseUrl = window.location.origin;
-    createCheckoutSession({
+    const data = {
       planName,
       interval,
       successUrl: `${baseUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${baseUrl}/pricing`,
       trialPeriod: true,
-    });
+    };
+    try {
+      console.log("data being sent to createCheckoutSession:", data);
+      createCheckoutSession(data);
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+    }
   };
 
   return (

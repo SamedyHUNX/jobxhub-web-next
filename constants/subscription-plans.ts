@@ -1,6 +1,6 @@
 export const SubscriptionPlans = {
-  Basic: {
-    name: "Basic",
+  basic: {
+    name: "basic",
     description: "Perfect for small teams starting out",
     priceMonthly: 10,
     priceAnnual: 100,
@@ -13,8 +13,8 @@ export const SubscriptionPlans = {
     allowedRoles: ["APPLICANT_MANAGER"],
     features: ["5 job postings", "Applicant management", "Basic analytics"],
   },
-  Growth: {
-    name: "Growth",
+  growth: {
+    name: "growth",
     description: "For growing companies",
     priceMonthly: 25,
     priceAnnual: 200,
@@ -32,8 +32,8 @@ export const SubscriptionPlans = {
       "Job listing management",
     ],
   },
-  Enterprise: {
-    name: "Enterprise",
+  enterprise: {
+    name: "enterprise",
     description: "For large organizations",
     priceMonthly: 100,
     priceAnnual: 1000,

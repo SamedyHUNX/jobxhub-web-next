@@ -8,6 +8,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { ReactNode } from "react";
+import { capitalizeString } from "@/lib/utils";
 
 interface PricingCardProps {
   title?: string;
@@ -25,7 +26,6 @@ export default function PricingCard({
   price = 0,
   description = "Great for trying out Frames X component and templates.",
   features = [],
-  buttonText = "Get Started",
   buttonComponent,
   isPopular = false,
   interval = "month",
@@ -41,7 +41,7 @@ export default function PricingCard({
       )}
 
       <CardHeader>
-        <CardTitle className="text-2xl">{title}</CardTitle>
+        <CardTitle className="text-2xl">{capitalizeString(title)}</CardTitle>
         <CardDescription className="text-base leading-relaxed">
           {description}
         </CardDescription>

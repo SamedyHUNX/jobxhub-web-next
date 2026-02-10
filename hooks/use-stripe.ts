@@ -18,7 +18,6 @@ export function useStripe() {
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   // Get subscription query
   const {
