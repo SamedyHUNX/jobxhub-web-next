@@ -3,6 +3,30 @@
 import PageLoader from "@/components/PageLoader";
 import { useStripe } from "@/hooks/use-stripe";
 
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { CreditCard, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
 export default function ManageSubscriptionPage() {
   const {
     subscription,
@@ -22,18 +46,22 @@ export default function ManageSubscriptionPage() {
   if (!subscription) {
     return (
       <div className="container mx-auto py-12 text-center">
-        <h1 className="text-2xl font-bold mb-4">No Active Subscription</h1>
-        <a href="/pricing" className="text-blue-600 hover:underline">
-          View Pricing Plans
-        </a>
+        <Card className="max-w-md mx-auto">
+          <CardHeader>
+            <CardTitle className="text-2xl">No Active Subscription</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <a href="/pricing">View Pricing Plans</a>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   const handleCancel = () => {
-    if (confirm("Are you sure you want to cancel your subscription?")) {
-      cancelSubscription({ cancelAtPeriodEnd: true });
-    }
+    cancelSubscription({ cancelAtPeriodEnd: true });
   };
 
   const handleReactivate = () => {
@@ -45,100 +73,148 @@ export default function ManageSubscriptionPage() {
       <h1 className="text-3xl font-bold mb-8">Manage Subscription</h1>
 
       {/* Current Subscription */}
-      <div className="bg-white border rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Current Plan</h2>
-        <div className="space-y-2">
-          <p>
-            <span className="text-gray-600">Status:</span>{" "}
-            <span
-              className={`font-semibold ${
-                subscription.status === "active"
-                  ? "text-green-600"
-                  : "text-orange-600"
-              }`}
-            >
-              {subscription.status.toUpperCase()}
-            </span>
-          </p>
-          <p>
-            <span className="text-gray-600">Current Period Ends:</span>{" "}
-            <span className="font-semibold">
-              {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
-            </span>
-          </p>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="text-xl">Current Plan</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">Status:</span>
+              <Badge
+                variant={
+                  subscription.status === "active" ? "default" : "secondary"
+                }
+                className={
+                  subscription.status === "active"
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-orange-600 hover:bg-orange-700"
+                }
+              >
+                {subscription.status.toUpperCase()}
+              </Badge>
+            </div>
+            <div>
+              <span className="text-muted-foreground">
+                Current Period Ends:
+              </span>{" "}
+              <span className="font-semibold">
+                {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+
           {subscription.cancelAtPeriodEnd && (
-            <p className="text-orange-600 font-semibold">
-              Subscription will cancel on{" "}
-              {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
-            </p>
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Subscription will cancel on{" "}
+                {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+              </AlertDescription>
+            </Alert>
           )}
-        </div>
 
-        <div className="mt-6 flex gap-4">
-          <button
-            onClick={() => openBillingPortal()}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Manage Billing
-          </button>
+          <Separator />
 
-          {subscription.cancelAtPeriodEnd ? (
-            <button
-              onClick={handleReactivate}
-              disabled={isReactivatingSubscription}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
-            >
-              {isReactivatingSubscription ? "Processing..." : "Reactivate"}
-            </button>
-          ) : (
-            <button
-              onClick={handleCancel}
-              disabled={isCancellingSubscription}
-              className="px-6 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50"
-            >
-              {isCancellingSubscription
-                ? "Processing..."
-                : "Cancel Subscription"}
-            </button>
-          )}
-        </div>
-      </div>
+          <div className="flex gap-4">
+            <Button onClick={() => openBillingPortal()} className="gap-2">
+              <CreditCard className="h-4 w-4" />
+              Manage Billing
+            </Button>
+
+            {subscription.cancelAtPeriodEnd ? (
+              <Button
+                onClick={handleReactivate}
+                disabled={isReactivatingSubscription}
+                variant="default"
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {isReactivatingSubscription ? "Processing..." : "Reactivate"}
+              </Button>
+            ) : (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    disabled={isCancellingSubscription}
+                  >
+                    {isCancellingSubscription
+                      ? "Processing..."
+                      : "Cancel Subscription"}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will cancel your subscription at the end of the
+                      current billing period. You'll continue to have access
+                      until{" "}
+                      {new Date(
+                        subscription.currentPeriodEnd,
+                      ).toLocaleDateString()}
+                      .
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Keep Subscription</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleCancel}
+                      className="bg-destructive hover:bg-destructive/90"
+                    >
+                      Cancel Subscription
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Payment History */}
-      <div className="bg-white border rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4">Payment History</h2>
-        {paymentHistory && paymentHistory.length > 0 ? (
-          <div className="space-y-3">
-            {paymentHistory.map((payment) => (
-              <div
-                key={payment.id}
-                className="flex justify-between items-center py-3 border-b last:border-b-0"
-              >
-                <div>
-                  <p className="font-medium">
-                    ${(payment.amount / 100).toFixed(2)}{" "}
-                    {payment.currency.toUpperCase()}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {new Date(payment.createdAt).toLocaleDateString()}
-                  </p>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">Payment History</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {paymentHistory && paymentHistory.length > 0 ? (
+            <div className="space-y-0">
+              {paymentHistory.map((payment, index) => (
+                <div key={payment.id}>
+                  <div className="flex justify-between items-center py-4">
+                    <div>
+                      <p className="font-medium">
+                        ${(payment.amount / 100).toFixed(2)}{" "}
+                        {payment.currency.toUpperCase()}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(payment.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={
+                        payment.status === "succeeded" ? "default" : "secondary"
+                      }
+                      className={
+                        payment.status === "succeeded"
+                          ? "bg-green-100 text-green-800 hover:bg-green-100"
+                          : "bg-orange-100 text-orange-800 hover:bg-orange-100"
+                      }
+                    >
+                      {payment.status}
+                    </Badge>
+                  </div>
+                  {index < paymentHistory.length - 1 && <Separator />}
                 </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm ${
-                    payment.status === "succeeded"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-orange-100 text-orange-800"
-                  }`}
-                >
-                  {payment.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-600">No payment history yet.</p>
-        )}
-      </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">No payment history yet.</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
