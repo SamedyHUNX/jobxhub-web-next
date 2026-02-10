@@ -21,6 +21,7 @@ export type PaymentStatus =
 
 // Subscription interval
 export type SubscriptionInterval = "day" | "week" | "month" | "year";
+const plans = ["basic", "growth", "enterprise"] as const;
 
 // Price object
 export interface Price {
@@ -54,8 +55,11 @@ export interface SubscriptionItem {
 export interface Subscription {
   id: string;
   userId: string;
-  customerId: string;
+  planName: (typeof plans)[number];
   status: SubscriptionStatus;
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  stripePriceId: string;
   currentPeriodStart: Date | string;
   currentPeriodEnd: Date | string;
   cancelAtPeriodEnd: boolean;

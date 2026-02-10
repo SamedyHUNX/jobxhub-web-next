@@ -1,14 +1,13 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
+import { ReactNode } from "react";
 
 interface PricingCardProps {
   title?: string;
@@ -16,7 +15,7 @@ interface PricingCardProps {
   description?: string;
   features?: readonly string[] | string[];
   buttonText?: string;
-  onButtonClick?: () => void;
+  buttonComponent?: ReactNode;
   isPopular?: boolean;
   interval?: string;
 }
@@ -27,7 +26,7 @@ export default function PricingCard({
   description = "Great for trying out Frames X component and templates.",
   features = [],
   buttonText = "Get Started",
-  onButtonClick = () => {},
+  buttonComponent,
   isPopular = false,
   interval = "month",
 }: PricingCardProps) {
@@ -54,14 +53,7 @@ export default function PricingCard({
           <span className="text-xl text-muted-foreground">/{interval}</span>
         </div>
 
-        <Button
-          onClick={onButtonClick}
-          className="w-full text-lg"
-          size="lg"
-          variant={isPopular ? "default" : "secondary"}
-        >
-          {buttonText}
-        </Button>
+        {buttonComponent && <div className="pt-4">{buttonComponent}</div>}
 
         <div className="border-t pt-6">
           <ul className="space-y-3">

@@ -1,12 +1,16 @@
 "use client";
 
+import SubmitButton from "@/components/SubmitButton";
 import PricingCard from "@/components/subscription/PricingCard";
-import { SubscriptionButton } from "@/components/subscription/SubscriptionButton";
+import { Button } from "@/components/ui/button";
 import { SubscriptionPlans } from "@/constants/subscription-plans";
+import { useStripe } from "@/hooks/use-stripe";
 import { useState } from "react";
 
 export default function PricingPage() {
   const [interval, setInterval] = useState<"month" | "year">("month");
+  const { createCheckoutSession, isCreatingCheckout, hasActiveSubscription } =
+    useStripe();
 
   const plans = [
     {
@@ -34,6 +38,17 @@ export default function PricingPage() {
       isPopular: false,
     },
   ];
+
+  const handleSubscribe = (planName: string) => {
+    const baseUrl = window.location.origin;
+    createCheckoutSession({
+      planName,
+      interval,
+      successUrl: `${baseUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${baseUrl}/pricing`,
+      trialPeriod: true,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -82,12 +97,17 @@ export default function PricingPage() {
               price={plan.price}
               description={plan.description}
               features={plan.features}
-              buttonText="Start Free Trial"
               interval={interval}
               isPopular={plan.isPopular}
-              onButtonClick={() => {
-                <SubscriptionButton planName={plan.name} interval={interval} />;
-              }}
+              buttonComponent={
+                <SubmitButton
+                  onClick={() => handleSubscribe(plan.name)}
+                  isSubmitting={isCreatingCheckout}
+                  buttonText={
+                    hasActiveSubscription ? "Upgrade Plan" : "Start Free Trial"
+                  }
+                />
+              }
             />
           ))}
         </div>
