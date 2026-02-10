@@ -69,7 +69,7 @@ export default function ManageSubscriptionPage() {
   };
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-4xl">
+    <div className="container mx-auto w-full p-8">
       <h1 className="text-3xl font-bold mb-8">Manage Subscription</h1>
 
       {/* Current Subscription */}
