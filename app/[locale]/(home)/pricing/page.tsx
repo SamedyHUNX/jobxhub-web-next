@@ -6,7 +6,7 @@ import { SubscriptionPlans } from "@/constants/subscription-plans";
 import { useProfile } from "@/hooks/use-profile";
 import { useStripe } from "@/hooks/use-stripe";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function PricingPage() {
   const [interval, setInterval] = useState<"month" | "year">("month");
@@ -15,13 +15,15 @@ export default function PricingPage() {
   const { user: currentUser } = useProfile();
   const router = useRouter();
 
-  if (currentUser?.hasSubscription) {
-    router.push("/employer");
-  } else {
-    router.push("/pricing");
-  }
+  useEffect(() => {
+    if (currentUser?.hasSubscription) {
+      router.push("/employer");
+    } else {
+      router.push("/pricing");
+    }
+  }, [currentUser, router]);
 
-  const plans = [
+  const stripeSubscriptionPlans = [
     {
       ...SubscriptionPlans.basic,
       price:
@@ -65,7 +67,7 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen  ">
       <div className="container mx-auto py-12 px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
@@ -104,7 +106,7 @@ export default function PricingPage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan) => (
+          {stripeSubscriptionPlans.map((plan) => (
             <PricingCard
               key={plan.name}
               title={plan.name}

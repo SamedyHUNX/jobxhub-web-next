@@ -30,8 +30,8 @@ const SELECTED_ORG_KEY = "selectedOrgId";
 export function useOrgs(params?: UseOrgsParams) {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-  const selectedOrganization = useAppSelector(
-    (state) => state.organizations.selectedOrgId
+  const selectedOrgId = useAppSelector(
+    (state) => state.organizations.selectedOrgId,
   );
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
@@ -53,7 +53,7 @@ export function useOrgs(params?: UseOrgsParams) {
 
   // Initialize from cookie on mount
   useEffect(() => {
-    if (!selectedOrganization && allOrgs.length > 0) {
+    if (!selectedOrgId && allOrgs.length > 0) {
       const storedId = Cookies.get(SELECTED_ORG_KEY);
       if (storedId) {
         const org = allOrgs.find((o: Organization) => o.id === storedId);
@@ -65,7 +65,7 @@ export function useOrgs(params?: UseOrgsParams) {
         }
       }
     }
-  }, [selectedOrganization, allOrgs, dispatch]);
+  }, [selectedOrgId, allOrgs, dispatch]);
 
   // Create organization mutation
   const createOrganizationMutation = useMutation<
@@ -119,12 +119,12 @@ export function useOrgs(params?: UseOrgsParams) {
         router.push(url);
       }
     },
-    [dispatch, allOrgs, router, locale]
+    [dispatch, allOrgs, router, locale],
   );
 
   const selectedOrgData = useMemo(
-    () => allOrgs.find((org: Organization) => org.id === selectedOrganization),
-    [allOrgs, selectedOrganization]
+    () => allOrgs.find((org: Organization) => org.id === selectedOrgId),
+    [allOrgs, selectedOrgId],
   );
 
   // Navigate to create organization page
@@ -139,14 +139,14 @@ export function useOrgs(params?: UseOrgsParams) {
       if (options?.skipInvitationScreen !== undefined) {
         params.append(
           "skipInvitationScreen",
-          String(options.skipInvitationScreen)
+          String(options.skipInvitationScreen),
         );
       }
 
       const url = params.toString() ? `${baseUrl}?${params}` : baseUrl;
       router.push(url);
     },
-    [router, locale]
+    [router, locale],
   );
 
   // Clear selected organization
@@ -158,7 +158,7 @@ export function useOrgs(params?: UseOrgsParams) {
   return {
     // Data
     allOrgs,
-    selectedOrganization,
+    selectedOrgId,
     selectedOrgData,
     isLoading,
     error,

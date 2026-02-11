@@ -16,7 +16,7 @@ import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 
 export default function JobIdPage() {
   const { fetchJobListingByJobId } = useJobListings();
-  const { selectedOrganization } = useOrgs();
+  const { selectedOrgId } = useOrgs();
   const jobId = useParams().jobId as string;
   const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
 
@@ -45,15 +45,16 @@ export default function JobIdPage() {
           </div>
         </div>
         <div className="flex items-center gap-2 empty:-mt-4">
-          {/* <AsyncIf condition={}></AsyncIf> */}
           <Button asChild variant={"outline"}>
             <Link
-              href={`/employer/orgs/${selectedOrganization}/all-jobs/${currentJob.id}/edit`}
+              href={`/employer/orgs/${selectedOrgId}/all-jobs/${currentJob.id}/edit`}
             >
               <EditIcon className="size-4" />
               Edit
             </Link>
           </Button>
+          // TODO: Implement publish/unpublish functionality
+          <StatusUpdateButton />
         </div>
       </div>
 
@@ -68,5 +69,13 @@ export default function JobIdPage() {
         dialogTitle="Description"
       />
     </div>
+  );
+}
+
+function StatusUpdateButton() {
+  return (
+    <Button asChild variant={"outline"}>
+      Toggle
+    </Button>
   );
 }

@@ -6,7 +6,6 @@ import type {
   CreateCheckoutSessionDto,
   Subscription,
   PaymentHistory,
-  CancelSubscriptionDto,
 } from "@/types/stripe";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";

@@ -4,12 +4,7 @@ import PageLoader from "@/components/PageLoader";
 import { useStripe } from "@/hooks/use-stripe";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -45,7 +40,7 @@ export default function ManageSubscriptionPage() {
   if (!subscription) {
     return (
       <div className="container mx-auto py-12 text-center">
-        <Card className="max-w-md mx-auto">
+        <Card className="w-full p-8 mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl">No Active Subscription</CardTitle>
           </CardHeader>

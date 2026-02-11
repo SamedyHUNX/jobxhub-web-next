@@ -32,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useOrgs } from "@/hooks/use-orgs";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 
@@ -45,7 +46,10 @@ type FilterType = {
 };
 
 export default function AllJobsByOrgPage() {
-  const { jobListings: allJobListings, isLoading } = useJobListings();
+  const { selectedOrgId } = useOrgs();
+  const { jobListings: allJobListings, isLoading } = useJobListings({
+    organizationId: selectedOrgId,
+  });
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [showFilters, setShowFilters] = useState<boolean>(false);

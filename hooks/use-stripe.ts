@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
@@ -18,6 +18,11 @@ export function useStripe() {
   const successT = useTranslations("apiSuccesses");
   const errorT = useTranslations("apiErrors");
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    // When user returns from Stripe, force refetch
+    queryClient.invalidateQueries({ queryKey: ["subscription"] });
+  }, [queryClient]);
 
   // Get subscription query
   const {
@@ -44,6 +49,7 @@ export function useStripe() {
       stripeApi.createSubscription(dto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subscription"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success(successT("subscriptionCreated"));
     },
     onError: (error: AxiosError) => {

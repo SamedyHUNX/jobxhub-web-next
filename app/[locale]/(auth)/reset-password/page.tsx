@@ -38,9 +38,6 @@ export default function ResetPasswordPage() {
       if (!value.newPassword || !value.confirmNewPassword) {
         return false;
       }
-
-      // Trigger validation when both fields are filled
-      // The schema's .refine() will check if they match
       return true;
     },
     onSubmit: (value) => resetPassword({ token, ...value }),
