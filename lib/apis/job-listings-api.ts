@@ -57,4 +57,10 @@ export const jobListingsApi = {
     const { data } = await api.put(`/job-listings/${id}`, dto);
     return data;
   },
+
+  toggleStatus: async (id: string, status: string) => {
+    assertApiUrl();
+    const { data } = await api.put(`/job-listings/${id}`, { status });
+    return data;
+  },
 };

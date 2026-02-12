@@ -8,14 +8,18 @@ import { useJobListings } from "@/hooks/use-job-listings";
 import { useOrgs } from "@/hooks/use-orgs";
 import { formatJobListingStatus } from "@/lib/formatter";
 import type { JobListing } from "@/types";
-import { EditIcon } from "lucide-react";
+import { EditIcon, ToggleRightIcon, ToggleLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 
 export default function JobIdPage() {
-  const { fetchJobListingByJobId } = useJobListings();
+  const {
+    fetchJobListingByJobId,
+    toggleJobListingStatus,
+    toggleJobListingStatusLoading,
+  } = useJobListings();
   const { selectedOrgId } = useOrgs();
   const jobId = useParams().jobId as string;
   const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
@@ -26,11 +30,22 @@ export default function JobIdPage() {
         setCurrentJob(job);
       });
     }
-  }, [jobId, fetchJobListingByJobId]);
+  }, [jobId]);
 
   if (!currentJob) {
     return null;
   }
+
+  const onToggle = () => {
+    try {
+      toggleJobListingStatus({
+        id: jobId,
+        status: currentJob.status === "published" ? "draft" : "published",
+      });
+    } catch (error) {
+      console.error("Failed to toggle job listing status:", error);
+    }
+  };
 
   return (
     <div className="space-y-6 w-full max-auto p-8 @container">
@@ -53,12 +68,11 @@ export default function JobIdPage() {
               Edit
             </Link>
           </Button>
-          // TODO: Implement publish/unpublish functionality
-          <StatusUpdateButton />
+          <StatusUpdateButton currentJob={currentJob} onToggle={onToggle} />
         </div>
       </div>
 
-      <MarkdownPartial
+      {/* <MarkdownPartial
         dialogMarkdown={<MarkdownRenderer source={currentJob.description} />}
         mainMarkdown={
           <MarkdownRenderer
@@ -67,15 +81,38 @@ export default function JobIdPage() {
           />
         }
         dialogTitle="Description"
-      />
+      /> */}
+      <div className="prose max-w-none prose-sm">
+        <MarkdownRenderer source={currentJob.description} />
+      </div>
     </div>
   );
 }
 
-function StatusUpdateButton() {
+function StatusUpdateButton({
+  currentJob,
+  onToggle,
+}: {
+  currentJob: JobListing;
+  onToggle: () => void;
+}) {
   return (
-    <Button asChild variant={"outline"}>
-      Toggle
+    <Button
+      variant={currentJob.status === "published" ? "destructive" : "default"}
+      onClick={onToggle}
+      disabled={false}
+    >
+      {currentJob.status === "published" ? (
+        <>
+          <ToggleLeftIcon className="size-4" />
+          Unpublish
+        </>
+      ) : (
+        <>
+          <ToggleRightIcon className="size-4" />
+          Publish
+        </>
+      )}
     </Button>
   );
 }

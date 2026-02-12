@@ -118,6 +118,28 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Toggle publish/unpublish status
+  const toggleJobListingStatusMutatio = useMutation<
+    JobListing,
+    AxiosError,
+    { id: string; status: string }
+  >({
+    mutationFn: ({ id, status }) => {
+      return jobListingsApi.toggleStatus(id, status);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast(
+        variables.status === "published"
+          ? successT("publishJobListingSuccess")
+          : successT("unpublishJobListingSuccess"),
+      );
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   // Usage
   const saveJobListing = (jobId?: string, data?: JobListingFormData) => {
     if (!data) return;
@@ -137,5 +159,9 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     // Fetch job by jobId
     fetchJobListingByJobId,
+
+    // Toggle publish/unpublish
+    toggleJobListingStatus: toggleJobListingStatusMutatio.mutate,
+    toggleJobListingStatusLoading: toggleJobListingStatusMutatio.isPending,
   };
 }

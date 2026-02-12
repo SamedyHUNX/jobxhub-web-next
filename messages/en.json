@@ -75,7 +75,7 @@
     "create": "Create",
     "settings": {
       "profile": {
-        "title": "Organization overview",
+        "title": "overview",
         "organizationName": "Organization Name",
         "updateProfile": "Update Organization",
         "organizationInformation": "Organization Information",

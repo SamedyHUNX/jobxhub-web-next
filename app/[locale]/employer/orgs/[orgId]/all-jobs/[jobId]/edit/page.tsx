@@ -12,7 +12,7 @@ import { useOrgs } from "@/hooks/use-orgs";
 
 export default function EditJobIdPage() {
   const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
-  const { selectedOrganization } = useOrgs();
+  const { selectedOrgId } = useOrgs();
   const { fetchJobListingByJobId, saveJobListing, jobListingLoading } =
     useJobListings();
   const jobId = useParams().jobId as string;
@@ -47,7 +47,7 @@ export default function EditJobIdPage() {
             jobListing={currentJob}
             onSubmit={(data) => saveJobListing(currentJob.id, data)}
             translations={formTranslations}
-            orgId={selectedOrganization}
+            orgId={selectedOrgId}
             isLoading={jobListingLoading}
             mode="edit"
           />
