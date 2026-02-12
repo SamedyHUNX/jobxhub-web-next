@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
@@ -11,7 +10,7 @@ import type {
   CreateCheckoutSessionDto,
   Subscription,
   PaymentHistory,
-} from "@/types/stripe";
+} from "@/types/stripe.types";
 import { stripeApi } from "@/lib/apis/stripe-api";
 
 export function useStripe() {

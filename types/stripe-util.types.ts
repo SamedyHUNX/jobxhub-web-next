@@ -3,7 +3,7 @@ import type {
   SubscriptionWithDetails,
   PricingPlan,
   SubscriptionStatus,
-} from "./stripe";
+} from "./stripe.types";
 
 // Helper type for subscription filters
 export type SubscriptionFilter = {

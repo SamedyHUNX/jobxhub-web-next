@@ -90,6 +90,7 @@ export interface Organization {
   id: string;
   orgName: string;
   imageUrl: string;
+  description: string;
   slug: string;
   isVerified: boolean;
   isBanned: boolean;
@@ -100,6 +101,12 @@ export interface Organization {
   jobsCount: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UpdateOrganizationDto {
+  orgName?: string;
+  description?: string;
+  imageFile?: File | null | undefined;
 }
 
 export type FindAllOrgsResponse = ApiResponse<Organization[]>;

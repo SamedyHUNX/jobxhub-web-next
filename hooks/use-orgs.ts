@@ -6,7 +6,11 @@ import {
   clearSelection,
   setSelectedOrgId,
 } from "@/stores/slices/organizations.slice";
-import type { CreateOrgResponse, Organization } from "@/types";
+import type {
+  CreateOrgResponse,
+  Organization,
+  UpdateOrganizationDto,
+} from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
@@ -155,6 +159,29 @@ export function useOrgs(params?: UseOrgsParams) {
     Cookies.remove(SELECTED_ORG_KEY);
   }, [dispatch]);
 
+  // Update organization mutation
+  const updateOrganizationMutation = useMutation<
+    Organization,
+    AxiosError,
+    { orgId: string; data: UpdateOrganizationDto }
+  >({
+    mutationFn: async ({ orgId, data }) => {
+      return await orgsApi.update(orgId, data);
+    },
+    onSuccess: (_, { orgId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["organizations"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["organization", orgId],
+      });
+      toast.success(successT("updateOrgSuccess"));
+    },
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     // Data
     allOrgs,
@@ -171,5 +198,8 @@ export function useOrgs(params?: UseOrgsParams) {
 
     // Mutation states
     isCreating: createOrganizationMutation.isPending,
+
+    updateOrganization: updateOrganizationMutation.mutateAsync,
+    isUpdating: updateOrganizationMutation.isPending,
   };
 }

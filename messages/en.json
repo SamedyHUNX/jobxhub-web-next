@@ -78,6 +78,20 @@
       "employerDashboard": "Employer Dashboard",
       "selectOrganization": "Select Organization",
       "createOrganization": "Create Organization"
+    },
+    "settings": {
+      "profile": {
+        "title": "Organization Overview",
+        "organizationName": "Organization Name",
+        "updateProfile": "Update Organization",
+        "organizationInformation": "Organization Information",
+        "description": "Description",
+        "createdOn": "Created On",
+        "lastUpdated": "Last Updated",
+        "editOrganization": "Edit Organization",
+        "clickToUploadLogo": "Click on the button to change the logo",
+        "saveChanges": "Save Changes"
+      }
     }
   },
   "user": {
@@ -225,7 +239,9 @@
     "locationRequirementRequired": "Please provide the required location",
     "nonRemoteRequired": "Required field for non-remote",
     "passwordsMustMatch": "Passwords must match",
-    "passwordsDoNotMatch": "Passwords must match"
+    "passwordsDoNotMatch": "Passwords must match",
+    "orgNameTooLong": "Organization name cannot be more than 100 characters long",
+    "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",

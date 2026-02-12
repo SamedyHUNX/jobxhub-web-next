@@ -64,12 +64,37 @@ export const createResetPasswordSchema = (t: (key: string) => string) => {
  */
 export const createOrganizationSchema = (t: (key: string) => string) => {
   return z.object({
-    orgName: z.string().min(1, t("orgNameRequired")),
-    orgDescription: z.string().min(10, t("orgDescriptionTooShort")),
+    orgName: z
+      .string()
+      .min(1, t("orgNameRequired"))
+      .max(100, t("orgNameTooLong")),
+    orgDescription: z
+      .string()
+      .min(10, t("orgDescriptionTooShort"))
+      .max(1000, t("orgDescriptionTooLong")),
     orgSlug: z.string().min(1, t("orgSlugRequired")),
     orgImage: z
       .any()
       .refine((file) => file instanceof File, t("orgImageRequired")),
+  });
+};
+
+/**
+ * Update Organization Schema
+ */
+export const updateOrganizationSchema = (t: (key: string) => string) => {
+  return z.object({
+    orgName: z
+      .string()
+      .min(1, t("orgNameRequired"))
+      .max(100, t("orgNameTooLong"))
+      .optional(),
+    description: z
+      .string()
+      .min(10, t("orgDescriptionTooShort"))
+      .max(1000, t("orgDescriptionTooLong"))
+      .optional(),
+    slug: z.string().min(1, t("orgSlugRequired")).optional(),
   });
 };
 
