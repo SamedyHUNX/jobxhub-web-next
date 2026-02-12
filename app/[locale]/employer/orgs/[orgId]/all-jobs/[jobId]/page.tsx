@@ -13,13 +13,11 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
+import { useProfile } from "@/hooks/use-profile";
+import { is } from "zod/v4/locales";
 
 export default function JobIdPage() {
-  const {
-    fetchJobListingByJobId,
-    toggleJobListingStatus,
-    toggleJobListingStatusLoading,
-  } = useJobListings();
+  const { fetchJobListingByJobId, toggleJobListingStatus } = useJobListings();
   const { selectedOrgId } = useOrgs();
   const jobId = useParams().jobId as string;
   const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
@@ -35,6 +33,9 @@ export default function JobIdPage() {
   if (!currentJob) {
     return null;
   }
+
+  // Check if current job belongs to the selected organization
+  const isOwner = currentJob.organizationId === selectedOrgId;
 
   const onToggle = () => {
     try {
@@ -66,17 +67,19 @@ export default function JobIdPage() {
             <JobListingBadges jobListing={currentJob} />
           </div>
         </div>
-        <div className="flex items-center gap-2 empty:-mt-4">
-          <Button asChild variant={"outline"}>
-            <Link
-              href={`/employer/orgs/${selectedOrgId}/all-jobs/${currentJob.id}/edit`}
-            >
-              <EditIcon className="size-4" />
-              Edit
-            </Link>
-          </Button>
-          <StatusUpdateButton currentJob={currentJob} onToggle={onToggle} />
-        </div>
+        {isOwner && (
+          <div className="flex items-center gap-2 empty:-mt-4">
+            <Button asChild variant={"outline"}>
+              <Link
+                href={`/employer/orgs/${selectedOrgId}/all-jobs/${currentJob.id}/edit`}
+              >
+                <EditIcon className="size-4" />
+                Edit
+              </Link>
+            </Button>
+            <StatusUpdateButton currentJob={currentJob} onToggle={onToggle} />
+          </div>
+        )}
       </div>
 
       {/* <MarkdownPartial
