@@ -131,7 +131,8 @@ export default function CreateNewOrgPage() {
             form={createOrgForm}
             name="orgSlug"
             label={newOrgT("orgSlugName")}
-            placeholder="Auto-generated"
+            placeholder={newOrgT("orgSlugPlaceholder")}
+            disabled={true}
             validator={(value) => {
               const result =
                 createOrganizationFormSchema.shape.orgSlug.safeParse(value);

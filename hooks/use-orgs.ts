@@ -163,10 +163,10 @@ export function useOrgs(params?: UseOrgsParams) {
   const updateOrganizationMutation = useMutation<
     Organization,
     AxiosError,
-    { orgId: string; data: UpdateOrganizationDto }
+    { orgId: string; data: FormData }
   >({
     mutationFn: async ({ orgId, data }) => {
-      return await orgsApi.update(orgId, data);
+      return await orgsApi.update({ orgId, data });
     },
     onSuccess: (_, { orgId }) => {
       queryClient.invalidateQueries({

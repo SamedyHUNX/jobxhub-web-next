@@ -87,7 +87,7 @@ export const orgsApi = {
   },
 
   // Update organization
-  update: async (orgId: string, data: UpdateOrganizationDto) => {
+  update: async ({ orgId, data }: { orgId: string; data: FormData }) => {
     const response = await api.put(`/organizations/org/${orgId}`, data);
     return response.data;
   },

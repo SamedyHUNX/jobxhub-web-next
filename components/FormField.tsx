@@ -9,6 +9,7 @@ interface FormFieldProps {
   type?: string;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export function FormField({
@@ -20,6 +21,7 @@ export function FormField({
   type = "text",
   placeholder,
   component,
+  disabled,
   className,
 }: FormFieldProps & { component?: React.ComponentType<any> }) {
   return (
@@ -52,6 +54,7 @@ export function FormField({
               id={name}
               type={type}
               value={field.state.value}
+              disabled={disabled}
               onChange={(e) => {
                 field.handleChange(e.target.value);
                 if (onChange) onChange(e.target.value);

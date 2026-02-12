@@ -9,16 +9,19 @@ import SubmitButton from "@/components/SubmitButton";
 import { Button } from "@/components/ui/button";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { useOrgs } from "@/hooks/use-orgs";
+import { generateSlug } from "@/lib/utils";
 import { updateOrganizationSchema } from "@/schemas";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function EmployerOrgIdDashboardPage() {
-  const { selectedOrgId, selectedOrgData, updateOrganization } = useOrgs();
+  const { selectedOrgData, updateOrganization } = useOrgs();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { orgId: selectedOrgId } = useParams<{ orgId: string }>();
 
   const t = useTranslations();
-  const profileT = (key: string) => t(`employer.settings.profile.${key}`);
+  const profileT = (key: string) => t(`organizations.settings.profile.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
 
   // Define validation schema
@@ -44,7 +47,7 @@ export default function EmployerOrgIdDashboardPage() {
           formData.append("image", values.imageFile);
         }
 
-        await updateOrganization(selectedOrgId, formData);
+        await updateOrganization({ orgId: selectedOrgId!, data: formData });
         setIsModalOpen(false);
       } catch (error) {
         // Error handling is done in the hook
@@ -197,6 +200,10 @@ export default function EmployerOrgIdDashboardPage() {
                   ? undefined
                   : result.error.issues[0].message;
               }}
+              onChange={(value) => {
+                // Auto-generate orgSlug when org name changes
+                updateOrgForm.setFieldValue("slug", generateSlug(value));
+              }}
             />
 
             <FormField
@@ -208,6 +215,20 @@ export default function EmployerOrgIdDashboardPage() {
               validator={(value) => {
                 const result =
                   updateOrgSchema.shape.description.safeParse(value);
+                return result.success
+                  ? undefined
+                  : result.error.issues[0].message;
+              }}
+            />
+
+            <FormField
+              form={updateOrgForm}
+              name="slug"
+              label={profileT("orgSlug")}
+              placeholder="Auto-generated"
+              disabled={true}
+              validator={(value) => {
+                const result = updateOrgSchema.shape.slug.safeParse(value);
                 return result.success
                   ? undefined
                   : result.error.issues[0].message;
