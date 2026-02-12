@@ -38,12 +38,19 @@ export default function JobIdPage() {
 
   const onToggle = () => {
     try {
+      const newStatus =
+        currentJob.status === "published" ? "draft" : "published";
+
+      // Update UI immediately (optimistic)
+      setCurrentJob({ ...currentJob, status: newStatus });
+
       toggleJobListingStatus({
         id: jobId,
-        status: currentJob.status === "published" ? "draft" : "published",
+        status: newStatus,
       });
     } catch (error) {
       console.error("Failed to toggle job listing status:", error);
+      fetchJobListingByJobId(jobId).then(setCurrentJob);
     }
   };
 
@@ -101,6 +108,7 @@ function StatusUpdateButton({
       variant={currentJob.status === "published" ? "destructive" : "default"}
       onClick={onToggle}
       disabled={false}
+      className="w-30"
     >
       {currentJob.status === "published" ? (
         <>

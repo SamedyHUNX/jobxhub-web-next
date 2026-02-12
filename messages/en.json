@@ -255,7 +255,9 @@
     "profileUpdated": "Profile updated successfully",
     "createJobListingSuccess": "Created job listing successfully",
     "updateJobListingSuccess": "Updated job listing successfully",
-    "updateOrgSuccess": "Organization updated successfully"
+    "updateOrgSuccess": "Organization updated successfully",
+    "publishJobListingSuccess": "Job listing published successfully",
+    "unpublishJobListingSuccess": "Job listing unpublished successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",
