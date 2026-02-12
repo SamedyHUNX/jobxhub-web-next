@@ -60,6 +60,7 @@ export default function PricingPage() {
       trialPeriod: true,
     };
     try {
+      console.log("data being sent", data);
       createCheckoutSession(data);
     } catch (error) {
       console.error("Error creating checkout session:", error);
