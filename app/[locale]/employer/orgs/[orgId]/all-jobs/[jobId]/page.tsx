@@ -20,6 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import CustomDialog from "@/components/CustomDialog";
 
 export default function JobIdPage() {
   const {
@@ -143,8 +144,22 @@ function StatusUpdateButton({
   publishedCount?: number;
   maxJobs?: number;
 }) {
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const isPublishing = currentJob.status === "draft";
   const disabled = isPublishing && !canPublish;
+
+  const handleButtonClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirm = () => {
+    setShowConfirmDialog(false);
+    onToggle();
+  };
+
+  const handleCancel = () => {
+    setShowConfirmDialog(false);
+  };
 
   // Show popover when at limit
   if (disabled && typeof maxJobs === "number") {
@@ -173,25 +188,45 @@ function StatusUpdateButton({
   }
 
   return (
-    <div className="flex flex-col items-end gap-1">
-      <Button
-        variant={currentJob.status === "published" ? "destructive" : "default"}
-        onClick={onToggle}
-        className="w-30"
-      >
-        {currentJob.status === "published" ? (
-          <>
-            <ToggleLeftIcon className="size-4" />
-            Unpublish
-          </>
-        ) : (
-          <>
-            <ToggleRightIcon className="size-4" />
-            Publish
-          </>
-        )}
-      </Button>
-    </div>
+    <>
+      <div className="flex flex-col items-end gap-1">
+        <Button
+          variant={
+            currentJob.status === "published" ? "destructive" : "default"
+          }
+          onClick={handleButtonClick}
+          className="w-30"
+        >
+          {currentJob.status === "published" ? (
+            <>
+              <ToggleLeftIcon className="size-4" />
+              Unpublish
+            </>
+          ) : (
+            <>
+              <ToggleRightIcon className="size-4" />
+              Publish
+            </>
+          )}
+        </Button>
+      </div>
+
+      <CustomDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        title={isPublishing ? "Publish Job Listing?" : "Unpublish Job Listing?"}
+        description={
+          isPublishing
+            ? "Are you sure? This will immediately show this job listing to all users."
+            : "Are you sure you want to unpublish this job listing? It will be hidden from all users."
+        }
+        cancelButtonText="Cancel"
+        buttonText="Confirm"
+        onCancel={handleCancel}
+        href={undefined}
+        onConfirm={handleConfirm}
+      />
+    </>
   );
 }
 
