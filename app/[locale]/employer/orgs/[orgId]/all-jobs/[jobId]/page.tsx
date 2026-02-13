@@ -133,13 +133,15 @@ export default function JobIdPage() {
                 Edit
               </Link>
             </Button>
-            <FeaturedToggleButton
-              currentJob={currentJob}
-              canFeature={canToggleToFeatured}
-              featuredCount={featuredJobListings.length}
-              maxFeatured={currentPlan?.limits.featuredListings}
-              onToggle={onToggleFeatured}
-            />
+            {currentJob?.status === "published" && (
+              <FeaturedToggleButton
+                currentJob={currentJob}
+                canFeature={canToggleToFeatured}
+                featuredCount={featuredJobListings.length}
+                maxFeatured={currentPlan?.limits.featuredListings}
+                onToggle={onToggleFeatured}
+              />
+            )}
             <StatusUpdateButton
               currentJob={currentJob}
               onToggle={onToggleStatus}
