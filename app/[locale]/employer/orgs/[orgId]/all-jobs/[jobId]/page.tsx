@@ -13,6 +13,7 @@ import {
   ToggleRightIcon,
   ToggleLeftIcon,
   StarIcon,
+  TrashIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -34,10 +35,12 @@ export default function JobIdPage() {
     toggleJobListingFeatured,
     publishedJobListings,
     featuredJobListings,
+    deleteJobListing,
   } = useJobListings();
   const { selectedOrgId } = useOrgs();
   const { user: currentUser } = useProfile();
   const jobId = useParams().jobId as string;
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
   const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
 
   useEffect(() => {
@@ -111,6 +114,11 @@ export default function JobIdPage() {
     }
   };
 
+  const handleDeleteConfirm = () => {
+    setShowDeleteDialog(false);
+    deleteJobListing(jobId);
+  };
+
   return (
     <div className="space-y-6 w-full max-auto p-8 @container">
       <div className="flex items-center justify-between gap-4 @max-4xl:flex-col @max-4xl:items-start">
@@ -149,9 +157,27 @@ export default function JobIdPage() {
               publishedCount={publishedJobsCount}
               maxJobs={currentPlan?.limits.jobPostings}
             />
+            <Button
+              variant={"destructive"}
+              onClick={() => setShowDeleteDialog(true)}
+            >
+              <TrashIcon className="size-4" />
+            </Button>
           </div>
         )}
       </div>
+
+      <CustomDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        title="Delete Job Listing?"
+        description="Are you sure you want to delete this job listing? This action cannot be undone."
+        cancelButtonText="Cancel"
+        buttonText="Delete"
+        onCancel={() => setShowDeleteDialog(false)}
+        href={undefined}
+        onConfirm={handleDeleteConfirm}
+      />
 
       {/* <MarkdownPartial
         dialogMarkdown={<MarkdownRenderer source={currentJob.description} />}

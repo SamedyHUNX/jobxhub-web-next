@@ -118,6 +118,21 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Delete job listing mutation
+  const deleteJobListingMutation = useMutation<any, AxiosError, string>({
+    mutationFn: (id: string) => {
+      return jobListingsApi.delete(id);
+    },
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast(successT("deleteJobListingSuccess"));
+      router.push(`/employer/orgs/${selectedOrganization}/all-jobs`);
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   // Toggle publish/unpublish status
   const toggleJobListingStatusMutation = useMutation<
     JobListing,
@@ -190,6 +205,10 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     // Fetch job by jobId
     fetchJobListingByJobId,
+
+    // Delete job listing
+    deleteJobListing: deleteJobListingMutation.mutate,
+    deleteJobListingLoading: deleteJobListingMutation.isPending,
 
     // Toggle publish/unpublish
     toggleJobListingStatus: toggleJobListingStatusMutation.mutate,
