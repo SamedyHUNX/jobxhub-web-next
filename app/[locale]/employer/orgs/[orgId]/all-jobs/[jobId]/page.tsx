@@ -33,6 +33,7 @@ export default function JobIdPage() {
     toggleJobListingStatus,
     toggleJobListingFeatured,
     publishedJobListings,
+    featuredJobListings,
   } = useJobListings();
   const { selectedOrgId } = useOrgs();
   const { user: currentUser } = useProfile();
@@ -59,10 +60,13 @@ export default function JobIdPage() {
     ? SubscriptionPlans[currentPlanName as keyof typeof SubscriptionPlans]
     : null;
 
-  // Check if user can publish more jobs
+  // Check if user can publish/feature more jobs
   const publishedJobsCount = publishedJobListings.length;
   const canPublishMore = currentPlan
     ? publishedJobsCount < currentPlan.limits.jobPostings
+    : false;
+  const canFeatureMore = currentPlan
+    ? featuredJobListings.length < currentPlan.limits.featuredListings
     : false;
 
   // If trying to publish and at limit, block the action
@@ -86,6 +90,9 @@ export default function JobIdPage() {
       fetchJobListingByJobId(jobId).then(setCurrentJob);
     }
   };
+
+  // Check if user can feature more jobs
+  const canToggleToFeatured = !currentJob.isFeatured ? canFeatureMore : true; // Always allow un-featuring
 
   const onToggleFeatured = () => {
     try {
@@ -128,6 +135,9 @@ export default function JobIdPage() {
             </Button>
             <FeaturedToggleButton
               currentJob={currentJob}
+              canFeature={canToggleToFeatured}
+              featuredCount={featuredJobListings.length}
+              maxFeatured={currentPlan?.limits.featuredListings}
               onToggle={onToggleFeatured}
             />
             <StatusUpdateButton
@@ -260,11 +270,19 @@ function StatusUpdateButton({
 function FeaturedToggleButton({
   currentJob,
   onToggle,
+  canFeature,
+  featuredCount,
+  maxFeatured,
 }: {
   currentJob: JobListing;
   onToggle: () => void;
+  canFeature: boolean;
+  featuredCount?: number;
+  maxFeatured?: number;
 }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const isFeaturing = !currentJob.isFeatured;
+  const disabled = isFeaturing && !canFeature;
 
   const handleButtonClick = () => {
     setShowConfirmDialog(true);
@@ -278,6 +296,32 @@ function FeaturedToggleButton({
   const handleCancel = () => {
     setShowConfirmDialog(false);
   };
+
+  // Show popover when at limit
+  if (disabled && typeof maxFeatured === "number") {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" disabled={false} className="w-30">
+            <StarIcon className="size-4" />
+            Feature
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col gap-2">
+          <p className="text-sm">
+            You must upgrade your subscription plan to feature more job
+            listings.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Limit: {featuredCount}/{maxFeatured}
+          </p>
+          <Button asChild>
+            <Link href="/pricing">Upgrade Plan</Link>
+          </Button>
+        </PopoverContent>
+      </Popover>
+    );
+  }
 
   return (
     <>

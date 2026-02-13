@@ -172,6 +172,11 @@ export function useJobListings(params?: UseJobListingsParams) {
     (job: JobListing) => job.status === "published",
   );
 
+  // Get featured job listings
+  const featuredJobListings = jobListings.filter(
+    (job: JobListing) => job.isFeatured,
+  );
+
   return {
     jobListings,
     count,
@@ -194,5 +199,6 @@ export function useJobListings(params?: UseJobListingsParams) {
     toggleJobListingFeatured: toggleJobListingFeaturedMutation.mutate,
     toggleJobListingFeaturedLoading: toggleJobListingFeaturedMutation.isPending,
     publishedJobListings,
+    featuredJobListings,
   };
 }
