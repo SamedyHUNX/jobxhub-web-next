@@ -14,11 +14,21 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { useProfile } from "@/hooks/use-profile";
-import { is } from "zod/v4/locales";
+import { SubscriptionPlans } from "@/constants/subscription-plans";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function JobIdPage() {
-  const { fetchJobListingByJobId, toggleJobListingStatus } = useJobListings();
+  const {
+    fetchJobListingByJobId,
+    toggleJobListingStatus,
+    publishedJobListings,
+  } = useJobListings();
   const { selectedOrgId } = useOrgs();
+  const { user: currentUser } = useProfile();
   const jobId = useParams().jobId as string;
   const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
 
@@ -34,8 +44,23 @@ export default function JobIdPage() {
     return null;
   }
 
-  // Check if current job belongs to the selected organization
   const isOwner = currentJob.organizationId === selectedOrgId;
+
+  // Get current plan limits
+  const currentPlanName = currentUser?.subscription?.planName;
+  const currentPlan = currentPlanName
+    ? SubscriptionPlans[currentPlanName as keyof typeof SubscriptionPlans]
+    : null;
+
+  // Check if user can publish more jobs
+  const publishedJobsCount = publishedJobListings.length;
+  const canPublishMore = currentPlan
+    ? publishedJobsCount < currentPlan.limits.jobPostings
+    : false;
+
+  // If trying to publish and at limit, block the action
+  const canToggleToPublished =
+    currentJob.status === "draft" ? canPublishMore : true; // Always allow unpublishing
 
   const onToggle = () => {
     try {
@@ -77,7 +102,13 @@ export default function JobIdPage() {
                 Edit
               </Link>
             </Button>
-            <StatusUpdateButton currentJob={currentJob} onToggle={onToggle} />
+            <StatusUpdateButton
+              currentJob={currentJob}
+              onToggle={onToggle}
+              canPublish={canToggleToPublished}
+              publishedCount={publishedJobsCount}
+              maxJobs={currentPlan?.limits.jobPostings}
+            />
           </div>
         )}
       </div>
@@ -102,28 +133,68 @@ export default function JobIdPage() {
 function StatusUpdateButton({
   currentJob,
   onToggle,
+  canPublish,
+  publishedCount,
+  maxJobs,
 }: {
   currentJob: JobListing;
   onToggle: () => void;
+  canPublish: boolean;
+  publishedCount?: number;
+  maxJobs?: number;
 }) {
+  const isPublishing = currentJob.status === "draft";
+  const disabled = isPublishing && !canPublish;
+
+  // Show popover when at limit
+  if (disabled && typeof maxJobs === "number") {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="default" disabled={false} className="w-30">
+            <ToggleRightIcon className="size-4" />
+            Publish
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col gap-2">
+          <p className="text-sm">
+            You must upgrade your subscription plan to publish more job
+            listings.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Limit: {publishedCount}/{maxJobs}
+          </p>
+          <Button asChild>
+            <Link href="/pricing">Upgrade Plan</Link>
+          </Button>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
   return (
-    <Button
-      variant={currentJob.status === "published" ? "destructive" : "default"}
-      onClick={onToggle}
-      disabled={false}
-      className="w-30"
-    >
-      {currentJob.status === "published" ? (
-        <>
-          <ToggleLeftIcon className="size-4" />
-          Unpublish
-        </>
-      ) : (
-        <>
-          <ToggleRightIcon className="size-4" />
-          Publish
-        </>
-      )}
-    </Button>
+    <div className="flex flex-col items-end gap-1">
+      <Button
+        variant={currentJob.status === "published" ? "destructive" : "default"}
+        onClick={onToggle}
+        className="w-30"
+      >
+        {currentJob.status === "published" ? (
+          <>
+            <ToggleLeftIcon className="size-4" />
+            Unpublish
+          </>
+        ) : (
+          <>
+            <ToggleRightIcon className="size-4" />
+            Publish
+          </>
+        )}
+      </Button>
+    </div>
   );
+}
+
+function statusToggleButtonText(status: string) {
+  return status === "published" ? "Unpublish" : "Publish";
 }

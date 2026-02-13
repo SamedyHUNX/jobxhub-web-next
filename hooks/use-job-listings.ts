@@ -146,6 +146,11 @@ export function useJobListings(params?: UseJobListingsParams) {
     jobListingMutation.mutate({ id: jobId, data });
   };
 
+  // Get published job listings
+  const publishedJobListings = jobListings.filter(
+    (job: JobListing) => job.status === "published",
+  );
+
   return {
     jobListings,
     count,
@@ -163,5 +168,6 @@ export function useJobListings(params?: UseJobListingsParams) {
     // Toggle publish/unpublish
     toggleJobListingStatus: toggleJobListingStatusMutatio.mutate,
     toggleJobListingStatusLoading: toggleJobListingStatusMutatio.isPending,
+    publishedJobListings,
   };
 }

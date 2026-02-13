@@ -8,7 +8,7 @@ export const SubscriptionPlans = {
     stripePriceIdAnnual: process.env.STRIPE_BASIC_ANNUAL_PRICE_ID,
     limits: {
       jobPostings: 5,
-      featuredListings: 0,
+      featuredListings: 1,
     },
     allowedRoles: ["APPLICANT_MANAGER"],
     features: ["5 job postings", "Applicant management", "Basic analytics"],
