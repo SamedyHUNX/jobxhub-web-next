@@ -119,13 +119,13 @@ export function useJobListings(params?: UseJobListingsParams) {
   });
 
   // Toggle publish/unpublish status
-  const toggleJobListingStatusMutatio = useMutation<
+  const toggleJobListingStatusMutation = useMutation<
     JobListing,
     AxiosError,
     { id: string; status: string }
   >({
     mutationFn: ({ id, status }) => {
-      return jobListingsApi.toggleStatus(id, status);
+      return jobListingsApi.toggleStatusOrFeatured(id, status);
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
@@ -133,6 +133,27 @@ export function useJobListings(params?: UseJobListingsParams) {
         variables.status === "published"
           ? successT("publishJobListingSuccess")
           : successT("unpublishJobListingSuccess"),
+      );
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  const toggleJobListingFeaturedMutation = useMutation<
+    JobListing,
+    AxiosError,
+    { id: string; isFeatured: boolean }
+  >({
+    mutationFn: ({ id, isFeatured }) => {
+      return jobListingsApi.toggleStatusOrFeatured(id, undefined, isFeatured);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast(
+        variables.isFeatured
+          ? successT("featureJobListingSuccess")
+          : successT("unfeatureJobListingSuccess"),
       );
     },
     onError: (error: AxiosError) => {
@@ -166,8 +187,12 @@ export function useJobListings(params?: UseJobListingsParams) {
     fetchJobListingByJobId,
 
     // Toggle publish/unpublish
-    toggleJobListingStatus: toggleJobListingStatusMutatio.mutate,
-    toggleJobListingStatusLoading: toggleJobListingStatusMutatio.isPending,
+    toggleJobListingStatus: toggleJobListingStatusMutation.mutate,
+    toggleJobListingStatusLoading: toggleJobListingStatusMutation.isPending,
+
+    // Toggle feature/unfeature
+    toggleJobListingFeatured: toggleJobListingFeaturedMutation.mutate,
+    toggleJobListingFeaturedLoading: toggleJobListingFeaturedMutation.isPending,
     publishedJobListings,
   };
 }

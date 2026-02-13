@@ -58,9 +58,16 @@ export const jobListingsApi = {
     return data;
   },
 
-  toggleStatus: async (id: string, status: string) => {
+  toggleStatusOrFeatured: async (
+    id: string,
+    status?: string,
+    isFeatured?: boolean,
+  ) => {
     assertApiUrl();
-    const { data } = await api.put(`/job-listings/${id}`, { status });
+    const { data } = await api.put(`/job-listings/${id}`, {
+      status,
+      isFeatured,
+    });
     return data;
   },
 };

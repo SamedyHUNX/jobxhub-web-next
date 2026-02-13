@@ -257,7 +257,9 @@
     "updateJobListingSuccess": "Updated job listing successfully",
     "updateOrgSuccess": "Organization updated successfully",
     "publishJobListingSuccess": "Job listing published successfully",
-    "unpublishJobListingSuccess": "Job listing unpublished successfully"
+    "unpublishJobListingSuccess": "Job listing unpublished successfully",
+    "featureJobListingSuccess": "Job listing marked as featured successfully",
+    "unfeatureJobListingSuccess": "Job listing unmarked as featured successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

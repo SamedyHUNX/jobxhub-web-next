@@ -8,7 +8,12 @@ import { useJobListings } from "@/hooks/use-job-listings";
 import { useOrgs } from "@/hooks/use-orgs";
 import { formatJobListingStatus } from "@/lib/formatter";
 import type { JobListing } from "@/types";
-import { EditIcon, ToggleRightIcon, ToggleLeftIcon } from "lucide-react";
+import {
+  EditIcon,
+  ToggleRightIcon,
+  ToggleLeftIcon,
+  StarIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,6 +31,7 @@ export default function JobIdPage() {
   const {
     fetchJobListingByJobId,
     toggleJobListingStatus,
+    toggleJobListingFeatured,
     publishedJobListings,
   } = useJobListings();
   const { selectedOrgId } = useOrgs();
@@ -63,7 +69,7 @@ export default function JobIdPage() {
   const canToggleToPublished =
     currentJob.status === "draft" ? canPublishMore : true; // Always allow unpublishing
 
-  const onToggle = () => {
+  const onToggleStatus = () => {
     try {
       const newStatus =
         currentJob.status === "published" ? "draft" : "published";
@@ -77,6 +83,23 @@ export default function JobIdPage() {
       });
     } catch (error) {
       console.error("Failed to toggle job listing status:", error);
+      fetchJobListingByJobId(jobId).then(setCurrentJob);
+    }
+  };
+
+  const onToggleFeatured = () => {
+    try {
+      const newFeaturedStatus = !currentJob.isFeatured;
+
+      // Update UI immediately (optimistic)
+      setCurrentJob({ ...currentJob, isFeatured: newFeaturedStatus });
+
+      toggleJobListingFeatured({
+        id: jobId,
+        isFeatured: newFeaturedStatus,
+      });
+    } catch (error) {
+      console.error("Failed to toggle job listing featured status:", error);
       fetchJobListingByJobId(jobId).then(setCurrentJob);
     }
   };
@@ -103,9 +126,13 @@ export default function JobIdPage() {
                 Edit
               </Link>
             </Button>
+            <FeaturedToggleButton
+              currentJob={currentJob}
+              onToggle={onToggleFeatured}
+            />
             <StatusUpdateButton
               currentJob={currentJob}
-              onToggle={onToggle}
+              onToggle={onToggleStatus}
               canPublish={canToggleToPublished}
               publishedCount={publishedJobsCount}
               maxJobs={currentPlan?.limits.jobPostings}
@@ -219,6 +246,73 @@ function StatusUpdateButton({
           isPublishing
             ? "Are you sure? This will immediately show this job listing to all users."
             : "Are you sure you want to unpublish this job listing? It will be hidden from all users."
+        }
+        cancelButtonText="Cancel"
+        buttonText="Confirm"
+        onCancel={handleCancel}
+        href={undefined}
+        onConfirm={handleConfirm}
+      />
+    </>
+  );
+}
+
+function FeaturedToggleButton({
+  currentJob,
+  onToggle,
+}: {
+  currentJob: JobListing;
+  onToggle: () => void;
+}) {
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirm = () => {
+    setShowConfirmDialog(false);
+    onToggle();
+  };
+
+  const handleCancel = () => {
+    setShowConfirmDialog(false);
+  };
+
+  return (
+    <>
+      <div className="flex flex-col items-end gap-1">
+        <Button
+          variant={currentJob.isFeatured ? "secondary" : "outline"}
+          onClick={handleButtonClick}
+          className="w-30"
+        >
+          {currentJob.isFeatured ? (
+            <>
+              <StarIcon className="size-4 fill-current" />
+              Featured
+            </>
+          ) : (
+            <>
+              <StarIcon className="size-4" />
+              Feature
+            </>
+          )}
+        </Button>
+      </div>
+
+      <CustomDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        title={
+          currentJob.isFeatured
+            ? "Remove Featured Status?"
+            : "Feature Job Listing?"
+        }
+        description={
+          currentJob.isFeatured
+            ? "Are you sure you want to remove the featured status from this job listing?"
+            : "Are you sure you want to feature this job listing? It will be highlighted to users."
         }
         cancelButtonText="Cancel"
         buttonText="Confirm"
