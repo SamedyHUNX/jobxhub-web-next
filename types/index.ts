@@ -148,6 +148,7 @@ export interface JobListing {
   experienceLevel: ExperienceLevel;
   status: JobListingStatus;
   type: JobListingType;
+  applicationCount: number;
   postedAt?: string;
   createdAt: string;
   updatedAt: string;

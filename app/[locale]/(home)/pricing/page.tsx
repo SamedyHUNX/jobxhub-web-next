@@ -2,7 +2,7 @@
 
 import SubmitButton from "@/components/SubmitButton";
 import PricingCard from "@/components/subscription/PricingCard";
-import { SubscriptionPlans } from "@/constants/subscription-plans";
+import { stripeSubscriptionPlansConst } from "@/constants/subscription-plans";
 import { useProfile } from "@/hooks/use-profile";
 import { useStripe } from "@/hooks/use-stripe";
 import { useRouter } from "next/navigation";
@@ -23,32 +23,7 @@ export default function PricingPage() {
     }
   }, [currentUser, router]);
 
-  const stripeSubscriptionPlans = [
-    {
-      ...SubscriptionPlans.basic,
-      price:
-        interval === "month"
-          ? SubscriptionPlans.basic.priceMonthly
-          : SubscriptionPlans.basic.priceAnnual,
-      isPopular: false,
-    },
-    {
-      ...SubscriptionPlans.growth,
-      price:
-        interval === "month"
-          ? SubscriptionPlans.growth.priceMonthly
-          : SubscriptionPlans.growth.priceAnnual,
-      isPopular: true,
-    },
-    {
-      ...SubscriptionPlans.enterprise,
-      price:
-        interval === "month"
-          ? SubscriptionPlans.enterprise.priceMonthly
-          : SubscriptionPlans.enterprise.priceAnnual,
-      isPopular: false,
-    },
-  ];
+  const stripeSubscriptionPlans = stripeSubscriptionPlansConst(interval);
 
   const handleSubscribe = (planName: string) => {
     const baseUrl = window.location.origin;
@@ -60,7 +35,6 @@ export default function PricingPage() {
       trialPeriod: true,
     };
     try {
-      console.log("data being sent", data);
       createCheckoutSession(data);
     } catch (error) {
       console.error("Error creating checkout session:", error);

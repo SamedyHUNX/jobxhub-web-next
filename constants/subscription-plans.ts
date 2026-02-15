@@ -58,3 +58,30 @@ export const SubscriptionPlans = {
     ],
   },
 } as const;
+
+export const stripeSubscriptionPlansConst = (interval: string) => [
+  {
+    ...SubscriptionPlans.basic,
+    price:
+      interval === "month"
+        ? SubscriptionPlans.basic.priceMonthly
+        : SubscriptionPlans.basic.priceAnnual,
+    isPopular: false,
+  },
+  {
+    ...SubscriptionPlans.growth,
+    price:
+      interval === "month"
+        ? SubscriptionPlans.growth.priceMonthly
+        : SubscriptionPlans.growth.priceAnnual,
+    isPopular: true,
+  },
+  {
+    ...SubscriptionPlans.enterprise,
+    price:
+      interval === "month"
+        ? SubscriptionPlans.enterprise.priceMonthly
+        : SubscriptionPlans.enterprise.priceAnnual,
+    isPopular: false,
+  },
+];
