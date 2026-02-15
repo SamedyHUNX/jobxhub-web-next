@@ -8,6 +8,7 @@
     "aiSearch": "AI Search",
     "employerDashboard": "Employer Dashboard",
     "superAdminDashboard": "Super-Admin Dashboard",
+    "manageSubscription": "Manage Subscription",
     "jobs": {
       "overview": "Overview",
       "createJob": "Create Job Listing",
@@ -22,6 +23,8 @@
     "enterYourEmail": "Enter Your Email",
     "yourNewPassword": "Enter Your New Password",
     "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Enter your confirm password",
     "passwordPlaceholder": "Enter your password",
     "forgotPassword": "Forgot Password?",
     "signIn": "Sign In",
@@ -68,7 +71,23 @@
     "orgDescriptionPlaceholder": "Tell others about your organization",
     "orgNamePlaceholder": "For example: Microsoft Corporation",
     "orgSlugName": "Your org's unique identifier (visible to others)",
-    "create": "Create"
+    "orgSlugPlaceholder": "For example: microsoft-corporation",
+    "create": "Create",
+    "settings": {
+      "profile": {
+        "title": "overview",
+        "organizationName": "Organization Name",
+        "updateProfile": "Update Organization",
+        "organizationInformation": "Organization Information",
+        "orgSlug": "Organization Slug",
+        "description": "Description",
+        "createdOn": "Created On",
+        "lastUpdated": "Last Updated",
+        "editOrganization": "Edit Organization",
+        "clickToUploadLogo": "Click on the button to change the logo",
+        "saveChanges": "Save Changes"
+      }
+    }
   },
   "employer": {
     "sidebar": {
@@ -222,7 +241,9 @@
     "locationRequirementRequired": "Please provide the required location",
     "nonRemoteRequired": "Required field for non-remote",
     "passwordsMustMatch": "Passwords must match",
-    "passwordsDoNotMatch": "Passwords must match"
+    "passwordsDoNotMatch": "Passwords must match",
+    "orgNameTooLong": "Organization name cannot be more than 100 characters long",
+    "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",
@@ -233,7 +254,12 @@
     "createOrgSuccess": "The org has been created. Please wait for the approval by the Admin Team",
     "profileUpdated": "Profile updated successfully",
     "createJobListingSuccess": "Created job listing successfully",
-    "updateJobListingSuccess": "Updated job listing successfully"
+    "updateJobListingSuccess": "Updated job listing successfully",
+    "updateOrgSuccess": "Organization updated successfully",
+    "publishJobListingSuccess": "Job listing published successfully",
+    "unpublishJobListingSuccess": "Job listing unpublished successfully",
+    "featureJobListingSuccess": "Job listing marked as featured successfully",
+    "unfeatureJobListingSuccess": "Job listing unmarked as featured successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

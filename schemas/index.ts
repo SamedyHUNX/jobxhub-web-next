@@ -14,16 +14,21 @@ export const createSignInSchema = (t: (key: string) => string) => {
  * Sign Up Schema
  */
 export const createSignUpSchema = (t: (key: string) => string) => {
-  return z.object({
-    username: z.string().min(1, t("usernameRequired")),
-    firstName: z.string().min(1, t("firstNameRequired")),
-    lastName: z.string().min(1, t("lastNameRequired")),
-    email: z.string().email(t("invalidEmail")),
-    password: z.string().min(8, t("passwordMinLength")),
-    phoneNumber: z.string().min(1, t("phoneNumberRequired")),
-    dateOfBirth: z.string().min(1, t("dateOfBirthRequired")),
-    image: z.any().refine((file) => file instanceof File, t("imageRequired")),
-  });
+  return z
+    .object({
+      username: z.string().min(1, t("usernameRequired")),
+      firstName: z.string().min(1, t("firstNameRequired")),
+      lastName: z.string().min(1, t("lastNameRequired")),
+      email: z.string().email(t("invalidEmail")),
+      phoneNumber: z.string().min(1, t("phoneNumberRequired")),
+      dateOfBirth: z.string().min(1, t("dateOfBirthRequired")),
+      image: z.any().refine((file) => file instanceof File, t("imageRequired")),
+      password: z.string().min(8, t("passwordMinLength")),
+      confirmPassword: z.string().min(1, t("confirmPasswordRequired")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("passwordsDoNotMatch"),
+    });
 };
 
 /**
@@ -59,12 +64,37 @@ export const createResetPasswordSchema = (t: (key: string) => string) => {
  */
 export const createOrganizationSchema = (t: (key: string) => string) => {
   return z.object({
-    orgName: z.string().min(1, t("orgNameRequired")),
-    orgDescription: z.string().min(10, t("orgDescriptionTooShort")),
+    orgName: z
+      .string()
+      .min(1, t("orgNameRequired"))
+      .max(100, t("orgNameTooLong")),
+    orgDescription: z
+      .string()
+      .min(10, t("orgDescriptionTooShort"))
+      .max(1000, t("orgDescriptionTooLong")),
     orgSlug: z.string().min(1, t("orgSlugRequired")),
     orgImage: z
       .any()
       .refine((file) => file instanceof File, t("orgImageRequired")),
+  });
+};
+
+/**
+ * Update Organization Schema
+ */
+export const updateOrganizationSchema = (t: (key: string) => string) => {
+  return z.object({
+    orgName: z
+      .string()
+      .min(1, t("orgNameRequired"))
+      .max(100, t("orgNameTooLong"))
+      .optional(),
+    description: z
+      .string()
+      .min(10, t("orgDescriptionTooShort"))
+      .max(1000, t("orgDescriptionTooLong"))
+      .optional(),
+    slug: z.string().min(1, t("orgSlugRequired")).optional(),
   });
 };
 

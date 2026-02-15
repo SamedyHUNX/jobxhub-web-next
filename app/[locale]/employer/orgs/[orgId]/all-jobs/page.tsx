@@ -3,7 +3,13 @@
 import { useState, useMemo } from "react";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { Search, Filter, Briefcase } from "lucide-react";
-import type { JobListing } from "@/types";
+import type {
+  ExperienceLevel,
+  JobListing,
+  JobListingStatus,
+  JobListingType,
+  LocationRequirement,
+} from "@/types";
 import PageLoader from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import JobListingCard from "@/components/job-listings/JobListingCard";
@@ -26,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useOrgs } from "@/hooks/use-orgs";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 
@@ -39,7 +46,10 @@ type FilterType = {
 };
 
 export default function AllJobsByOrgPage() {
-  const { jobListings: allJobListings, isLoading } = useJobListings();
+  const { selectedOrgId } = useOrgs();
+  const { jobListings: allJobListings, isLoading } = useJobListings({
+    organizationId: selectedOrgId,
+  });
 
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [showFilters, setShowFilters] = useState<boolean>(false);
@@ -276,7 +286,7 @@ export default function AllJobsByOrgPage() {
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">Job Type</Label>
                     <div className="space-y-2">
-                      {filterOptions.types.map((type) => (
+                      {(filterOptions.types as JobListingType[]).map((type) => (
                         <div key={type} className="flex items-center space-x-2">
                           <Checkbox
                             id={`type-${type}`}
@@ -298,7 +308,9 @@ export default function AllJobsByOrgPage() {
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">Location</Label>
                     <div className="space-y-2">
-                      {filterOptions.locationRequirements.map((location) => (
+                      {(
+                        filterOptions.locationRequirements as LocationRequirement[]
+                      ).map((location) => (
                         <div
                           key={location}
                           className="flex items-center space-x-2"
@@ -329,7 +341,9 @@ export default function AllJobsByOrgPage() {
                       Experience Level
                     </Label>
                     <div className="space-y-2">
-                      {filterOptions.experienceLevels.map((level) => (
+                      {(
+                        filterOptions.experienceLevels as ExperienceLevel[]
+                      ).map((level) => (
                         <div
                           key={level}
                           className="flex items-center space-x-2"
@@ -356,26 +370,28 @@ export default function AllJobsByOrgPage() {
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">Status</Label>
                     <div className="space-y-2">
-                      {filterOptions.statuses.map((status) => (
-                        <div
-                          key={status}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`status-${status}`}
-                            checked={filters.status.includes(status)}
-                            onCheckedChange={() =>
-                              toggleFilter("status", status)
-                            }
-                          />
-                          <Label
-                            htmlFor={`status-${status}`}
-                            className="text-sm font-normal cursor-pointer capitalize"
+                      {(filterOptions.statuses as JobListingStatus[]).map(
+                        (status) => (
+                          <div
+                            key={status}
+                            className="flex items-center space-x-2"
                           >
-                            {status}
-                          </Label>
-                        </div>
-                      ))}
+                            <Checkbox
+                              id={`status-${status}`}
+                              checked={filters.status.includes(status)}
+                              onCheckedChange={() =>
+                                toggleFilter("status", status)
+                              }
+                            />
+                            <Label
+                              htmlFor={`status-${status}`}
+                              className="text-sm font-normal cursor-pointer capitalize"
+                            >
+                              {status}
+                            </Label>
+                          </div>
+                        ),
+                      )}
                     </div>
                   </div>
 
@@ -384,7 +400,7 @@ export default function AllJobsByOrgPage() {
                     <div className="space-y-3">
                       <Label className="text-sm font-medium">State</Label>
                       <div className="space-y-2 max-h-40 overflow-y-auto">
-                        {filterOptions.states.map((state) => (
+                        {(filterOptions.states as string[]).map((state) => (
                           <div
                             key={state}
                             className="flex items-center space-x-2"

@@ -1,5 +1,9 @@
 import { CreateOrgFormData } from "@/schemas";
-import { CreateOrgResponse, FindAllOrgsResponse } from "@/types";
+import {
+  CreateOrgResponse,
+  FindAllOrgsResponse,
+  UpdateOrganizationDto,
+} from "@/types";
 import axios from "axios";
 
 import Cookies from "js-cookie";
@@ -23,7 +27,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 function assertApiUrl() {
@@ -36,7 +40,7 @@ export const orgsApi = {
   // Get all orgs with optional filtering
   findAll: async (
     search?: string,
-    isVerified?: boolean
+    isVerified?: boolean,
   ): Promise<FindAllOrgsResponse> => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
@@ -59,7 +63,7 @@ export const orgsApi = {
     const { data } = await api.post<CreateOrgResponse>(
       "/organizations",
       formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      { headers: { "Content-Type": "multipart/form-data" } },
     );
     return data;
   },
@@ -80,5 +84,11 @@ export const orgsApi = {
   selectedOrg: async () => {
     const { data } = await api.get(`/organizations/org/selected`);
     return data;
+  },
+
+  // Update organization
+  update: async ({ orgId, data }: { orgId: string; data: FormData }) => {
+    const response = await api.put(`/organizations/org/${orgId}`, data);
+    return response.data;
   },
 };

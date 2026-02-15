@@ -27,13 +27,14 @@ export default function CustomDialog({
   open,
   onOpenChange,
   onCancel,
+  onConfirm,
   description,
   additionalDesc,
   additionalDescTitle,
   cancelButtonText = "Nevermind",
   href,
   buttonText,
-}: CustomDialogProps) {
+}: CustomDialogProps & { onConfirm?: () => void }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -68,7 +69,11 @@ export default function CustomDialog({
               {cancelButtonText}
             </Button>
           )}
-          {href && (
+          {onConfirm ? (
+            <Button onClick={onConfirm}>
+              {buttonText ? buttonText : "Confirm"}
+            </Button>
+          ) : href ? (
             <Button
               onClick={() => {
                 onOpenChange(false);
@@ -77,7 +82,7 @@ export default function CustomDialog({
             >
               <Link href={href}>{buttonText ? buttonText : "Create"}</Link>
             </Button>
-          )}
+          ) : null}
         </DialogFooter>
       </DialogContent>
     </Dialog>

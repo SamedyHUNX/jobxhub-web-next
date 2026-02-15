@@ -14,6 +14,27 @@ export interface User {
   dateOfBirth: string;
   createdAt: string;
   updatedAt: string;
+  hasSubscription: boolean;
+  subscription?: Subscription;
+}
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  planName: "basic" | "growth" | "enterprise";
+  status: "active" | "canceled" | "past_due" | "trialing" | "unpaid";
+  interval: "month" | "year";
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  stripePriceId: string;
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  canceledAt: string | null;
+  trialStart: string | null;
+  trialEnd: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Axios APIs
@@ -69,6 +90,7 @@ export interface Organization {
   id: string;
   orgName: string;
   imageUrl: string;
+  description: string;
   slug: string;
   isVerified: boolean;
   isBanned: boolean;
@@ -79,6 +101,12 @@ export interface Organization {
   jobsCount: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UpdateOrganizationDto {
+  orgName?: string;
+  description?: string;
+  imageFile?: File | null | undefined;
 }
 
 export type FindAllOrgsResponse = ApiResponse<Organization[]>;
@@ -120,6 +148,7 @@ export interface JobListing {
   experienceLevel: ExperienceLevel;
   status: JobListingStatus;
   type: JobListingType;
+  applicationCount: number;
   postedAt?: string;
   createdAt: string;
   updatedAt: string;

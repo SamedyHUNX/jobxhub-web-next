@@ -35,7 +35,10 @@ export default function ResetPasswordPage() {
     validationSchema: resetPasswordFormSchema,
     validateOnChange: (value) => {
       // Only validate if both fields have values
-      return !!(value.newPassword && value.confirmNewPassword);
+      if (!value.newPassword || !value.confirmNewPassword) {
+        return false;
+      }
+      return true;
     },
     onSubmit: (value) => resetPassword({ token, ...value }),
   });
@@ -52,7 +55,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="mx-auto space-y-8 px-4 mt-auto max-w-4xl">
+    <div className="mx-auto space-y-8 px-4 mt-[25vh] max-w-4xl">
       <BrandLogo />
       <div className="pt-4">
         <AuthLeftHeader title={authT("yourNewPassword")} />

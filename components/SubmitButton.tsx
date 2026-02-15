@@ -4,15 +4,19 @@ import { Button } from "./ui/button";
 
 export default function SubmitButton({
   isSubmitting,
-  buttonText = "Submit",
+  buttonText,
   buttonClassname,
+  onClick,
 }: {
   isSubmitting: boolean;
   buttonText?: string;
   buttonClassname?: string;
+  hasActiveSubscription?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <Button
+      onClick={onClick}
       type="submit"
       disabled={isSubmitting}
       className={cn(

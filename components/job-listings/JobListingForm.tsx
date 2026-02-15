@@ -19,7 +19,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import TextField from "../form/TextField";
 import SelectField from "../form/SelectField";
-import { states } from "@/data/australia-state";
+import { states } from "@/constants/australia-state";
 import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import SubmitButton from "../SubmitButton";

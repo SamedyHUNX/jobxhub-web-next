@@ -62,3 +62,7 @@ export const generateSlug = (name: string) => {
     .replace(/\s+/g, "-") // Replace spaces with hyphens
     .replace(/-+/g, "-"); // Replace multiple hyphens with single hyphen
 };
+
+export function capitalizeString(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

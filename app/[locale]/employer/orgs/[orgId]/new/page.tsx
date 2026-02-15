@@ -14,7 +14,7 @@ export default function CreateJobPage() {
 
   const formTranslations = translations(formT);
 
-  const { selectedOrganization } = useOrgs();
+  const { selectedOrgId } = useOrgs();
 
   const { saveJobListing, jobListingLoading } = useJobListings();
 
@@ -31,7 +31,7 @@ export default function CreateJobPage() {
           <JobListingForm
             onSubmit={(data) => saveJobListing(undefined, data)}
             translations={formTranslations}
-            orgId={selectedOrganization}
+            orgId={selectedOrgId}
             isLoading={jobListingLoading}
           />
         </CardContent>

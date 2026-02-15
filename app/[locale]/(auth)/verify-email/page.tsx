@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";

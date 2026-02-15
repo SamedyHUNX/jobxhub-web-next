@@ -29,6 +29,7 @@ export default function SignUpPage() {
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
       countryCode: "+61",
       phoneNumber: "",
       dateOfBirth: "",
@@ -40,7 +41,10 @@ export default function SignUpPage() {
       ...value,
       phoneNumber: `${value.countryCode}${value.phoneNumber}`,
     }),
-    onSubmit: (formData) => signUp({ formData, locale }),
+    onSubmit: (formData) => {
+      console.log("data being sent: ", formData);
+      signUp({ formData, locale });
+    },
   });
 
   return (
@@ -150,6 +154,29 @@ export default function SignUpPage() {
                 return result.success
                   ? undefined
                   : result.error.issues[0].message;
+              }}
+            />
+
+            <FormField
+              form={signUpForm}
+              name="confirmPassword"
+              label={authT("confirmPassword")}
+              type="password"
+              placeholder={authT("confirmPasswordPlaceholder")}
+              validator={(value) => {
+                const result =
+                  signUpSchema.shape.confirmPassword.safeParse(value);
+                if (!result.success) {
+                  return result.error.issues[0].message;
+                }
+
+                // Check if passwords match
+                const passwordValue = signUpForm.getFieldValue("password");
+                if (value && passwordValue && value !== passwordValue) {
+                  return validationT("passwordsDoNotMatch");
+                }
+
+                return undefined;
               }}
             />
 

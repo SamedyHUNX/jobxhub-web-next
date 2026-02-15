@@ -8,6 +8,7 @@ import {
   BrainCircuitIcon,
   ClipboardListIcon,
   LayoutDashboard,
+  BanknoteIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
@@ -38,6 +39,12 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
                 href: `/employer`,
                 icon: <LayoutDashboard />,
                 label: sidebarT("employerDashboard"),
+                authStatus: currentUser ? "signedIn" : "signedOut",
+              },
+              {
+                href: "/subscription/manage",
+                icon: <BanknoteIcon />,
+                label: sidebarT("manageSubscription"),
                 authStatus: currentUser ? "signedIn" : "signedOut",
               },
               isSuperAdmin && {

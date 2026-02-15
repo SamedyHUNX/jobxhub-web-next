@@ -57,4 +57,24 @@ export const jobListingsApi = {
     const { data } = await api.put(`/job-listings/${id}`, dto);
     return data;
   },
+
+  delete: async (id: string) => {
+    assertApiUrl();
+    const { data } = await api.delete(`/job-listings/${id}`);
+    return data;
+  },
+
+  // Toggle job listing status or featured flag
+  toggleStatusOrFeatured: async (
+    id: string,
+    status?: string,
+    isFeatured?: boolean,
+  ) => {
+    assertApiUrl();
+    const { data } = await api.put(`/job-listings/${id}`, {
+      status,
+      isFeatured,
+    });
+    return data;
+  },
 };

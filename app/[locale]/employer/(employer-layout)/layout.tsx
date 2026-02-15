@@ -6,6 +6,7 @@ import SidebarUserButton from "@/components/sidebar/client/SidebarUserButton";
 import { useProfile } from "@/hooks/use-profile";
 import { CheckIcon, FilePlusIcon, LayoutDashboardIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 export default function EmployerOrgsDashboardLayout({
@@ -16,6 +17,11 @@ export default function EmployerOrgsDashboardLayout({
   const { user: currentUser, isLoading } = useProfile();
   const locale = useLocale();
   const employerT = useTranslations("employer.sidebar");
+  const router = useRouter();
+
+  if (!currentUser?.hasSubscription) {
+    router.push(`/${locale}/pricing`);
+  }
 
   return (
     <AppSidebar

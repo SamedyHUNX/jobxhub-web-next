@@ -118,11 +118,79 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Delete job listing mutation
+  const deleteJobListingMutation = useMutation<any, AxiosError, string>({
+    mutationFn: (id: string) => {
+      return jobListingsApi.delete(id);
+    },
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast(successT("deleteJobListingSuccess"));
+      router.push(`/employer/orgs/${selectedOrganization}/all-jobs`);
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Toggle publish/unpublish status
+  const toggleJobListingStatusMutation = useMutation<
+    JobListing,
+    AxiosError,
+    { id: string; status: string }
+  >({
+    mutationFn: ({ id, status }) => {
+      return jobListingsApi.toggleStatusOrFeatured(id, status);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast(
+        variables.status === "published"
+          ? successT("publishJobListingSuccess")
+          : successT("unpublishJobListingSuccess"),
+      );
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  const toggleJobListingFeaturedMutation = useMutation<
+    JobListing,
+    AxiosError,
+    { id: string; isFeatured: boolean }
+  >({
+    mutationFn: ({ id, isFeatured }) => {
+      return jobListingsApi.toggleStatusOrFeatured(id, undefined, isFeatured);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast(
+        variables.isFeatured
+          ? successT("featureJobListingSuccess")
+          : successT("unfeatureJobListingSuccess"),
+      );
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   // Usage
   const saveJobListing = (jobId?: string, data?: JobListingFormData) => {
     if (!data) return;
     jobListingMutation.mutate({ id: jobId, data });
   };
+
+  // Get published job listings
+  const publishedJobListings = jobListings.filter(
+    (job: JobListing) => job.status === "published",
+  );
+
+  // Get featured job listings
+  const featuredJobListings = jobListings.filter(
+    (job: JobListing) => job.isFeatured,
+  );
 
   return {
     jobListings,
@@ -137,5 +205,19 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     // Fetch job by jobId
     fetchJobListingByJobId,
+
+    // Delete job listing
+    deleteJobListing: deleteJobListingMutation.mutate,
+    deleteJobListingLoading: deleteJobListingMutation.isPending,
+
+    // Toggle publish/unpublish
+    toggleJobListingStatus: toggleJobListingStatusMutation.mutate,
+    toggleJobListingStatusLoading: toggleJobListingStatusMutation.isPending,
+
+    // Toggle feature/unfeature
+    toggleJobListingFeatured: toggleJobListingFeaturedMutation.mutate,
+    toggleJobListingFeaturedLoading: toggleJobListingFeaturedMutation.isPending,
+    publishedJobListings,
+    featuredJobListings,
   };
 }
