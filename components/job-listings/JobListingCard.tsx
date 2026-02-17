@@ -2,19 +2,18 @@ import { formatDate, formatWage } from "@/lib/formatter";
 import type { JobListing } from "@/types";
 import {
   Briefcase,
-  Building2,
   Calendar,
   DollarSign,
   MapPin,
   Star,
   TrendingUp,
+  Calculator,
 } from "lucide-react";
 import Link from "next/link";
 import { ComponentType } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -67,10 +66,6 @@ export default function JobListingCard({ job }: { job: JobListing }) {
                 <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
               )}
             </CardTitle>
-            <CardDescription className="flex items-center gap-2 mt-2">
-              <Building2 className="w-4 h-4" />
-              <span>Organization ID: {job.organizationId}</span>
-            </CardDescription>
           </div>
           <Badge variant={statusVariant}>{job.status}</Badge>
         </div>
@@ -106,14 +101,14 @@ export default function JobListingCard({ job }: { job: JobListing }) {
           />
 
           <JobListingCardItem
-            icon={Briefcase}
-            text={job.type.replace(/_/g, " ")}
-            className="text-muted-foreground capitalize"
+            icon={Calculator}
+            text={job.applicationCount.toString()}
+            className="text-foreground font-medium"
           />
 
           <JobListingCardItem
-            icon={TrendingUp}
-            text={job.experienceLevel.replace(/_/g, " ")}
+            icon={Briefcase}
+            text={job.type.replace(/_/g, " ")}
             className="text-muted-foreground capitalize"
           />
         </div>

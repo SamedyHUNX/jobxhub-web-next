@@ -19,7 +19,7 @@ export default function EmployerOrgsDashboardLayout({
   const employerT = useTranslations("employer.sidebar");
   const router = useRouter();
 
-  if (!currentUser?.hasSubscription) {
+  if (!currentUser?.subscription) {
     router.push(`/${locale}/pricing`);
   }
 
@@ -55,7 +55,7 @@ export default function EmployerOrgsDashboardLayout({
             <div className="px-4 py-2">Loading...</div>
           ) : currentUser ? (
             <>
-              <SidebarUserButton currentUser={currentUser} />
+        
             </>
           ) : null}
         </>

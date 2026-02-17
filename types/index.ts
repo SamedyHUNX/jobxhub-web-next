@@ -14,7 +14,7 @@ export interface User {
   dateOfBirth: string;
   createdAt: string;
   updatedAt: string;
-  hasSubscription: boolean;
+  hasActiveSubscription: boolean;
   subscription?: Subscription;
 }
 
