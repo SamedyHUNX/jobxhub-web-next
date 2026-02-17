@@ -16,8 +16,8 @@ export default function AppSidebarClient({
 
   if (isMobile) {
     return (
-      <div className="flex flex-col w-full">
-        <div className="p-2 border-b flex items-center gap-2 h-17">
+      <div className="flex flex-col w-full ">
+        <div className="p-2 border-b flex items-center gap-2 h-17 ">
           <SidebarTrigger />
           <BrandLogo />
           <div className="ml-auto flex items-center gap-2">
