@@ -48,10 +48,7 @@ export default function SelectField({
     >
       {(field: any) => (
         <div className="space-y-2">
-          <Label
-            htmlFor={name}
-            className="text-lg font-medium text-gray-700 tracking-tighter"
-          >
+          <Label htmlFor={name} className="tracking-tighter">
             {label}
           </Label>
           <Select

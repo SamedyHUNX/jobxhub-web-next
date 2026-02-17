@@ -1,4 +1,5 @@
 import { createElement } from "react";
+import { Label } from "./ui/label";
 
 interface FormFieldProps {
   form: any;
@@ -33,12 +34,9 @@ export function FormField({
     >
       {(field: any) => (
         <div className={`space-y-2 ${className}`}>
-          <label
-            htmlFor={name}
-            className="block text-sm font-medium text-gray-700 dark:text-white"
-          >
+          <Label htmlFor={name} className="tracking-tighter">
             {label}
-          </label>
+          </Label>
           {component ? (
             createElement(component, {
               ...field,
