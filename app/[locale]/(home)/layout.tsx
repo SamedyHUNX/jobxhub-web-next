@@ -13,7 +13,13 @@ import {
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
-export default function JobSeekerLayout({ children }: { children: ReactNode }) {
+export default function JobSeekerLayout({
+  children,
+  sidebar,
+}: {
+  sidebar: ReactNode;
+  children: ReactNode;
+}) {
   const { user: currentUser, isLoading } = useProfile();
   const isSuperAdmin = currentUser?.userRole === "SUPER-ADMIN";
   const sidebarT = useTranslations("sidebar");
@@ -21,41 +27,44 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
   return (
     <AppSidebar
       content={
-        <SidebarNavMenuGroup
-          className="mt-auto"
-          items={
-            [
-              {
-                href: `/`,
-                icon: <ClipboardListIcon />,
-                label: sidebarT("findJobs"),
-              },
-              {
-                href: `/ai-search`,
-                icon: <BrainCircuitIcon />,
-                label: sidebarT("aiSearch"),
-              },
-              {
-                href: `/employer`,
-                icon: <LayoutDashboard />,
-                label: sidebarT("employerDashboard"),
-                authStatus: currentUser ? "signedIn" : "signedOut",
-              },
-              {
-                href: "/subscription/manage",
-                icon: <BanknoteIcon />,
-                label: sidebarT("manageSubscription"),
-                authStatus: currentUser ? "signedIn" : "signedOut",
-              },
-              isSuperAdmin && {
-                href: `/super-admin/dashboard`,
-                icon: <LayoutDashboard />,
-                label: sidebarT("superAdminDashboard"),
-                authStatus: currentUser ? "signedIn" : "signedOut",
-              },
-            ].filter(Boolean) as any[]
-          }
-        />
+        <>
+          {sidebar}
+          <SidebarNavMenuGroup
+            className="mt-auto"
+            items={
+              [
+                {
+                  href: `/`,
+                  icon: <ClipboardListIcon />,
+                  label: sidebarT("findJobs"),
+                },
+                {
+                  href: `/ai-search`,
+                  icon: <BrainCircuitIcon />,
+                  label: sidebarT("aiSearch"),
+                },
+                {
+                  href: `/employer`,
+                  icon: <LayoutDashboard />,
+                  label: sidebarT("employerDashboard"),
+                  authStatus: currentUser ? "signedIn" : "signedOut",
+                },
+                {
+                  href: "/subscription/manage",
+                  icon: <BanknoteIcon />,
+                  label: sidebarT("manageSubscription"),
+                  authStatus: currentUser ? "signedIn" : "signedOut",
+                },
+                isSuperAdmin && {
+                  href: `/super-admin/dashboard`,
+                  icon: <LayoutDashboard />,
+                  label: sidebarT("superAdminDashboard"),
+                  authStatus: currentUser ? "signedIn" : "signedOut",
+                },
+              ].filter(Boolean) as any[]
+            }
+          />
+        </>
       }
       footerButton={
         <>

@@ -61,7 +61,7 @@ export function FormField({
               }}
               onBlur={field.handleBlur}
               placeholder={placeholder}
-              className={`w-full px-3 py-2 border rounded-xl h-14 ${
+              className={`w-full px-3 py-2 border border-gray-400 rounded-xl h-14 ${
                 field.state.meta.errors.length > 0
                   ? "border-red-500 border-2"
                   : ""
