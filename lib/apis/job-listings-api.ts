@@ -39,9 +39,8 @@ export const jobListingsApi = {
       params.append("locationRequirement", locationRequirement);
     if (experience) params.append("experienceLevel", experience);
     if (city) params.append("city", city);
-    if (state)
-      (params.append("state", state),
-        jobIds?.forEach((id) => params.append("jobIds", id)));
+    if (state) params.append("state", state);
+    jobIds?.forEach((id) => params.append("jobIds", id));
 
     const { data } = await api.get(`/job-listings?${params.toString()}`);
     return data;
