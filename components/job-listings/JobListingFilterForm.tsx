@@ -20,6 +20,7 @@ import {
   formatLocationRequirement,
 } from "@/lib/formatter";
 import SubmitButton from "../SubmitButton";
+import { useSidebar } from "../ui/sidebar";
 
 const ANY_VALUE = "any";
 
@@ -38,6 +39,7 @@ const jobListingFilterSchema = z.object({
 export default function JobListingFilterForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { setOpen } = useSidebar();
 
   const jobListingFilterForm = useCustomForm({
     defaultValues: {
@@ -100,6 +102,7 @@ export default function JobListingFilterForm() {
       }
 
       router.push(`?${params.toString()}`);
+      setOpen(false);
     },
     validationSchema: jobListingFilterSchema,
   });
