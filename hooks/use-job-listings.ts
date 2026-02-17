@@ -14,11 +14,15 @@ import { setSelectedJobListing } from "@/stores/slices/job-listings.slice";
 
 interface UseJobListingsParams {
   search?: string;
+  title?: string;
   organizationId?: string;
   status?: string;
   type?: string;
   locationRequirement?: string;
-  experienceLevel?: string;
+  experience?: string;
+  city?: string;
+  state?: string;
+  jobIds?: string[];
 }
 
 const SELECTED_JOB_LISTING_KEY = "selectedJobListingId";
@@ -47,20 +51,28 @@ export function useJobListings(params?: UseJobListingsParams) {
     queryKey: [
       "jobListings",
       params?.search,
+      params?.title,
       params?.organizationId,
       params?.status,
       params?.type,
       params?.locationRequirement,
-      params?.experienceLevel,
+      params?.experience,
+      params?.city,
+      params?.state,
+      params?.jobIds,
     ],
     queryFn: () =>
       jobListingsApi.findAll(
         params?.search,
+        params?.title,
         params?.organizationId,
         params?.status,
         params?.type,
         params?.locationRequirement,
-        params?.experienceLevel,
+        params?.experience,
+        params?.city,
+        params?.state,
+        params?.jobIds,
       ),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });

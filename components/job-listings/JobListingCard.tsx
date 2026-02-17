@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import MarkdownPartial from "../markdown/MarkdownPartial";
 import MarkdownRenderer from "../markdown/MarkdownRenderer";
+import DateComponent from "../DateComponent";
 
 const JobListingCardItem = ({
   icon: Icon,
@@ -115,10 +116,7 @@ export default function JobListingCard({ job }: { job: JobListing }) {
       </CardContent>
 
       <CardFooter className="flex items-center justify-between border-t pt-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="w-4 h-4" />
-          <span>Posted on {formatDate(job.postedAt!)}</span>
-        </div>
+        <DateComponent postedAt={job.postedAt} />
         <Button variant="link" asChild className="px-0">
           <Link
             href={`/employer/orgs/${job.organizationId}/all-jobs/${job.id}`}

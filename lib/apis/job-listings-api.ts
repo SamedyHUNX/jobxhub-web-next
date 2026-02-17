@@ -19,20 +19,29 @@ export const jobListingsApi = {
   // Get all job listings with optional filtering
   findAll: async (
     search?: string,
+    title?: string,
     organizationId?: string,
     status?: string,
     type?: string,
     locationRequirement?: string,
-    experienceLevel?: string,
+    experience?: string,
+    city?: string,
+    state?: string,
+    jobIds?: string[],
   ) => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
+    if (title) params.append("title", title);
     if (organizationId) params.append("organizationId", organizationId);
     if (status) params.append("status", status);
     if (type) params.append("type", type);
     if (locationRequirement)
       params.append("locationRequirement", locationRequirement);
-    if (experienceLevel) params.append("experienceLevel", experienceLevel);
+    if (experience) params.append("experienceLevel", experience);
+    if (city) params.append("city", city);
+    if (state)
+      (params.append("state", state),
+        jobIds?.forEach((id) => params.append("jobIds", id)));
 
     const { data } = await api.get(`/job-listings?${params.toString()}`);
     return data;

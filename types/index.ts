@@ -152,4 +152,5 @@ export interface JobListing {
   postedAt?: string;
   createdAt: string;
   updatedAt: string;
+  organization: Organization;
 }

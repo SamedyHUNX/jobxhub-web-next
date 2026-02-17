@@ -231,3 +231,20 @@ export type ExperienceLevel = (typeof experienceLevels)[number];
 export type JobListingStatus = (typeof jobListingStatuses)[number];
 export type JobListingType = (typeof jobListingTypes)[number];
 export type ApplicationStage = (typeof applicationStages)[number];
+
+export const searchParamsSchema = z.object({
+  search: z.string().optional().catch(undefined),
+  title: z.string().optional().catch(undefined),
+  city: z.string().optional().catch(undefined),
+  state: z.string().optional().catch(undefined),
+  experience: z.enum(experienceLevels).optional().catch(undefined),
+  locationRequirement: z.enum(locationRequirements).optional().catch(undefined),
+  type: z.enum(jobListingTypes).optional().catch(undefined),
+  jobIds: z
+    .union([z.string(), z.array(z.string())])
+    .transform((v) => (Array.isArray(v) ? v : [v]))
+    .optional()
+    .catch([]),
+});
+
+export type SearchParams = z.infer<typeof searchParamsSchema>;
