@@ -10,7 +10,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../ui/sidebar";
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 import BrandLogo from "../../BrandLogo";
 import { SignedIn } from "../../AuthStatus";
 import { NavBar } from "../../Navbar";
@@ -28,10 +28,17 @@ export const AppSidebar = ({
 }) => {
   const isMobile = useIsMobile();
   return (
-    <SidebarProvider className="overflow-y-hidden">
+    <SidebarProvider
+      className="overflow-y-hidden"
+      style={{ "--sidebar-width": "20rem" } as CSSProperties}
+    >
       <AppSidebarClient>
-        <Sidebar collapsible="icon" className="overflow-hidden">
-          <SidebarHeader className="flex-row h-12 mt-2">
+        <Sidebar
+          collapsible="icon"
+          className="overflow-hidden"
+          style={{ "--sidebar-width": "20rem" } as CSSProperties}
+        >
+          <SidebarHeader className="flex-row h-12 mt-2 ">
             <SidebarTrigger className="mt-2" />
             <BrandLogo />
           </SidebarHeader>
