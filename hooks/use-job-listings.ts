@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { jobListingsApi } from "@/lib/apis/job-listings-api";
-import { JobListingFormData } from "@/schemas";
+import {
+  JobListingFormData,
+  NewJobListingApplication,
+  newJobListingApplicationSchema,
+} from "@/schemas";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -240,6 +244,29 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Create job listing application
+  const createJobListingApplicationMutation = useMutation({
+    mutationFn: async ({
+      jobListingId,
+      dto,
+    }: {
+      jobListingId: string;
+      dto: NewJobListingApplication;
+    }) => {
+      const response = await jobListingsApi.createJobListingApplication(
+        jobListingId,
+        dto,
+      );
+      return response.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     jobListings,
     count,
@@ -249,6 +276,7 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     getOwnJobApplication: getJobListingApplicationMutation.mutate,
     getUserResume: getUserResumeMutation.mutate,
+    createJobListingApplication: createJobListingApplicationMutation.mutate,
 
     // Create or Update job listing
     saveJobListing,

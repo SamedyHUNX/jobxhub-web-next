@@ -248,3 +248,14 @@ export const searchParamsSchema = z.object({
 });
 
 export type SearchParams = z.infer<typeof searchParamsSchema>;
+
+export const newJobListingApplicationSchema = z.object({
+  coverLetter: z
+    .string()
+    .transform((val) => (val?.trim() === "" ? null : val))
+    .nullable(),
+});
+
+export type NewJobListingApplication = z.infer<
+  typeof newJobListingApplicationSchema
+>;
