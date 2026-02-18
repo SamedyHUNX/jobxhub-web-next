@@ -23,17 +23,13 @@ function useIsBreakpoint(breakpoint: string) {
     const controller = new AbortController();
     const media = window.matchMedia(`(${breakpoint})`);
 
-    media.addEventListener(
-      "change",
-      (e) => {
-        setIsBreakpoint(e.matches);
-      },
-      { signal: controller.signal },
-    );
+    setIsBreakpoint(media.matches);
 
-    return () => {
-      controller.abort();
-    };
+    media.addEventListener("change", (e) => setIsBreakpoint(e.matches), {
+      signal: controller.signal,
+    });
+
+    return () => controller.abort();
   }, [breakpoint]);
 
   return isBreakpoint;

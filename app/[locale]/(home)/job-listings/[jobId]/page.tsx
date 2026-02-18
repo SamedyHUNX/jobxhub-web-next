@@ -26,19 +26,19 @@ export default function JobListingById() {
     if (typeof params.jobId === "string") {
       fetchJobListingByJobId(params.jobId);
     }
-  }, [params.jobId]);
+  }, [params.jobId, fetchJobListingByJobId]);
 
   return (
     <PanelGroup direction="horizontal" autoSaveId="jobxhub-panel">
       <Panel id="left" order={1} defaultSize={60} minSize={30}>
-        <div className="h-screen overflow-y-auto">
+        <div className="h-full overflow-y-auto">
           <Suspense fallback={<PageLoader />}>
             <JobListingItems />
           </Suspense>
         </div>
       </Panel>
 
-      <PanelResizeHandle className="w-1 bg-border hover:bg-accent" />
+      <PanelResizeHandle className="w-2 bg-border hover:bg-primary/40 transition-colors cursor-col-resize" />
 
       <Panel
         id="right"
