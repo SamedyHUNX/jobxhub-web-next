@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import type { JobListing, JobListingFormResponse } from "@/types";
 import { setSelectedJobListing } from "@/stores/slices/job-listings.slice";
+import type { Application } from "@/types/application.types";
 
 interface UseJobListingsParams {
   search?: string;
@@ -204,12 +205,50 @@ export function useJobListings(params?: UseJobListingsParams) {
     (job: JobListing) => job.isFeatured,
   );
 
+  // Get job listing application
+  const getJobListingApplicationMutation = useMutation<
+    Application,
+    AxiosError,
+    { jobId: string; userId: string }
+  >({
+    mutationFn: async ({ jobId, userId }) => {
+      const result = await jobListingsApi.getOwnJobListingApplication(
+        jobId,
+        userId,
+      );
+      return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Get user resume
+  const getUserResumeMutation = useMutation({
+    mutationFn: async ({ userId }: { userId: string }) => {
+      const result = await jobListingsApi.getUserResume(userId);
+      return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     jobListings,
     count,
     isLoading,
     error,
     refetch,
+
+    getOwnJobApplication: getJobListingApplicationMutation.mutate,
+    getUserResume: getUserResumeMutation.mutate,
 
     // Create or Update job listing
     saveJobListing,

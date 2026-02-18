@@ -16,7 +16,7 @@ export default function PricingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (currentUser?.hasSubscription) {
+    if (currentUser?.hasActiveSubscription) {
       router.push("/employer");
     } else {
       router.push("/pricing");

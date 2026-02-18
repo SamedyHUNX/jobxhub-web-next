@@ -85,4 +85,22 @@ export const jobListingsApi = {
     });
     return data;
   },
+
+  // Get own job listing application
+  getOwnJobListingApplication: async (jobId: string, userId: string) => {
+    assertApiUrl();
+    const { data } = await api.get(`/${jobId}/application`, {
+      params: { userId },
+    });
+    return data;
+  },
+
+  // Get user resume
+  getUserResume: async (userId: string) => {
+    assertApiUrl();
+    const { data } = await api.get(`/${userId}/resume`, {
+      params: { userId },
+    });
+    return data;
+  },
 };

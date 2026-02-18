@@ -5,7 +5,7 @@ import { Suspense } from "react";
 export default function HomePage() {
   return (
     <Suspense fallback={<PageLoader />}>
-      <JobListingItems />;
+      <JobListingItems />
     </Suspense>
   );
 }
