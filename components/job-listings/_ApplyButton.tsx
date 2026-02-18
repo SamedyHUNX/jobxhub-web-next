@@ -32,7 +32,6 @@ export default function ApplyButton({
 
   useEffect(() => {
     if (currentUser?.id) {
-      // ✅ move lookups into effect
       const app = getOwnJobApplication({
         jobId: jobListingId,
         userId: currentUser.id,
@@ -44,7 +43,6 @@ export default function ApplyButton({
     }
   }, [currentUser?.id, jobListingId, getOwnJobApplication, getUserResume]);
 
-  // --- Render logic ---
   if (currentUser?.id == null) {
     return (
       <Popover>
@@ -68,7 +66,11 @@ export default function ApplyButton({
       style: "short",
       numeric: "always",
     });
-    const difference = differenceInDays(application.createdAt, new Date());
+
+    // Convert string to Date
+    const createdAtDate = new Date(application.createdAt);
+
+    const difference = differenceInDays(createdAtDate, new Date());
 
     return (
       <div className="text-muted-foreground text-sm">

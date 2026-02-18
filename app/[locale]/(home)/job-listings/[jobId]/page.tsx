@@ -26,7 +26,7 @@ export default function JobListingById() {
     if (typeof params.jobId === "string") {
       fetchJobListingByJobId(params.jobId);
     }
-  }, [params.jobId, fetchJobListingByJobId]);
+  }, [params.jobId]);
 
   return (
     <PanelGroup direction="horizontal" autoSaveId="jobxhub-panel">
@@ -85,6 +85,8 @@ function JobListingDetails() {
       });
     }
   }, [jobId]);
+
+  console.log(currentJob);
 
   if (!currentJob) {
     return null;

@@ -89,7 +89,7 @@ export const jobListingsApi = {
   // Get own job listing application
   getOwnJobListingApplication: async (jobId: string, userId: string) => {
     assertApiUrl();
-    const { data } = await api.get(`/${jobId}/application`, {
+    const { data } = await api.get(`/job-listings/${jobId}/application`, {
       params: { userId },
     });
     return data;
@@ -98,9 +98,7 @@ export const jobListingsApi = {
   // Get user resume
   getUserResume: async (userId: string) => {
     assertApiUrl();
-    const { data } = await api.get(`/${userId}/resume`, {
-      params: { userId },
-    });
+    const { data } = await api.get(`/job-listings/${userId}/resume`);
     return data;
   },
 
@@ -110,7 +108,7 @@ export const jobListingsApi = {
     dto: NewJobListingApplication,
   ) => {
     assertApiUrl();
-    const { data } = await api.post(`/${jobId}/application`, dto);
+    const { data } = await api.post(`/job-listings/${jobId}/application`, dto);
     return data;
   },
 };
