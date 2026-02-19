@@ -7,8 +7,12 @@ import { useJobListings } from "@/hooks/use-job-listings";
 
 export function NewJobListingApplicationForm({
   jobListingId,
+  buttonText,
+  onSuccess,
 }: {
   jobListingId: string;
+  buttonText?: string;
+  onSuccess?: () => void;
 }) {
   const { createJobListingApplication } = useJobListings();
 
@@ -16,7 +20,13 @@ export function NewJobListingApplicationForm({
     defaultValues: { coverLetter: "" },
     validationSchema: newJobListingApplicationSchema,
     onSubmit: async (values) => {
-      createJobListingApplication({ jobListingId: jobListingId, dto: values });
+      createJobListingApplication(
+        {
+          jobListingId: jobListingId,
+          dto: values,
+        },
+        { onSuccess },
+      );
     },
   });
 
@@ -42,7 +52,10 @@ export function NewJobListingApplicationForm({
         }}
       />
 
-      <SubmitButton isSubmitting={form.state.isSubmitting} />
+      <SubmitButton
+        isSubmitting={form.state.isSubmitting}
+        buttonText={buttonText}
+      />
     </form>
   );
 }

@@ -259,7 +259,8 @@ export function useJobListings(params?: UseJobListingsParams) {
       );
       return response.data[0];
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      toast.success(successT("createJobListingApplicationSuccess"));
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
     },
     onError: (error: AxiosError) => {

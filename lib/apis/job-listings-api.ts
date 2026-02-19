@@ -104,11 +104,14 @@ export const jobListingsApi = {
 
   // Create job listing application
   createJobListingApplication: async (
-    jobId: string,
+    jobListingId: string,
     dto: NewJobListingApplication,
   ) => {
     assertApiUrl();
-    const { data } = await api.post(`/job-listings/${jobId}/application`, dto);
+    const { data } = await api.post(
+      `/job-listings/${jobListingId}/application`,
+      dto,
+    );
     return data;
   },
 };

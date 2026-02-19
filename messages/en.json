@@ -259,7 +259,8 @@
     "publishJobListingSuccess": "Job listing published successfully",
     "unpublishJobListingSuccess": "Job listing unpublished successfully",
     "featureJobListingSuccess": "Job listing marked as featured successfully",
-    "unfeatureJobListingSuccess": "Job listing unmarked as featured successfully"
+    "unfeatureJobListingSuccess": "Job listing unmarked as featured successfully",
+    "createJobListingApplicationSuccess": "You have applied for the job successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

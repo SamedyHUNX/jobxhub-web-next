@@ -29,6 +29,7 @@ export default function ApplyButton({
 
   const [application, setApplication] = useState<any | null>(null);
   const [userResume, setUserResume] = useState<any | null>(null);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (currentUser?.id) {
@@ -80,28 +81,28 @@ export default function ApplyButton({
     );
   }
 
-  if (userResume == null) {
-    return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button>Apply</Button>
-        </PopoverTrigger>
-        <PopoverContent className="flex flex-col gap-2">
-          You need to upload your resume before applying for a job.
-          <Button asChild>
-            <Link href="/user-settings/resume">Upload Resume</Link>
-          </Button>
-        </PopoverContent>
-      </Popover>
-    );
-  }
+  // if (userResume == null) {
+  //   return (
+  //     <Popover>
+  //       <PopoverTrigger asChild>
+  //         <Button>Apply</Button>
+  //       </PopoverTrigger>
+  //       <PopoverContent className="flex flex-col gap-2">
+  //         You need to upload your resume before applying for a job.
+  //         <Button asChild>
+  //           <Link href="/user-settings/resume">Upload Resume</Link>
+  //         </Button>
+  //       </PopoverContent>
+  //     </Popover>
+  //   );
+  // }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button>Apply</Button>
       </DialogTrigger>
-      <DialogContent className="md:max-w-3xl max-h-[calc(100%-2rem)] overflow-hidden flex flex-col">
+      <DialogContent className="md:max-w-3xl max-h-[calc(100%-2rem)] overflow-hidden flex flex-col bg-white dark:bg-black">
         <DialogHeader>
           <DialogTitle>Application</DialogTitle>
           <DialogDescription>
@@ -110,7 +111,11 @@ export default function ApplyButton({
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto">
-          <NewJobListingApplicationForm jobListingId={jobListingId} />
+          <NewJobListingApplicationForm
+            jobListingId={jobListingId}
+            buttonText="Apply"
+            onSuccess={() => setDialogOpen(false)}
+          />
         </div>
       </DialogContent>
     </Dialog>

@@ -16,7 +16,7 @@ import Link from "next/link";
 import { XIcon } from "lucide-react";
 import JobListingBadges from "@/components/job-listings/JobListingBadges";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
-import ApplyButton from "../../../../../components/job-listings/_ApplyButton";
+import ApplyButton from "@/components/job-listings/_ApplyButton";
 
 export default function JobListingById() {
   const params = useParams();
@@ -86,8 +86,6 @@ function JobListingDetails() {
     }
   }, [jobId]);
 
-  console.log(currentJob);
-
   if (!currentJob) {
     return null;
   }
@@ -120,18 +118,19 @@ function JobListingDetails() {
             </div>
             {currentJob?.postedAt != null && (
               <div className="text-sm text-muted-foreground @min-lg:hidden">
-                {currentJob?.postedAt}
+                {new Date(currentJob.postedAt).toLocaleDateString()}
               </div>
             )}
           </div>
           <div className="ml-auto flex items-center gap-4">
             {currentJob?.postedAt != null && (
               <div className="text-sm text-muted-foreground @max-lg:hidden">
-                {currentJob?.postedAt}
+                {new Date(currentJob.postedAt).toLocaleDateString()}
               </div>
             )}
+
             <Button size="icon" variant="outline" asChild>
-              <Link href={`/`}>
+              <Link href={"/"}>
                 <span className="sr-only">Close</span>
                 <XIcon />
               </Link>
