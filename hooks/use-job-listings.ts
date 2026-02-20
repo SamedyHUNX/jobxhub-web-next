@@ -220,7 +220,7 @@ export function useJobListings(params?: UseJobListingsParams) {
         jobId,
         userId,
       );
-      return result.data[0];
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
@@ -285,6 +285,22 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Delete user resume
+  const deleteUserResumeMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      console.log(userId);
+      const result = await jobListingsApi.deleteUserResume(userId);
+      return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast.success(successT("deleteResumeSuccess"));
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     jobListings,
     count,
@@ -306,6 +322,10 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     // Fetch job by jobId
     fetchJobListingByJobId,
+
+    // Delete user resume
+    deleteResume: deleteUserResumeMutation.mutate,
+    isDeletingResume: deleteUserResumeMutation.isPending,
 
     // Delete job listing
     deleteJobListing: deleteJobListingMutation.mutate,

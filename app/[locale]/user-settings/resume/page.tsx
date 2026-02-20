@@ -12,44 +12,77 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 export default function UserResumePage() {
-  const { getUserResume, uploadResume, uploadResumeLoading } = useJobListings();
+  const {
+    getUserResume,
+    uploadResume,
+    uploadResumeLoading,
+    deleteResume,
+    isDeletingResume,
+  } = useJobListings();
+
   const { user: currentUser } = useProfile();
+
   const [resume, setResume] = useState<Resume | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [resumeLoading, setResumeLoading] = useState(true);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!currentUser?.id) return;
+
+    setResumeLoading(true);
+
     getUserResume(currentUser.id, {
       onSuccess: (data) => {
-        if (data) setResume(data);
+        setResume(data ?? null);
         setResumeLoading(false);
       },
-      onError: () => setResumeLoading(false),
+      onError: () => {
+        setResumeLoading(false);
+      },
     });
-  }, [currentUser?.id]);
+  }, [currentUser?.id, getUserResume]);
 
   if (resumeLoading) return <PageLoader />;
 
   const handleFile = (file: File) => {
+    if (uploadResumeLoading) return;
+
     if (file.type !== "application/pdf") {
       toast.error("Only PDF files are allowed");
       return;
     }
+
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File size must be under 5MB");
       return;
     }
-    uploadResume({ file }, { onSuccess: (data) => setResume(data) });
+
+    uploadResume(
+      { file },
+      {
+        onSuccess: (data) => setResume(data),
+      },
+    );
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    const file = e.dataTransfer.files[0];
+
+    const file = e.dataTransfer.files?.[0];
     if (file) handleFile(file);
   };
+
+  const handleDelete = () => {
+    if (!currentUser?.id) return;
+
+    deleteResume(currentUser.id, {
+      onSuccess: () => setResume(null),
+    });
+  };
+
   return (
     <div className="max-w-3xl mx-auto py-8 space-y-6">
       <h1 className="text-2xl font-bold text-black dark:text-white">
@@ -88,6 +121,7 @@ export default function UserResumePage() {
                   <p className="text-xs">PDF only · Max 5MB</p>
                 </div>
               )}
+
               <input
                 ref={fileInputRef}
                 type="file"
@@ -95,7 +129,10 @@ export default function UserResumePage() {
                 className="hidden"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-                  if (file) handleFile(file);
+                  if (file) {
+                    handleFile(file);
+                    e.target.value = "";
+                  }
                 }}
               />
             </div>
@@ -103,7 +140,11 @@ export default function UserResumePage() {
 
           {/* Resume Details */}
           {resume && (
-            <ResumeDetails resume={resume} onDelete={() => setResume(null)} />
+            <ResumeDetails
+              resume={resume}
+              onDelete={handleDelete}
+              isDeleting={isDeletingResume}
+            />
           )}
         </CardContent>
       </Card>
@@ -117,9 +158,11 @@ export default function UserResumePage() {
 function ResumeDetails({
   resume,
   onDelete,
+  isDeleting,
 }: {
-  resume: any;
+  resume: Resume;
   onDelete: () => void;
+  isDeleting: boolean;
 }) {
   return (
     <div className="flex items-center justify-between rounded-lg border p-4">
@@ -132,6 +175,7 @@ function ResumeDetails({
           </p>
         </div>
       </div>
+
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm" asChild>
           <a
@@ -142,8 +186,14 @@ function ResumeDetails({
             View
           </a>
         </Button>
-        <Button variant="destructive" size="sm" onClick={onDelete}>
-          Delete
+
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={onDelete}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Deleting..." : "Delete"}
         </Button>
       </div>
     </div>

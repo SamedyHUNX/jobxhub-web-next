@@ -102,6 +102,13 @@ export const jobListingsApi = {
     return data;
   },
 
+  // Delete user resume
+  deleteUserResume: async (userId: string) => {
+    assertApiUrl();
+    const { data } = await api.delete(`/job-listings/resume/${userId}`);
+    return data;
+  },
+
   // Create job listing application
   createJobListingApplication: async (
     jobListingId: string,

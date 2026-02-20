@@ -263,7 +263,8 @@
     "featureJobListingSuccess": "Job listing marked as featured successfully",
     "unfeatureJobListingSuccess": "Job listing unmarked as featured successfully",
     "createJobListingApplicationSuccess": "You have applied for the job successfully",
-    "uploadResumeSuccess": "Resume uploaded successfully"
+    "uploadResumeSuccess": "Resume uploaded successfully",
+    "deleteResumeSuccess": "Resume deleted successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",
