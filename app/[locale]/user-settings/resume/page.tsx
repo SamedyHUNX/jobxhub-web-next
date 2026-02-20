@@ -1,8 +1,15 @@
 "use client";
 
+import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import PageLoader from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useProfile } from "@/hooks/use-profile";
 import { cn } from "@/lib/utils";
@@ -181,7 +188,7 @@ function ResumeDetails({
           <a
             href={resume.resumeFileUrl}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer" // open the page in a new tab
           >
             View
           </a>
@@ -203,14 +210,18 @@ function ResumeDetails({
 function AiSummaryCard({ summary }: { summary: string }) {
   return (
     <Card>
-      <CardContent className="pt-6 space-y-2">
-        <div className="flex items-center gap-2">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold">AI Summary</h2>
-        </div>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {summary}
-        </p>
+          AI-Generated Summary
+        </CardTitle>
+        <CardDescription>
+          This is used by employers to quickly understand your qualifications
+          and experience
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <MarkdownRenderer source={summary} />
       </CardContent>
     </Card>
   );
