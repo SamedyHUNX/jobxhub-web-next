@@ -121,7 +121,8 @@
       "sidebar": {
         "profile": "Profile",
         "security": "Security",
-        "billing": "Billing"
+        "billing": "Billing",
+        "resume": "Your Resume"
       }
     }
   },
