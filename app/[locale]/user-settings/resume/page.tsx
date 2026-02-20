@@ -85,7 +85,7 @@ export default function UserResumePage() {
 
   return (
     <div className="max-w-3xl mx-auto py-8 space-y-6">
-      <h1 className="text-2xl font-bold text-black dark:text-white">
+      <h1 className="text-4xl font-bold text-black dark:text-white">
         Upload Your Resume
       </h1>
 
