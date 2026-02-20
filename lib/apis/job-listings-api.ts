@@ -98,7 +98,7 @@ export const jobListingsApi = {
   // Get user resume
   getUserResume: async (userId: string) => {
     assertApiUrl();
-    const { data } = await api.get(`/job-listings/${userId}/resume`);
+    const { data } = await api.get(`/job-listings/resume/${userId}`);
     return data;
   },
 

@@ -230,20 +230,6 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
-  // Get user resume
-  const getUserResumeMutation = useMutation({
-    mutationFn: async ({ userId }: { userId: string }) => {
-      const result = await jobListingsApi.getUserResume(userId);
-      return result.data[0];
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
-    },
-    onError: (error: AxiosError) => {
-      toast(extractErrorMessage(error, errorT));
-    },
-  });
-
   // Create job listing application
   const createJobListingApplicationMutation = useMutation({
     mutationFn: async ({
@@ -269,11 +255,9 @@ export function useJobListings(params?: UseJobListingsParams) {
   });
 
   // Handle resume upload
-  // Handle resume upload
   const uploadResumeMutation = useMutation({
     mutationFn: async ({ file }: { file: File }) => {
       const formData = new FormData();
-      console.log("data being sent", formData);
       formData.append("file", file);
       const response = await jobListingsApi.uploadResume(formData);
       return response.data[0];
@@ -281,6 +265,20 @@ export function useJobListings(params?: UseJobListingsParams) {
     onSuccess: () => {
       toast.success(successT("uploadResumeSuccess"));
       queryClient.invalidateQueries({ queryKey: ["userResume"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Get user resume
+  const getUserResumeMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const result = await jobListingsApi.getUserResume(userId);
+      return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
     },
     onError: (error: AxiosError) => {
       toast(extractErrorMessage(error, errorT));

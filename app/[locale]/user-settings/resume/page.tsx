@@ -1,20 +1,36 @@
 "use client";
 
+import PageLoader from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useProfile } from "@/hooks/use-profile";
 import { cn } from "@/lib/utils";
+import { Resume } from "@/types";
 import { FileText, Loader2, Sparkles, UploadCloud } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 export default function UserResumePage() {
   const { getUserResume, uploadResume, uploadResumeLoading } = useJobListings();
-
-  const [resume, setResume] = useState(null);
+  const { user: currentUser } = useProfile();
+  const [resume, setResume] = useState<Resume | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [resumeLoading, setResumeLoading] = useState(true);
+
+  useEffect(() => {
+    if (!currentUser?.id) return;
+    getUserResume(currentUser.id, {
+      onSuccess: (data) => {
+        if (data) setResume(data);
+        setResumeLoading(false);
+      },
+      onError: () => setResumeLoading(false),
+    });
+  }, [currentUser?.id]);
+
+  if (resumeLoading) return <PageLoader />;
 
   const handleFile = (file: File) => {
     if (file.type !== "application/pdf") {
