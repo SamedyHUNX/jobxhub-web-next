@@ -122,7 +122,8 @@
         "profile": "Profile",
         "security": "Security",
         "billing": "Billing",
-        "resume": "Your Resume"
+        "resume": "Your Resume",
+        "notifications": "Notifications"
       }
     }
   },
@@ -261,7 +262,8 @@
     "unpublishJobListingSuccess": "Job listing unpublished successfully",
     "featureJobListingSuccess": "Job listing marked as featured successfully",
     "unfeatureJobListingSuccess": "Job listing unmarked as featured successfully",
-    "createJobListingApplicationSuccess": "You have applied for the job successfully"
+    "createJobListingApplicationSuccess": "You have applied for the job successfully",
+    "uploadResumeSuccess": "Resume uploaded successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

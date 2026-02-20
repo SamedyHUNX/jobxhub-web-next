@@ -114,4 +114,15 @@ export const jobListingsApi = {
     );
     return data;
   },
+
+  // Upload resume
+  uploadResume: async (formData: FormData) => {
+    assertApiUrl();
+    const { data } = await api.post(`/job-listings/resume`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return data;
+  },
 };

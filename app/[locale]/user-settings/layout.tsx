@@ -6,7 +6,8 @@ import {
   UserIcon,
   ShieldCheckIcon,
   CreditCardIcon,
-  NewspaperIcon,
+  BellIcon,
+  FileUserIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
@@ -42,8 +43,13 @@ export default function UserSettingsLayout({
               },
               {
                 href: `/user-settings/resume`,
-                icon: <NewspaperIcon />,
+                icon: <FileUserIcon />,
                 label: sidebarT("resume"),
+              },
+              {
+                href: `/user-settings/notifications`,
+                icon: <BellIcon />,
+                label: sidebarT("notifications"),
               },
             ].filter(Boolean) as any[]
           }

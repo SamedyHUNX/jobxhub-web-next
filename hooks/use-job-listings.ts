@@ -268,6 +268,25 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Handle resume upload
+  // Handle resume upload
+  const uploadResumeMutation = useMutation({
+    mutationFn: async ({ file }: { file: File }) => {
+      const formData = new FormData();
+      console.log("data being sent", formData);
+      formData.append("file", file);
+      const response = await jobListingsApi.uploadResume(formData);
+      return response.data[0];
+    },
+    onSuccess: () => {
+      toast.success(successT("uploadResumeSuccess"));
+      queryClient.invalidateQueries({ queryKey: ["userResume"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     jobListings,
     count,
@@ -282,6 +301,10 @@ export function useJobListings(params?: UseJobListingsParams) {
     // Create or Update job listing
     saveJobListing,
     jobListingLoading: jobListingMutation.isPending,
+
+    // Upload resume
+    uploadResume: uploadResumeMutation.mutate,
+    uploadResumeLoading: uploadResumeMutation.isPending,
 
     // Fetch job by jobId
     fetchJobListingByJobId,
