@@ -125,7 +125,11 @@ export default function ApplyButton({
           <NewJobListingApplicationForm
             jobListingId={jobListingId}
             buttonText="Apply"
-            onSuccess={() => setDialogOpen(false)}
+            onSuccess={async () => {
+              const app = await getOwnJobApplication({ jobId: jobListingId });
+              setApplication(app);
+              setDialogOpen(false);
+            }}
           />
         </div>
       </DialogContent>
