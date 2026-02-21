@@ -275,6 +275,7 @@ export function useJobListings(params?: UseJobListingsParams) {
   const getUserResumeMutation = useMutation({
     mutationFn: async (userId: string) => {
       const result = await jobListingsApi.getUserResume(userId);
+      console.log(result.data[0]);
       return result.data[0];
     },
     onSuccess: () => {
@@ -309,7 +310,7 @@ export function useJobListings(params?: UseJobListingsParams) {
     refetch,
 
     getOwnJobApplication: getJobListingApplicationMutation.mutate,
-    getUserResume: getUserResumeMutation.mutate,
+    getUserResume: getUserResumeMutation.mutateAsync,
     createJobListingApplication: createJobListingApplicationMutation.mutate,
 
     // Create or Update job listing
