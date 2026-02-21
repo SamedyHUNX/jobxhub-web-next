@@ -213,14 +213,11 @@ export function useJobListings(params?: UseJobListingsParams) {
   const getJobListingApplicationMutation = useMutation<
     Application,
     AxiosError,
-    { jobId: string; userId: string }
+    { jobId: string }
   >({
-    mutationFn: async ({ jobId, userId }) => {
-      const result = await jobListingsApi.getOwnJobListingApplication(
-        jobId,
-        userId,
-      );
-      return result;
+    mutationFn: async ({ jobId }: { jobId: string }) => {
+      const result = await jobListingsApi.getOwnJobListingApplication(jobId);
+      return result.data[0];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
@@ -309,7 +306,7 @@ export function useJobListings(params?: UseJobListingsParams) {
     error,
     refetch,
 
-    getOwnJobApplication: getJobListingApplicationMutation.mutate,
+    getOwnJobApplication: getJobListingApplicationMutation.mutateAsync,
     getUserResume: getUserResumeMutation.mutateAsync,
     createJobListingApplication: createJobListingApplicationMutation.mutate,
 

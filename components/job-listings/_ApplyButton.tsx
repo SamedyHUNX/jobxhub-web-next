@@ -38,10 +38,9 @@ export default function ApplyButton({
       if (!currentUser?.id) return;
 
       try {
-        // 1. Fetch application (added await assuming this is an API call)
+        // 1. Fetch application
         const app = await getOwnJobApplication({
           jobId: jobListingId,
-          userId: currentUser.id,
         });
         setApplication(app);
 
