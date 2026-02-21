@@ -154,3 +154,12 @@ export interface JobListing {
   updatedAt: string;
   organization: Organization;
 }
+
+export type Resume = {
+  userId: string;
+  resumeFileUrl: string;
+  resumeFileKey: string;
+  aiSummary: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};

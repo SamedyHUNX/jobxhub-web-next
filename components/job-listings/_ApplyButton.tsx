@@ -18,6 +18,7 @@ import {
 import { useProfile } from "@/hooks/use-profile";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { NewJobListingApplicationForm } from "@/components/job-listings/NewJobListingApplicationForm";
+import type { Resume } from "@/types";
 
 export default function ApplyButton({
   jobListingId,
@@ -28,20 +29,30 @@ export default function ApplyButton({
   const { getOwnJobApplication, getUserResume } = useJobListings();
 
   const [application, setApplication] = useState<any | null>(null);
-  const [userResume, setUserResume] = useState<any | null>(null);
+  const [userResume, setUserResume] = useState<Resume | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (currentUser?.id) {
-      const app = getOwnJobApplication({
-        jobId: jobListingId,
-        userId: currentUser.id,
-      });
-      setApplication(app);
+    // Define the async logic inside the effect
+    const fetchData = async () => {
+      if (!currentUser?.id) return;
 
-      const resume = getUserResume({ userId: currentUser.id });
-      setUserResume(resume);
-    }
+      try {
+        // 1. Fetch application
+        const app = await getOwnJobApplication({
+          jobId: jobListingId,
+        });
+        setApplication(app);
+
+        // 2. Fetch resume
+        const resume = await getUserResume(currentUser.id);
+        setUserResume(resume);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+
+    fetchData();
   }, [currentUser?.id, jobListingId, getOwnJobApplication, getUserResume]);
 
   if (currentUser?.id == null) {
@@ -81,7 +92,7 @@ export default function ApplyButton({
     );
   }
 
-  if (userResume == null) {
+  if (userResume == null || !userResume) {
     return (
       <Popover>
         <PopoverTrigger asChild>
@@ -114,7 +125,11 @@ export default function ApplyButton({
           <NewJobListingApplicationForm
             jobListingId={jobListingId}
             buttonText="Apply"
-            onSuccess={() => setDialogOpen(false)}
+            onSuccess={async () => {
+              const app = await getOwnJobApplication({ jobId: jobListingId });
+              setApplication(app);
+              setDialogOpen(false);
+            }}
           />
         </div>
       </DialogContent>

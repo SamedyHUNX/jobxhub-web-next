@@ -70,7 +70,7 @@ function SidebarUserButtonClient({
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/user/settings`}>
+            <Link href={`/user-settings`}>
               <SettingsIcon className="mr-1" />
               Settings
             </Link>

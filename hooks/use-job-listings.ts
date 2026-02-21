@@ -213,27 +213,10 @@ export function useJobListings(params?: UseJobListingsParams) {
   const getJobListingApplicationMutation = useMutation<
     Application,
     AxiosError,
-    { jobId: string; userId: string }
+    { jobId: string }
   >({
-    mutationFn: async ({ jobId, userId }) => {
-      const result = await jobListingsApi.getOwnJobListingApplication(
-        jobId,
-        userId,
-      );
-      return result.data[0];
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
-    },
-    onError: (error: AxiosError) => {
-      toast(extractErrorMessage(error, errorT));
-    },
-  });
-
-  // Get user resume
-  const getUserResumeMutation = useMutation({
-    mutationFn: async ({ userId }: { userId: string }) => {
-      const result = await jobListingsApi.getUserResume(userId);
+    mutationFn: async ({ jobId }: { jobId: string }) => {
+      const result = await jobListingsApi.getOwnJobListingApplication(jobId);
       return result.data[0];
     },
     onSuccess: () => {
@@ -268,6 +251,54 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Handle resume upload
+  const uploadResumeMutation = useMutation({
+    mutationFn: async ({ file }: { file: File }) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await jobListingsApi.uploadResume(formData);
+      return response.data[0];
+    },
+    onSuccess: () => {
+      toast.success(successT("uploadResumeSuccess"));
+      queryClient.invalidateQueries({ queryKey: ["userResume"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Get user resume
+  const getUserResumeMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const result = await jobListingsApi.getUserResume(userId);
+      console.log(result.data[0]);
+      return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Delete user resume
+  const deleteUserResumeMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      console.log(userId);
+      const result = await jobListingsApi.deleteUserResume(userId);
+      return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast.success(successT("deleteResumeSuccess"));
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     jobListings,
     count,
@@ -275,16 +306,24 @@ export function useJobListings(params?: UseJobListingsParams) {
     error,
     refetch,
 
-    getOwnJobApplication: getJobListingApplicationMutation.mutate,
-    getUserResume: getUserResumeMutation.mutate,
+    getOwnJobApplication: getJobListingApplicationMutation.mutateAsync,
+    getUserResume: getUserResumeMutation.mutateAsync,
     createJobListingApplication: createJobListingApplicationMutation.mutate,
 
     // Create or Update job listing
     saveJobListing,
     jobListingLoading: jobListingMutation.isPending,
 
+    // Upload resume
+    uploadResume: uploadResumeMutation.mutate,
+    uploadResumeLoading: uploadResumeMutation.isPending,
+
     // Fetch job by jobId
     fetchJobListingByJobId,
+
+    // Delete user resume
+    deleteResume: deleteUserResumeMutation.mutate,
+    isDeletingResume: deleteUserResumeMutation.isPending,
 
     // Delete job listing
     deleteJobListing: deleteJobListingMutation.mutate,

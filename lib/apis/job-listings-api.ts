@@ -87,18 +87,23 @@ export const jobListingsApi = {
   },
 
   // Get own job listing application
-  getOwnJobListingApplication: async (jobId: string, userId: string) => {
+  getOwnJobListingApplication: async (jobId: string) => {
     assertApiUrl();
-    const { data } = await api.get(`/job-listings/${jobId}/application`, {
-      params: { userId },
-    });
+    const { data } = await api.get(`/job-listings/application/${jobId}`);
     return data;
   },
 
   // Get user resume
   getUserResume: async (userId: string) => {
     assertApiUrl();
-    const { data } = await api.get(`/job-listings/${userId}/resume`);
+    const { data } = await api.get(`/job-listings/resume/${userId}`);
+    return data;
+  },
+
+  // Delete user resume
+  deleteUserResume: async (userId: string) => {
+    assertApiUrl();
+    const { data } = await api.delete(`/job-listings/resume/${userId}`);
     return data;
   },
 
@@ -112,6 +117,17 @@ export const jobListingsApi = {
       `/job-listings/${jobListingId}/application`,
       dto,
     );
+    return data;
+  },
+
+  // Upload resume
+  uploadResume: async (formData: FormData) => {
+    assertApiUrl();
+    const { data } = await api.post(`/job-listings/resume`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return data;
   },
 };
