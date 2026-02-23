@@ -259,3 +259,8 @@ export const newJobListingApplicationSchema = z.object({
 export type NewJobListingApplication = z.infer<
   typeof newJobListingApplicationSchema
 >;
+
+export const jobListingAiSearchSchema = (t: (key: string) => string) =>
+  z.object({ query: z.string().min(1, t("fieldRequired")) });
+
+export type JobListingAiSearch = z.infer<typeof jobListingAiSearchSchema>;

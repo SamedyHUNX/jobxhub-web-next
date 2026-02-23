@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { jobListingsApi } from "@/lib/apis/job-listings-api";
 import {
+  JobListingAiSearch,
   JobListingFormData,
   NewJobListingApplication,
   newJobListingApplicationSchema,
@@ -286,13 +287,27 @@ export function useJobListings(params?: UseJobListingsParams) {
   // Delete user resume
   const deleteUserResumeMutation = useMutation({
     mutationFn: async (userId: string) => {
-      console.log(userId);
       const result = await jobListingsApi.deleteUserResume(userId);
       return result.data[0];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
       toast.success(successT("deleteResumeSuccess"));
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Get AI Job Listings Search Results
+  const getAiJobListingSearchResultsMutation = useMutation({
+    mutationFn: async (data: JobListingAiSearch) => {
+      const result = await jobListingsApi.getAiSearchResults(data);
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast.success(successT("aiSearchSuccess"));
     },
     onError: (error: AxiosError) => {
       toast(extractErrorMessage(error, errorT));
@@ -338,5 +353,8 @@ export function useJobListings(params?: UseJobListingsParams) {
     toggleJobListingFeaturedLoading: toggleJobListingFeaturedMutation.isPending,
     publishedJobListings,
     featuredJobListings,
+
+    getAiJobListingSearchResults:
+      getAiJobListingSearchResultsMutation.mutateAsync,
   };
 }

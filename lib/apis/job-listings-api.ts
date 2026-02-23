@@ -1,4 +1,4 @@
-import { JobListingFormData, NewJobListingApplication } from "@/schemas";
+import { JobListingAiSearch, JobListingFormData, NewJobListingApplication } from "@/schemas";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -129,5 +129,14 @@ export const jobListingsApi = {
       },
     });
     return data;
+  },
+
+  getAiSearchResults: async (data: JobListingAiSearch) => {
+    assertApiUrl();
+    const { data: responseData } = await api.post(
+      `/job-listings/ai-search`,
+      data,
+    );
+    return responseData;
   },
 };
