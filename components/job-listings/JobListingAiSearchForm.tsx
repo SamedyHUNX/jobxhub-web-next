@@ -7,7 +7,6 @@ import { FormField } from "../FormField";
 import SubmitButton from "../SubmitButton";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export function JobListingAiSearchForm() {
   const validationT = useTranslations("validations");
