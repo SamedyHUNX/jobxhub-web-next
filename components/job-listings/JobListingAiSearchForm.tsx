@@ -11,7 +11,6 @@ import { useState } from "react";
 
 export function JobListingAiSearchForm() {
   const validationT = useTranslations("validations");
-  const [aiResults, setAiResults] = useState<string[]>([]);
   const router = useRouter();
 
   const { getAiJobListingSearchResults } = useJobListings();
@@ -19,10 +18,10 @@ export function JobListingAiSearchForm() {
   const jobListingAiSearchVali = jobListingAiSearchSchema(validationT);
 
   const jobListingAiSearchForm = useCustomForm({
-    validationSchema: jobListingAiSearchVali,
     defaultValues: {
       query: "",
     },
+    validationSchema: jobListingAiSearchVali,
     onSubmit: async (values) => {
       const results = await getAiJobListingSearchResults(values);
 
