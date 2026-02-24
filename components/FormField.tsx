@@ -11,6 +11,7 @@ interface FormFieldProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  description?: string;
 }
 
 export function FormField({
@@ -24,6 +25,7 @@ export function FormField({
   component,
   disabled,
   className,
+  description,
 }: FormFieldProps & { component?: React.ComponentType<any> }) {
   return (
     <form.Field
@@ -37,6 +39,9 @@ export function FormField({
           <Label htmlFor={name} className="tracking-tighter">
             {label}
           </Label>
+          {description && (
+            <p className="text-sm text-muted-foreground">{description}</p>
+          )}
           {component ? (
             createElement(component, {
               ...field,

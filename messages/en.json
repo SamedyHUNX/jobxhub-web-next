@@ -245,7 +245,8 @@
     "passwordsMustMatch": "Passwords must match",
     "passwordsDoNotMatch": "Passwords must match",
     "orgNameTooLong": "Organization name cannot be more than 100 characters long",
-    "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long"
+    "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long",
+    "fieldRequired": "This field is required"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",
@@ -264,7 +265,8 @@
     "unfeatureJobListingSuccess": "Job listing unmarked as featured successfully",
     "createJobListingApplicationSuccess": "You have applied for the job successfully",
     "uploadResumeSuccess": "Resume uploaded successfully",
-    "deleteResumeSuccess": "Resume deleted successfully"
+    "deleteResumeSuccess": "Resume deleted successfully",
+    "aiSearchSuccess": "We have found jobs matching your query"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",
