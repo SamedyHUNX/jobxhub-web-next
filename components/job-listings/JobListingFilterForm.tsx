@@ -126,7 +126,7 @@ export default function JobListingFilterForm() {
         name="title"
         label={"Job Title"}
         type="text"
-        placeholder={""}
+        placeholder={"Enter the job title"}
         validator={(value) => {
           const result = jobListingFilterSchema.shape.title.safeParse(value);
           return result.success ? undefined : result.error.issues[0].message;

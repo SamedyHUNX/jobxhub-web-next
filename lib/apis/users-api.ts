@@ -24,4 +24,10 @@ export const usersApi = {
     });
     return data;
   },
+
+  getMyNotificationSettings: async () => {
+    assertApiUrl();
+    const { data } = await api.get("/users/me/notification-settings");
+    return data;
+  },
 };

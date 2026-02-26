@@ -264,3 +264,17 @@ export const jobListingAiSearchSchema = (t: (key: string) => string) =>
   z.object({ query: z.string().min(1, t("fieldRequired")) });
 
 export type JobListingAiSearch = z.infer<typeof jobListingAiSearchSchema>;
+
+export const userNotificationSettingsSchema = (t: (key: string) => string) => {
+  return z.object({
+    newJobEmailNotifications: z.boolean(),
+    aiPrompt: z
+      .string()
+      .transform((val) => (val.trim() === "" ? null : val))
+      .nullable(),
+  });
+};
+
+export type UserNotificationSettings = z.infer<
+  typeof userNotificationSettingsSchema
+>;

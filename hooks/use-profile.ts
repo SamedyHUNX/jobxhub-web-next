@@ -60,6 +60,23 @@ export function useProfile() {
     },
   });
 
+  // Get user notifcation settings
+  const getMyNotificationSettingsMutation = useMutation({
+    mutationFn: () => usersApi.getMyNotificationSettings(),
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        toast.success(successT("getMyNotificationSettingsSuccess"));
+        return response.data[0];
+      } else {
+        toast.error(errorT("getMyNotificationSettingsFailed"));
+      }
+    },
+    // onError(error: AxiosError) {
+    //   toast.error(extractErrorMessage(error, errorT));
+    // },
+  });
+
   return {
     // Get data
     user,
@@ -70,5 +87,8 @@ export function useProfile() {
 
     // Update profile
     updateProfile: updateProfileMutation.mutateAsync,
+
+    // Get user notifcation settings
+    getMyNotificationSettings: getMyNotificationSettingsMutation.mutateAsync,
   };
 }
