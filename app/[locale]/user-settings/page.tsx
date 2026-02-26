@@ -35,24 +35,19 @@ export default function UserSettingsPage() {
     },
     validationSchema: updateProfileSchema,
     onSubmit: async (values) => {
-      try {
-        const formData = new FormData();
-        formData.append("firstName", values.firstName);
-        formData.append("lastName", values.lastName);
-        formData.append("username", values.username);
-        formData.append("phoneNumber", values.phoneNumber);
+      const formData = new FormData();
+      formData.append("firstName", values.firstName);
+      formData.append("lastName", values.lastName);
+      formData.append("username", values.username);
+      formData.append("phoneNumber", values.phoneNumber);
 
-        // Add image only if it exists
-        if (values.image) {
-          formData.append("image", values.image);
-        }
-
-        await updateProfile(formData);
-        setIsModalOpen(false);
-      } catch (error) {
-        // Error handling is done in the hook
-        console.error("Failed to update profile:", error);
+      // Add image only if it exists
+      if (values.image) {
+        formData.append("image", values.image);
       }
+
+      await updateProfile(formData);
+      setIsModalOpen(false);
     },
   });
 

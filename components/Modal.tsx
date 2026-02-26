@@ -19,13 +19,15 @@ export function Modal({ isOpen, onClose, children, size = "md" }: ModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-
+      <div
+        className="absolute inset-0 bg-black/50 dark:bg-black/70"
+        onClick={onClose}
+      />
       {/* Modal Content */}
       <div
-        className={`relative bg-white rounded-lg shadow-xl w-full ${sizeClasses[size]} mx-4 max-h-[90vh] overflow-hidden`}
+        className={`relative w-full ${sizeClasses[size]} rounded-xl bg-white shadow-xl dark:bg-zinc-900 dark:shadow-black/40`}
       >
         {children}
       </div>
@@ -42,14 +44,16 @@ Modal.Header = function ModalHeader({
   onClose?: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between p-6 border-b">
-      <h2 className="text-xl font-semibold">{children}</h2>
+    <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-zinc-700">
+      <div className="text-lg font-semibold text-gray-900 dark:text-zinc-100">
+        {children}
+      </div>
       {onClose && (
         <button
           onClick={onClose}
-          className="p-1 hover:bg-gray-100 rounded-full transition"
+          className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
         >
-          <X className="w-5 h-5" />
+          <X size={18} />
         </button>
       )}
     </div>
@@ -58,13 +62,13 @@ Modal.Header = function ModalHeader({
 
 Modal.Body = function ModalBody({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-y-auto max-h-[calc(90vh-140px)]">{children}</div>
+    <div className="px-6 py-4 text-gray-700 dark:text-zinc-300">{children}</div>
   );
 };
 
 Modal.Footer = function ModalFooter({ children }: { children: ReactNode }) {
   return (
-    <div className="flex items-center justify-end gap-3 p-6 border-t bg-gray-50">
+    <div className="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-zinc-700">
       {children}
     </div>
   );
