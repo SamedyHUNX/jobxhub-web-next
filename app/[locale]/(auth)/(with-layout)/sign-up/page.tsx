@@ -36,13 +36,18 @@ export default function SignUpPage() {
       image: null as File | null,
     },
     validationSchema: signUpSchema,
-    validateOnChange: false,
+    validateOnChange: (values) => {
+      // Only validate if both fields have values
+      if (!values.password || !values.confirmPassword) {
+        return false;
+      }
+      return true;
+    },
     transformBeforeSubmit: (value) => ({
       ...value,
       phoneNumber: `${value.countryCode}${value.phoneNumber}`,
     }),
     onSubmit: (formData) => {
-      console.log("data being sent: ", formData);
       signUp({ formData, locale });
     },
   });

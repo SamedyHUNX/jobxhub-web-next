@@ -33,14 +33,14 @@ export default function ResetPasswordPage() {
       confirmNewPassword: "",
     },
     validationSchema: resetPasswordFormSchema,
-    validateOnChange: (value) => {
+    validateOnChange: (values) => {
       // Only validate if both fields have values
-      if (!value.newPassword || !value.confirmNewPassword) {
+      if (!values.newPassword || !values.confirmNewPassword) {
         return false;
       }
       return true;
     },
-    onSubmit: (value) => resetPassword({ token, ...value }),
+    onSubmit: (values) => resetPassword({ token, ...values }),
   });
 
   // Redirect if no token provided

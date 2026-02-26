@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
       email: "",
     },
     validationSchema: forgotPasswordFormSchema,
-    onSubmit: (value) => forgotPassword({ email: value.email, locale }),
+    onSubmit: (values) => forgotPassword({ email: values.email, locale }),
   });
 
   return (
