@@ -30,4 +30,16 @@ export const usersApi = {
     const { data } = await api.get("/users/me/notification-settings");
     return data;
   },
+
+  updateNotificationSettings: async (payload: {
+    newJobEmailNotifications: boolean;
+    aiPrompt: string | null;
+  }) => {
+    assertApiUrl();
+    const { data } = await api.patch(
+      "/users/me/notification-settings",
+      payload,
+    );
+    return data;
+  },
 };

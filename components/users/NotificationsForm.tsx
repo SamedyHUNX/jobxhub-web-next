@@ -8,33 +8,51 @@ import {
 import { useTranslations } from "next-intl";
 import { FormField } from "../FormField";
 import { Switch } from "../ui/switch";
-import { FormControl, FormDescription, FormItem, FormLabel } from "../ui/form";
-import TextField from "../form/TextField";
 import { useStore } from "@tanstack/react-form";
+import { usersApi } from "@/lib/apis/users-api";
+import { toast } from "sonner";
+import { useState } from "react";
+import SubmitButton from "../SubmitButton";
 
 export function NotificationsForm({
   notificationSettings,
 }: {
-  notificationSettings?: any;
+  notificationSettings?: Partial<UserNotificationSettings>;
 }) {
   const validationT = useTranslations("validations");
   const userNotificationSettingsVali =
     userNotificationSettingsSchema(validationT);
 
-  const notificationsForm = useCustomForm({
+  const [isSaving, setIsSaving] = useState(false);
+
+  const defaultValues: UserNotificationSettings = {
+    aiPrompt: notificationSettings?.aiPrompt ?? null,
+    newJobEmailNotifications:
+      notificationSettings?.newJobEmailNotifications ?? false,
+  };
+
+  const notificationsForm = useCustomForm<UserNotificationSettings>({
     validationSchema: userNotificationSettingsVali,
-    defaultValues: notificationSettings ?? {
-      aiPrompt: "",
-      newJobEmailNotifications: false,
-    },
-    onSubmit: (values: UserNotificationSettings) => {
-      console.log(values);
+    defaultValues,
+    onSubmit: async (values) => {
+      setIsSaving(true);
+      try {
+        await usersApi.updateNotificationSettings({
+          newJobEmailNotifications: values.newJobEmailNotifications,
+          aiPrompt: values.aiPrompt,
+        });
+        toast.success("Notification settings saved.");
+      } catch {
+        toast.error("Failed to save notification settings. Please try again.");
+      } finally {
+        setIsSaving(false);
+      }
     },
   });
 
   const newJobEmailNotifications = useStore(
     notificationsForm.store,
-    (state) => state.values.newJobEmailNotifications
+    (state) => state.values.newJobEmailNotifications,
   );
 
   return (
@@ -44,56 +62,80 @@ export function NotificationsForm({
         e.stopPropagation();
         notificationsForm.handleSubmit();
       }}
-      className={"space-y-6"}
+      className="space-y-6"
     >
-      <div className="flex items-center justify-between">
-        <FormField
-          form={notificationsForm}
-          name="newJobEmailNotifications"
-          label="New Job Email Notifications"
-          description="Receive emails about new job listings that match your interests"
-          validator={(value) => {
-            const result =
-              userNotificationSettingsVali.shape.newJobEmailNotifications.safeParse(
+      {/* New Job Email Notifications toggle */}
+      <notificationsForm.Field
+        name="newJobEmailNotifications"
+        validators={{
+          onChange: ({ value }) =>
+            userNotificationSettingsVali.shape.newJobEmailNotifications.safeParse(
+              value,
+            ).success
+              ? undefined
+              : userNotificationSettingsVali.shape.newJobEmailNotifications.safeParse(
                 value,
-              );
-            return result.success ? undefined : result.error.issues[0].message;
-          }}
-          render={(field) => (
+              ).error?.issues[0].message,
+        }}
+      >
+        {(field) => (
+          <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
+            <div className="space-y-0.5">
+              <label
+                htmlFor="newJobEmailNotifications"
+                className="text-sm font-medium leading-none"
+              >
+                New Job Email Notifications
+              </label>
+              <p className="text-sm text-muted-foreground">
+                Receive emails about new job listings that match your interests
+              </p>
+              {field.state.meta.errors.length > 0 && (
+                <p className="text-sm text-red-500">
+                  {field.state.meta.errors[0]}
+                </p>
+              )}
+            </div>
             <Switch
+              id="newJobEmailNotifications"
               checked={field.state.value}
               onCheckedChange={field.handleChange}
             />
+          </div>
+        )}
+      </notificationsForm.Field>
+
+      {/* AI Prompt – only visible when email notifications are on */}
+      {newJobEmailNotifications && (
+        <FormField
+          form={notificationsForm}
+          name="aiPrompt"
+          label="Filter Prompt"
+          description="Our AI will use this prompt to filter job listings and only send you notifications for jobs that match your criteria."
+          validator={(value) => {
+            const result =
+              userNotificationSettingsVali.shape.aiPrompt.safeParse(value);
+            return result.success
+              ? undefined
+              : result.error.issues[0].message;
+          }}
+          render={(field) => (
+            <input
+              id="aiPrompt"
+              type="text"
+              value={field.state.value ?? ""}
+              onChange={(e) => field.handleChange(e.target.value)}
+              onBlur={field.handleBlur}
+              placeholder="e.g. Senior React roles in fintech, remote only"
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           )}
         />
-        {newJobEmailNotifications && (
-          <FormField
-            form={notificationsForm}
-            name="aiPrompt"
-            label="Filter Prompt"
-            validator={(value) => {
-              const result =
-                userNotificationSettingsVali.shape.aiPrompt.safeParse(value);
-              return result.success
-                ? undefined
-                : result.error.issues[0].message;
-            }}
-            render={(field) => (
-              <FormItem>
-                <div className="space-y-0.5">
-                  <FormLabel>Filter Prompt</FormLabel>
-                  <FormDescription>
-                    Our AI will use this prompt to filter job listings and only
-                    send you notifications for jobs that match your criteria.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <TextField {...field}></TextField>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        )}
+      )}
+
+      {/* Save button */}
+      <div className="flex justify-end">
+        <SubmitButton isSubmitting={isSaving} buttonText="Save Preferences" />
       </div>
     </form>
   );

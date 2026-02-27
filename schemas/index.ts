@@ -276,5 +276,5 @@ export const userNotificationSettingsSchema = (t: (key: string) => string) => {
 };
 
 export type UserNotificationSettings = z.infer<
-  typeof userNotificationSettingsSchema
+  ReturnType<typeof userNotificationSettingsSchema>
 >;
