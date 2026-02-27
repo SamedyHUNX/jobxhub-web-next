@@ -236,8 +236,8 @@ export const searchParamsSchema = z.object({
   search: z.string().optional().catch(undefined),
   title: z.string().optional().catch(undefined),
   city: z.string().optional().catch(undefined),
-  state: z.string().optional().catch(undefined),
-  experience: z.enum(experienceLevels).optional().catch(undefined),
+  stateAbbreviation: z.string().optional().catch(undefined),
+  experienceLevel: z.enum(experienceLevels).optional().catch(undefined),
   locationRequirement: z.enum(locationRequirements).optional().catch(undefined),
   type: z.enum(jobListingTypes).optional().catch(undefined),
   jobIds: z

@@ -28,7 +28,7 @@ export function JobListingItems() {
     search: rawParams.get("search") ?? undefined,
     title: rawParams.get("title") ?? undefined,
     city: rawParams.get("city") ?? undefined,
-    state: rawParams.get("state") ?? undefined,
+    stateAbbreviation: rawParams.get("stateAbbreviation") ?? undefined,
     experienceLevel: rawParams.get("experienceLevel") ?? undefined,
     locationRequirement: rawParams.get("locationRequirement") ?? undefined,
     type: rawParams.get("type") ?? undefined,
@@ -40,9 +40,9 @@ export function JobListingItems() {
     title: parsed.title,
     type: parsed.type,
     locationRequirement: parsed.locationRequirement,
-    experience: parsed.experience,
+    experienceLevel: parsed.experienceLevel,
     city: parsed.city,
-    state: parsed.state,
+    stateAbbreviation: parsed.stateAbbreviation,
     jobIds: [...(parsed.jobIds ?? []), ...(jobId ? [jobId] : [])],
   });
 
