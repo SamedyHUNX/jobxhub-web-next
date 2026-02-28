@@ -49,7 +49,8 @@ export interface AuthRequest {
   dateOfBirth: string;
   image: File | null;
   newPassword: string;
-  confirmNewPassword: string;
+  confirmPassword: string;
+  countryCode: string;
 }
 
 export interface ApiResponse<T = any> {
@@ -71,14 +72,21 @@ export type SignUpFormData = Pick<
   | "lastName"
   | "email"
   | "password"
+  | "confirmPassword"
   | "phoneNumber"
   | "dateOfBirth"
   | "image"
->;
+> & {
+  locale: string;
+};
+
+export type ForgotPasswordFormData = Pick<AuthRequest, "email"> & {
+  locale: string;
+};
 
 export type ResetPasswordFormData = Pick<
   AuthRequest,
-  "newPassword" | "confirmNewPassword"
+  "newPassword" | "confirmPassword"
 >;
 
 export interface ResetPasswordVariables extends ResetPasswordFormData {

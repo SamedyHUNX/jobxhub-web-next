@@ -5,6 +5,8 @@ import {
   AuthResponse,
   User,
   ProfileResponse,
+  ForgotPasswordFormData,
+  ResetPasswordVariables,
 } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -36,21 +38,18 @@ export const authApi = {
   },
 
   // Signup
-  signUp: async (
-    formData: SignUpFormData,
-    locale: string,
-  ): Promise<AuthResponse> => {
+  signUp: async (signUpFormData: SignUpFormData): Promise<AuthResponse> => {
     assertApiUrl();
 
-    const form = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
+    const signUpForm = new FormData();
+    Object.entries(signUpFormData).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
-        form.append(key, value instanceof File ? value : String(value));
+        signUpForm.append(key, value instanceof File ? value : String(value));
       }
     });
 
-    const { data } = await api.post<AuthResponse>("/auth/sign-up", form, {
-      headers: { "Accept-Language": locale },
+    const { data } = await api.post<AuthResponse>("/auth/sign-up", signUpForm, {
+      headers: { "Accept-Language": signUpFormData.locale },
     });
     return data;
   },
@@ -70,28 +69,28 @@ export const authApi = {
   },
 
   // Forgot password
-  forgotPassword: async (
-    email: string,
-    locale: string,
-  ): Promise<AuthResponse> => {
+  forgotPassword: async ({
+    email,
+    locale,
+  }: ForgotPasswordFormData): Promise<AuthResponse> => {
     const { data } = await api.post<AuthResponse>(
       "/auth/forgot-password",
-      { email },
+      {},
       { headers: { "Accept-Language": locale } },
     );
     return data;
   },
 
   // Reset password
-  resetPassword: async (
-    token: string | null,
-    newPassword: string,
-    confirmNewPassword: string,
-  ): Promise<AuthResponse> => {
+  resetPassword: async ({
+    token,
+    newPassword,
+    confirmPassword,
+  }: ResetPasswordVariables): Promise<AuthResponse> => {
     const { data } = await api.post<AuthResponse>("/auth/reset-password", {
       token,
       newPassword,
-      confirmNewPassword,
+      confirmPassword,
     });
     return data;
   },

@@ -16,7 +16,7 @@ export default function SignInPage() {
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
 
-  const { signIn, isSigningIn } = useAuth();
+  const { signInMutation } = useAuth();
 
   const signInSchema = createSignInSchema(validationT);
 
@@ -26,7 +26,7 @@ export default function SignInPage() {
       password: "",
     },
     validationSchema: signInSchema,
-    onSubmit: (formData: SignInFormData) => signIn(formData),
+    onSubmit: (formData: SignInFormData) => signInMutation.mutate(formData),
   });
 
   return (
@@ -83,13 +83,16 @@ export default function SignInPage() {
           </div>
         </div>
 
-        <SubmitButton isSubmitting={isSigningIn} buttonText={authT("signIn")} />
+        <SubmitButton
+          isSubmitting={signInMutation.isPending}
+          buttonText={authT("signIn")}
+        />
 
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("dontHaveAnAccount")}{" "}
             <Link
-              href={`/sign-up`}
+              href={"/sign-up"}
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signUp")}

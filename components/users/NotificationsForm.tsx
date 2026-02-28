@@ -9,8 +9,6 @@ import { useTranslations } from "next-intl";
 import { FormField } from "../FormField";
 import { Switch } from "../ui/switch";
 import { useStore } from "@tanstack/react-form";
-import { usersApi } from "@/lib/apis/users-api";
-import { toast } from "sonner";
 import { useState } from "react";
 import SubmitButton from "../SubmitButton";
 import { useProfile } from "@/hooks/use-profile";

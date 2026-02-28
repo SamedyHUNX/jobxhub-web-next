@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { clearAuth } from "@/stores/slices/auth.slice";
 import {
   AuthResponse,
+  ForgotPasswordFormData,
   ResetPasswordVariables,
   SignInFormData,
   SignUpFormData,
@@ -39,12 +40,8 @@ export function useAuth() {
   });
 
   // Sign up mutation
-  const signUpMutation = useMutation<
-    AuthResponse,
-    AxiosError,
-    { formData: SignUpFormData; locale: string }
-  >({
-    mutationFn: ({ formData, locale }) => authApi.signUp(formData, locale),
+  const signUpMutation = useMutation<AuthResponse, AxiosError, SignUpFormData>({
+    mutationFn: (signUpFormData) => authApi.signUp(signUpFormData),
     onSuccess: () => {
       toast.success(successT("signUpSuccess"));
       router.push("/sign-in");
@@ -70,9 +67,10 @@ export function useAuth() {
   const forgotPasswordMutation = useMutation<
     AuthResponse,
     AxiosError,
-    { email: string; locale: string }
+    ForgotPasswordFormData
   >({
-    mutationFn: ({ email, locale }) => authApi.forgotPassword(email, locale),
+    mutationFn: (forgotPasswordFormData) =>
+      authApi.forgotPassword(forgotPasswordFormData),
     onSuccess: (_, variables) => {
       toast.success(successT("forgotPasswordSuccess"));
       router.push(
@@ -92,8 +90,8 @@ export function useAuth() {
     AxiosError, // error type
     ResetPasswordVariables // variables type
   >({
-    mutationFn: ({ token, newPassword, confirmNewPassword }) =>
-      authApi.resetPassword(token, newPassword, confirmNewPassword),
+    mutationFn: (resetPasswordVariables) =>
+      authApi.resetPassword(resetPasswordVariables),
     onSuccess: () => {
       toast.success(successT("resetPasswordSuccess"));
       router.push("/sign-in");
@@ -123,27 +121,19 @@ export function useAuth() {
     isInitialized,
 
     // Sign in
-    signIn: signInMutation.mutate,
-    isSigningIn: signInMutation.isPending,
+    signInMutation,
 
     // Sign up
-    signUp: signUpMutation.mutate,
-    isSigningUp: signUpMutation.isPending,
+    signUpMutation,
 
     // Verify email
-    verifyEmail: verifyEmailMutation.mutate,
-    isVerifyingEmail: verifyEmailMutation.isPending,
-    verifyEmailError: verifyEmailMutation.error as AxiosError,
-    verifyEmailSuccess: verifyEmailMutation.isSuccess,
-    verifyEmailData: verifyEmailMutation.data,
+    verifyEmailMutation,
 
     // Forgot password
-    forgotPassword: forgotPasswordMutation.mutate,
-    isRequestingForgotPassword: forgotPasswordMutation.isPending,
+    forgotPasswordMutation,
 
     // Reset password
-    resetPassword: resetPasswordMutation.mutate,
-    isResettingPassword: resetPasswordMutation.isPending,
+    resetPasswordMutation,
 
     // Sign Out
     signOut,

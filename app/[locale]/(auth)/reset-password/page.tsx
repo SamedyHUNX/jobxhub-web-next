@@ -7,6 +7,7 @@ import SubmitButton from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { createResetPasswordSchema } from "@/schemas";
+import type { ResetPasswordVariables } from "@/types";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -22,7 +23,7 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const { resetPassword, isResettingPassword } = useAuth();
+  const { resetPasswordMutation } = useAuth();
 
   // Define schema
   const resetPasswordFormSchema = createResetPasswordSchema(validationT);
@@ -30,17 +31,19 @@ export default function ResetPasswordPage() {
   const resetPasswordForm = useCustomForm({
     defaultValues: {
       newPassword: "",
-      confirmNewPassword: "",
+      confirmPassword: "",
+      token,
     },
     validationSchema: resetPasswordFormSchema,
     validateOnChange: (values) => {
       // Only validate if both fields have values
-      if (!values.newPassword || !values.confirmNewPassword) {
+      if (!values.newPassword || !values.confirmPassword) {
         return false;
       }
       return true;
     },
-    onSubmit: (values) => resetPassword({ token, ...values }),
+    onSubmit: (values: ResetPasswordVariables) =>
+      resetPasswordMutation.mutate(values),
   });
 
   // Redirect if no token provided
@@ -104,7 +107,7 @@ export default function ResetPasswordPage() {
         </div>
 
         <SubmitButton
-          isSubmitting={isResettingPassword}
+          isSubmitting={resetPasswordMutation.isPending}
           buttonText={authT("resetPassword")}
         />
       </form>
