@@ -25,9 +25,9 @@ interface UseJobListingsParams {
   status?: string;
   type?: string;
   locationRequirement?: string;
-  experience?: string;
+  experienceLevel?: string;
   city?: string;
-  state?: string;
+  stateAbbreviation?: string;
   jobIds?: string[];
 }
 
@@ -62,9 +62,9 @@ export function useJobListings(params?: UseJobListingsParams) {
       params?.status,
       params?.type,
       params?.locationRequirement,
-      params?.experience,
+      params?.experienceLevel,
       params?.city,
-      params?.state,
+      params?.stateAbbreviation,
       params?.jobIds,
     ],
     queryFn: () =>
@@ -75,9 +75,9 @@ export function useJobListings(params?: UseJobListingsParams) {
         params?.status,
         params?.type,
         params?.locationRequirement,
-        params?.experience,
+        params?.experienceLevel,
         params?.city,
-        params?.state,
+        params?.stateAbbreviation,
         params?.jobIds,
       ),
     staleTime: 5 * 60 * 1000, // 5 minutes

@@ -22,7 +22,7 @@ export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const { verifyEmail, verifyEmailError, verifyEmailSuccess } = useAuth();
+  const { verifyEmailMutation } = useAuth();
 
   // Trigger verification on mount
   useEffect(() => {
@@ -32,10 +32,10 @@ export default function VerifyEmailPage() {
       return;
     }
 
-    verifyEmail(token);
-  }, [token, verifyEmail, router, locale]);
+    verifyEmailMutation.mutate(token);
+  }, [token, verifyEmailMutation, router, locale]);
 
-  if (verifyEmailSuccess) {
+  if (verifyEmailMutation.isSuccess) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <BrandLogo />
@@ -63,7 +63,7 @@ export default function VerifyEmailPage() {
     );
   }
 
-  if (verifyEmailError) {
+  if (verifyEmailMutation.isError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <BrandLogo />
@@ -81,7 +81,7 @@ export default function VerifyEmailPage() {
             {authT("verifyEmailFailedTitle")}
           </h2>
           <p className="text-red-600 text-base p-4">
-            {extractErrorMessage(verifyEmailError, errorT)}
+            {extractErrorMessage(verifyEmailMutation.error, errorT)}
           </p>
           <Link
             href={`/${locale}/support`}

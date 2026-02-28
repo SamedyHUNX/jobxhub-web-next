@@ -266,7 +266,9 @@
     "createJobListingApplicationSuccess": "You have applied for the job successfully",
     "uploadResumeSuccess": "Resume uploaded successfully",
     "deleteResumeSuccess": "Resume deleted successfully",
-    "aiSearchSuccess": "We have found jobs matching your query"
+    "aiSearchSuccess": "We have found jobs matching your query",
+    "updateMyNotificationSettingsSuccess": "Updated preferences successfully",
+    "getMyNotificationSettingsSuccess": "Fetched your preferences successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",
@@ -291,6 +293,8 @@
     "accountDisabled": "Account has been disabled. Please contact support team",
     "tooManyRequest": "Too many request. Please try again in 1 hour",
     "unauthorized": "You are not authorized to do this action",
-    "profileUpdateFailed": "Failed to update profile"
+    "profileUpdateFailed": "Failed to update profile",
+    "updateMyNotificationSettingsFailed": "Failed to update your preferences",
+    "getMyNotificationSettingsFailed": "Failed to fetch your preferences"
   }
 }

@@ -6,11 +6,7 @@ import {
   clearSelection,
   setSelectedOrgId,
 } from "@/stores/slices/organizations.slice";
-import type {
-  CreateOrgResponse,
-  Organization,
-  UpdateOrganizationDto,
-} from "@/types";
+import type { CreateOrgResponse, Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";

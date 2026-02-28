@@ -47,7 +47,7 @@ export default function JobListingFilterForm() {
       city: searchParams.get("city") ?? "",
       stateAbbreviation: searchParams.get("stateAbbreviation") ?? ANY_VALUE,
       experienceLevel:
-        (searchParams.get("experience") as ExperienceLevel) ?? ANY_VALUE,
+        (searchParams.get("experienceLevel") as ExperienceLevel) ?? ANY_VALUE,
       type: (searchParams.get("type") as JobListingType) ?? ANY_VALUE,
       locationRequirement:
         (searchParams.get("locationRequirement") as LocationRequirement) ??
@@ -81,9 +81,9 @@ export default function JobListingFilterForm() {
         values.experienceLevel &&
         (values.experienceLevel as string) !== ANY_VALUE
       ) {
-        params.set("experience", values.experienceLevel);
+        params.set("experienceLevel", values.experienceLevel);
       } else {
-        params.delete("experience");
+        params.delete("experienceLevel");
       }
 
       if (values.type && (values.type as string) !== ANY_VALUE) {
@@ -126,7 +126,7 @@ export default function JobListingFilterForm() {
         name="title"
         label={"Job Title"}
         type="text"
-        placeholder={""}
+        placeholder={"Enter the job title"}
         validator={(value) => {
           const result = jobListingFilterSchema.shape.title.safeParse(value);
           return result.success ? undefined : result.error.issues[0].message;

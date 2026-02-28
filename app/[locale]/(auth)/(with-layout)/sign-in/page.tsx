@@ -1,13 +1,14 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { createSignInSchema } from "@/schemas";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
 import AuthLeftHeader from "@/components/AuthLeftHeader";
 import SubmitButton from "@/components/SubmitButton";
 import { useCustomForm } from "@/hooks/use-custom-form";
+import type { SignInFormData } from "@/types";
 
 export default function SignInPage() {
   // Translations
@@ -15,9 +16,7 @@ export default function SignInPage() {
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
 
-  const locale = useLocale();
-
-  const { signIn, isSigningIn } = useAuth();
+  const { signInMutation } = useAuth();
 
   const signInSchema = createSignInSchema(validationT);
 
@@ -27,7 +26,7 @@ export default function SignInPage() {
       password: "",
     },
     validationSchema: signInSchema,
-    onSubmit: (formData) => signIn(formData),
+    onSubmit: (formData: SignInFormData) => signInMutation.mutate(formData),
   });
 
   return (
@@ -76,7 +75,7 @@ export default function SignInPage() {
 
           <div className="flex items-center justify-between pt-1">
             <Link
-              href={`/${locale}/forgot-password`}
+              href={`/forgot-password`}
               className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("forgotPassword")}
@@ -84,13 +83,16 @@ export default function SignInPage() {
           </div>
         </div>
 
-        <SubmitButton isSubmitting={isSigningIn} buttonText={authT("signIn")} />
+        <SubmitButton
+          isSubmitting={signInMutation.isPending}
+          buttonText={authT("signIn")}
+        />
 
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("dontHaveAnAccount")}{" "}
             <Link
-              href={`/sign-up`}
+              href={"/sign-up"}
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signUp")}

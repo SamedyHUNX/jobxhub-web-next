@@ -12,6 +12,8 @@ interface FormFieldProps {
   className?: string;
   disabled?: boolean;
   description?: string;
+  showInput?: boolean;
+  render?: (field: any) => React.ReactNode;
 }
 
 export function FormField({
@@ -26,6 +28,8 @@ export function FormField({
   disabled,
   className,
   description,
+  showInput = true,
+  render,
 }: FormFieldProps & { component?: React.ComponentType<any> }) {
   return (
     <form.Field
@@ -40,7 +44,7 @@ export function FormField({
             {label}
           </Label>
           {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-sm text-muted-foreground my-2">{description}</p>
           )}
           {component ? (
             createElement(component, {
@@ -52,7 +56,9 @@ export function FormField({
               },
               className: "min-h-[200px]",
             })
-          ) : (
+          ) : render ? (
+            render(field)
+          ) : showInput ? (
             <input
               id={name}
               type={type}
@@ -70,6 +76,8 @@ export function FormField({
                   : ""
               }`}
             />
+          ) : (
+            ""
           )}
           {field.state.meta.errors.length > 0 && (
             <p className="text-sm text-red-600 dark:text-red-400">

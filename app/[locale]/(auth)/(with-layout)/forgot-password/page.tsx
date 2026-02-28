@@ -1,16 +1,14 @@
 "use client";
 
 import { FormField } from "@/components/FormField";
-import { LoadingSwap } from "@/components/LoadingSwap";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { forgotPasswordSchema } from "@/schemas";
-import { useForm } from "@tanstack/react-form";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import AuthLeftHeader from "@/components/AuthLeftHeader";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import SubmitButton from "@/components/SubmitButton";
+import type { ForgotPasswordFormData } from "@/types";
 
 export default function ForgotPasswordPage() {
   // Translations
@@ -21,14 +19,16 @@ export default function ForgotPasswordPage() {
   const forgotPasswordFormSchema = forgotPasswordSchema(validationT);
 
   const locale = useLocale();
-  const { forgotPassword, isRequestingForgotPassword } = useAuth();
+  const { forgotPasswordMutation } = useAuth();
 
   const forgotPasswordForm = useCustomForm({
     defaultValues: {
       email: "",
+      locale,
     },
     validationSchema: forgotPasswordFormSchema,
-    onSubmit: (value) => forgotPassword({ email: value.email, locale }),
+    onSubmit: (values: ForgotPasswordFormData) =>
+      forgotPasswordMutation.mutate(values),
   });
 
   return (
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <SubmitButton
-          isSubmitting={isRequestingForgotPassword}
+          isSubmitting={forgotPasswordMutation.isPending}
           buttonText={authT("sendResetLink")}
         />
 

@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { countries } from "@/lib/constants";
 import { createSignUpSchema } from "@/schemas";
+import type { SignUpFormData } from "@/types";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
@@ -18,7 +19,7 @@ export default function SignUpPage() {
   const validationT = (key: string) => t(`validations.${key}`);
   const locale = useLocale();
 
-  const { signUp, isSigningUp } = useAuth();
+  const { signUpMutation } = useAuth();
 
   const signUpSchema = createSignUpSchema(validationT);
 
@@ -34,16 +35,23 @@ export default function SignUpPage() {
       phoneNumber: "",
       dateOfBirth: "",
       image: null as File | null,
+      locale,
     },
     validationSchema: signUpSchema,
-    validateOnChange: false,
-    transformBeforeSubmit: (value) => ({
-      ...value,
-      phoneNumber: `${value.countryCode}${value.phoneNumber}`,
+    validateOnChange: (values) => {
+      // Only validate if both fields have values
+      if (!values.password || !values.confirmPassword) {
+        return false;
+      }
+      return true;
+    },
+    transformBeforeSubmit: (values) => ({
+      ...values,
+      phoneNumber: `${values.countryCode}${values.phoneNumber}`,
     }),
-    onSubmit: (formData) => {
-      console.log("data being sent: ", formData);
-      signUp({ formData, locale });
+    onSubmit: (signUpFormData: SignUpFormData) => {
+      console.log("data being sent", signUpFormData);
+      signUpMutation.mutate(signUpFormData);
     },
   });
 
@@ -238,7 +246,10 @@ export default function SignUpPage() {
         </div>
 
         {/* Submit Button */}
-        <SubmitButton isSubmitting={isSigningUp} buttonText={authT("signUp")} />
+        <SubmitButton
+          isSubmitting={signUpMutation.isPending}
+          buttonText={authT("signUp")}
+        />
 
         {/* Sign In Link */}
         <div className="text-center">

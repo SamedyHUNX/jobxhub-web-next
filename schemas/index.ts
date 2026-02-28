@@ -236,8 +236,8 @@ export const searchParamsSchema = z.object({
   search: z.string().optional().catch(undefined),
   title: z.string().optional().catch(undefined),
   city: z.string().optional().catch(undefined),
-  state: z.string().optional().catch(undefined),
-  experience: z.enum(experienceLevels).optional().catch(undefined),
+  stateAbbreviation: z.string().optional().catch(undefined),
+  experienceLevel: z.enum(experienceLevels).optional().catch(undefined),
   locationRequirement: z.enum(locationRequirements).optional().catch(undefined),
   type: z.enum(jobListingTypes).optional().catch(undefined),
   jobIds: z
@@ -264,3 +264,17 @@ export const jobListingAiSearchSchema = (t: (key: string) => string) =>
   z.object({ query: z.string().min(1, t("fieldRequired")) });
 
 export type JobListingAiSearch = z.infer<typeof jobListingAiSearchSchema>;
+
+export const userNotificationSettingsSchema = (t: (key: string) => string) => {
+  return z.object({
+    newJobEmailNotifications: z.boolean(),
+    aiPrompt: z
+      .string()
+      .transform((val) => (val.trim() === "" ? null : val))
+      .nullable(),
+  });
+};
+
+export type UserNotificationSettings = z.infer<
+  ReturnType<typeof userNotificationSettingsSchema>
+>;
