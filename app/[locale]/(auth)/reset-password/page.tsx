@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
 
           <FormField
             form={resetPasswordForm}
-            name="confirmNewPassword"
+            name="confirmPassword"
             label={authT("confirmNewPassword")}
             type="password"
             placeholder={authT("confirmNewPasswordPlaceholder")}

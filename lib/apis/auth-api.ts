@@ -75,7 +75,7 @@ export const authApi = {
   }: ForgotPasswordFormData): Promise<AuthResponse> => {
     const { data } = await api.post<AuthResponse>(
       "/auth/forgot-password",
-      {},
+      { email },
       { headers: { "Accept-Language": locale } },
     );
     return data;
@@ -87,6 +87,7 @@ export const authApi = {
     newPassword,
     confirmPassword,
   }: ResetPasswordVariables): Promise<AuthResponse> => {
+    console.log("data being sent", token, newPassword, confirmPassword);
     const { data } = await api.post<AuthResponse>("/auth/reset-password", {
       token,
       newPassword,
