@@ -163,3 +163,8 @@ export type Resume = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type UpdateNotificationSettings = {
+  newJobEmailNotifications: boolean;
+  aiPrompt: string | null;
+};

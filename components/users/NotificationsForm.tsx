@@ -13,6 +13,7 @@ import { usersApi } from "@/lib/apis/users-api";
 import { toast } from "sonner";
 import { useState } from "react";
 import SubmitButton from "../SubmitButton";
+import { useProfile } from "@/hooks/use-profile";
 
 export function NotificationsForm({
   notificationSettings,
@@ -24,6 +25,7 @@ export function NotificationsForm({
     userNotificationSettingsSchema(validationT);
 
   const [isSaving, setIsSaving] = useState(false);
+  const { updateMyNotificationSettings } = useProfile();
 
   const defaultValues: UserNotificationSettings = {
     aiPrompt: notificationSettings?.aiPrompt ?? null,
@@ -35,15 +37,14 @@ export function NotificationsForm({
     validationSchema: userNotificationSettingsVali,
     defaultValues,
     onSubmit: async (values) => {
+      console.log("data being sent", values);
       setIsSaving(true);
       try {
-        await usersApi.updateNotificationSettings({
-          newJobEmailNotifications: values.newJobEmailNotifications,
-          aiPrompt: values.aiPrompt,
-        });
-        toast.success("Notification settings saved.");
+        await updateMyNotificationSettings(values);
       } catch {
-        toast.error("Failed to save notification settings. Please try again.");
+        console.error(
+          "Failed to save notification settings. Please try again.",
+        );
       } finally {
         setIsSaving(false);
       }
@@ -74,8 +75,8 @@ export function NotificationsForm({
             ).success
               ? undefined
               : userNotificationSettingsVali.shape.newJobEmailNotifications.safeParse(
-                value,
-              ).error?.issues[0].message,
+                  value,
+                ).error?.issues[0].message,
         }}
       >
         {(field) => (
@@ -115,9 +116,7 @@ export function NotificationsForm({
           validator={(value) => {
             const result =
               userNotificationSettingsVali.shape.aiPrompt.safeParse(value);
-            return result.success
-              ? undefined
-              : result.error.issues[0].message;
+            return result.success ? undefined : result.error.issues[0].message;
           }}
           render={(field) => (
             <input
@@ -126,8 +125,9 @@ export function NotificationsForm({
               value={field.state.value ?? ""}
               onChange={(e) => field.handleChange(e.target.value)}
               onBlur={field.handleBlur}
-              placeholder="e.g. Senior React roles in fintech, remote only"
-              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="For example: I am looking for remote frontend development positions 
+              that use React and pay at least $100k per year."
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-50"
             />
           )}
         />

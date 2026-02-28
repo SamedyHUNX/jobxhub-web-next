@@ -42,6 +42,7 @@ export function JobListingItems() {
     locationRequirement: parsed.locationRequirement,
     experienceLevel: parsed.experienceLevel,
     city: parsed.city,
+    status: "published",
     stateAbbreviation: parsed.stateAbbreviation,
     jobIds: [...(parsed.jobIds ?? []), ...(jobId ? [jobId] : [])],
   });

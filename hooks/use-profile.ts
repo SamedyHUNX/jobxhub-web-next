@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/lib/utils";
 import { AxiosError } from "axios";
-import { ProfileResponse } from "@/types";
+import { ProfileResponse, UpdateNotificationSettings } from "@/types";
 
 export function useProfile() {
   const dispatch = useAppDispatch();
@@ -77,6 +77,24 @@ export function useProfile() {
     // },
   });
 
+  // Update my notification settings
+  const updateMyNotificationSettingsMutation = useMutation({
+    mutationFn: (data: UpdateNotificationSettings) =>
+      usersApi.updateNotificationSettings(data),
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        toast.success(successT("updateMyNotificationSettingsSuccess"));
+        return response.data[0];
+      } else {
+        toast.error(errorT("updateMyNotificationSettingsFailed"));
+      }
+    },
+    // onError(error: AxiosError) {
+    //   toast.error(extractErrorMessage(error, errorT));
+    // },
+  });
+
   return {
     // Get data
     user,
@@ -90,5 +108,8 @@ export function useProfile() {
 
     // Get user notifcation settings
     getMyNotificationSettings: getMyNotificationSettingsMutation.mutateAsync,
+
+    updateMyNotificationSettings:
+      updateMyNotificationSettingsMutation.mutateAsync,
   };
 }
