@@ -7,18 +7,8 @@ import { useProfile } from "@/hooks/use-profile";
 import { Suspense, useEffect, useState } from "react";
 
 export default function NotificationsPage() {
-  const { user: currentUser, getMyNotificationSettings } = useProfile();
-  const [notificationSettings, setNotificationSettings] = useState("");
+  const { user: currentUser } = useProfile();
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      if (currentUser?.id) {
-        const notifications = await getMyNotificationSettings();
-        setNotificationSettings(notifications);
-      }
-    };
-    fetchNotifications();
-  }, [currentUser?.id, getMyNotificationSettings]);
   if (!currentUser) return null;
 
   return (
@@ -27,10 +17,22 @@ export default function NotificationsPage() {
       <Card>
         <CardContent>
           <Suspense fallback={<PageLoader />}>
-            <NotificationsForm notificationSettings={notificationSettings} />
+            <SuspendedForm />
           </Suspense>
         </CardContent>
       </Card>
     </div>
   );
+}
+
+function SuspendedForm() {
+  const { getMyNotificationSettingsQuery } = useProfile();
+  const { data: notificationSettings, isLoading } =
+    getMyNotificationSettingsQuery;
+
+  console.log(notificationSettings);
+
+  if (isLoading) return <PageLoader />;
+
+  return <NotificationsForm notificationSettings={notificationSettings} />;
 }

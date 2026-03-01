@@ -178,20 +178,14 @@ export function useOrgs(params?: UseOrgsParams) {
     },
   });
 
-  const getOrgUserNotificationSettingsMutation = useMutation({
-    mutationFn: (orgId: string) =>
-      orgsApi.getOrgUserNotificationSettings(orgId),
-    onSuccess: (response) => {
-      if (response.data && response.data.length > 0) {
-        queryClient.invalidateQueries({ queryKey: ["organizations"] });
-        toast.success(successT("getOrgUserNotificationSettingsSuccess"));
-        return response.data[0];
-      }
-    },
-    onError(error: AxiosError) {
-      toast.error(extractErrorMessage(error, errorT));
-    },
-  });
+  const getOrgUserNotificationSettingsQuery = (orgId: string) =>
+    useQuery({
+      queryKey: ["orgUserNotificationSettings", orgId],
+      queryFn: () =>
+        orgsApi
+          .getOrgUserNotificationSettings(orgId)
+          .then((res) => res.data[0]),
+    });
 
   const updateOrgUserNotificationSettingsMutation = useMutation({
     mutationFn: ({
@@ -233,7 +227,7 @@ export function useOrgs(params?: UseOrgsParams) {
     updateOrganization: updateOrganizationMutation.mutateAsync,
     isUpdating: updateOrganizationMutation.isPending,
 
-    getOrgUserNotificationSettingsMutation,
+    getOrgUserNotificationSettingsQuery,
     updateOrgUserNotificationSettingsMutation,
   };
 }
