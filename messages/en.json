@@ -12,7 +12,8 @@
     "jobs": {
       "overview": "Overview",
       "createJob": "Create Job Listing",
-      "allJobs": "All Jobs"
+      "allJobs": "All Jobs",
+      "members": "All Members"
     }
   },
   "auth": {

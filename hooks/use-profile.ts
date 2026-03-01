@@ -68,13 +68,11 @@ export function useProfile() {
         queryClient.invalidateQueries({ queryKey: ["profile"] });
         toast.success(successT("getMyNotificationSettingsSuccess"));
         return response.data[0];
-      } else {
-        toast.error(errorT("getMyNotificationSettingsFailed"));
       }
     },
-    // onError(error: AxiosError) {
-    //   toast.error(extractErrorMessage(error, errorT));
-    // },
+    onError(error: AxiosError) {
+      toast.error(extractErrorMessage(error, errorT));
+    },
   });
 
   // Update my notification settings
@@ -86,13 +84,11 @@ export function useProfile() {
         queryClient.invalidateQueries({ queryKey: ["profile"] });
         toast.success(successT("updateMyNotificationSettingsSuccess"));
         return response.data[0];
-      } else {
-        toast.error(errorT("updateMyNotificationSettingsFailed"));
       }
     },
-    // onError(error: AxiosError) {
-    //   toast.error(extractErrorMessage(error, errorT));
-    // },
+    onError(error: AxiosError) {
+      toast.error(extractErrorMessage(error, errorT));
+    },
   });
 
   return {

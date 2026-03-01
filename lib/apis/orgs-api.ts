@@ -1,4 +1,4 @@
-import { CreateOrgFormData } from "@/schemas";
+import { CreateOrgFormData, OrgUserNotificationSettings } from "@/schemas";
 import {
   CreateOrgResponse,
   FindAllOrgsResponse,
@@ -90,5 +90,27 @@ export const orgsApi = {
   update: async ({ orgId, data }: { orgId: string; data: FormData }) => {
     const response = await api.put(`/organizations/org/${orgId}`, data);
     return response.data;
+  },
+
+  // Get org notification settings
+  getOrgUserNotificationSettings: async (orgId: string) => {
+    assertApiUrl();
+    const { data } = await api.get(
+      `/organizations/org/${orgId}/notification-settings`,
+    );
+    return data;
+  },
+
+  // Update org notification settings
+  updateOrgUserNotificationSettings: async (
+    orgId: string,
+    updateOrgUserNotificationSettings: OrgUserNotificationSettings,
+  ) => {
+    assertApiUrl();
+    const { data } = await api.put(
+      `/organizations/org/${orgId}/notification-settings`,
+      updateOrgUserNotificationSettings,
+    );
+    return data;
   },
 };

@@ -1,6 +1,6 @@
 import { orgsApi } from "@/lib/apis/orgs-api";
 import { extractErrorMessage } from "@/lib/utils";
-import { CreateOrgFormData } from "@/schemas";
+import { CreateOrgFormData, OrgUserNotificationSettings } from "@/schemas";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import {
   clearSelection,
@@ -178,6 +178,41 @@ export function useOrgs(params?: UseOrgsParams) {
     },
   });
 
+  const getOrgUserNotificationSettingsMutation = useMutation({
+    mutationFn: (orgId: string) =>
+      orgsApi.getOrgUserNotificationSettings(orgId),
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        queryClient.invalidateQueries({ queryKey: ["organizations"] });
+        toast.success(successT("getOrgUserNotificationSettingsSuccess"));
+        return response.data[0];
+      }
+    },
+    onError(error: AxiosError) {
+      toast.error(extractErrorMessage(error, errorT));
+    },
+  });
+
+  const updateOrgUserNotificationSettingsMutation = useMutation({
+    mutationFn: ({
+      orgId,
+      data,
+    }: {
+      orgId: string;
+      data: OrgUserNotificationSettings;
+    }) => orgsApi.updateOrgUserNotificationSettings(orgId, data),
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        queryClient.invalidateQueries({ queryKey: ["organizations"] });
+        toast.success(successT("updateOrgUserNotificationSettingsSuccess"));
+        return response.data[0];
+      }
+    },
+    onError(error: AxiosError) {
+      toast.error(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     // Data
     allOrgs,
@@ -197,5 +232,8 @@ export function useOrgs(params?: UseOrgsParams) {
 
     updateOrganization: updateOrganizationMutation.mutateAsync,
     isUpdating: updateOrganizationMutation.isPending,
+
+    getOrgUserNotificationSettingsMutation,
+    updateOrgUserNotificationSettingsMutation,
   };
 }

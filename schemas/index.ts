@@ -278,3 +278,16 @@ export const userNotificationSettingsSchema = (t: (key: string) => string) => {
 export type UserNotificationSettings = z.infer<
   ReturnType<typeof userNotificationSettingsSchema>
 >;
+
+export const orgUserNotificationSettingsSchema = (
+  t: (key: string) => string,
+) => {
+  return z.object({
+    newApplicationEmailNotifications: z.boolean(),
+    minimumRating: z.number(),
+  });
+};
+
+export type OrgUserNotificationSettings = z.infer<
+  ReturnType<typeof orgUserNotificationSettingsSchema>
+>;

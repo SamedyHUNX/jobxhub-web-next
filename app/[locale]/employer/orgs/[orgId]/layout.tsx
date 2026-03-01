@@ -10,6 +10,7 @@ import {
   FilePlusIcon,
   ClipboardMinusIcon,
   SquareChartGanttIcon,
+  UserIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
@@ -52,6 +53,11 @@ export default function EmployerOrgsDashboardLayout({
                 href: `/employer/orgs/${selectedOrgData?.id}/new`,
                 icon: <FilePlusIcon />,
                 label: employerT("createJob"),
+              },
+              {
+                href: `/employer/orgs/${selectedOrgData?.id}/members`,
+                icon: <UserIcon />,
+                label: employerT("members"),
               },
             ]}
           />
