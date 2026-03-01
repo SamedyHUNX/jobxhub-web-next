@@ -34,8 +34,8 @@ export default function SignUpPage() {
       countryCode: "+61",
       phoneNumber: "",
       dateOfBirth: "",
-      image: null as File | null,
       locale,
+      image: null as File | null,
     },
     validationSchema: signUpSchema,
     validateOnChange: (values) => {
@@ -50,7 +50,6 @@ export default function SignUpPage() {
       phoneNumber: `${values.countryCode}${values.phoneNumber}`,
     }),
     onSubmit: (signUpFormData: SignUpFormData) => {
-      console.log("data being sent", signUpFormData);
       signUpMutation.mutate(signUpFormData);
     },
   });
@@ -256,7 +255,7 @@ export default function SignUpPage() {
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {authT("alreadyHaveAccount")}{" "}
             <Link
-              href={`/${locale}/sign-in`}
+              href={"/sign-in"}
               className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
             >
               {authT("signIn")}
