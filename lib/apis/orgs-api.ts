@@ -2,8 +2,7 @@ import { CreateOrgFormData, OrgUserNotificationSettings } from "@/schemas";
 import {
   CreateOrgResponse,
   FindAllOrgsResponse,
-  UpdateOrganizationDto,
-} from "@/types";
+} from "@/types/organization.types";
 import axios from "axios";
 
 import Cookies from "js-cookie";

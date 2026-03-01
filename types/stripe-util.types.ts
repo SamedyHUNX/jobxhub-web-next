@@ -1,9 +1,9 @@
-import type {
-  Subscription,
-  SubscriptionWithDetails,
+import {
   PricingPlan,
+  Subscription,
   SubscriptionStatus,
-} from "./stripe.types";
+  SubscriptionWithDetails,
+} from "./subscription.types";
 
 // Helper type for subscription filters
 export type SubscriptionFilter = {

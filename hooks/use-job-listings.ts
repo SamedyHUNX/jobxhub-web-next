@@ -14,9 +14,9 @@ import { extractErrorMessage } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
-import type { JobListing, JobListingFormResponse } from "@/types";
 import { setSelectedJobListing } from "@/stores/slices/job-listings.slice";
 import type { Application } from "@/types/application.types";
+import { JobListing, JobListingFormResponse } from "@/types/job-listing.types";
 
 interface UseJobListingsParams {
   search?: string;

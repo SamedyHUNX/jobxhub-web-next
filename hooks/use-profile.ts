@@ -8,7 +8,10 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/lib/utils";
 import { AxiosError } from "axios";
-import { ProfileResponse, UpdateNotificationSettings } from "@/types";
+import {
+  ProfileResponse,
+  UpdateNotificationSettings,
+} from "@/types/user.types";
 
 export function useProfile() {
   const dispatch = useAppDispatch();

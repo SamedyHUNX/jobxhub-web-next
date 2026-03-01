@@ -24,6 +24,7 @@
     "enterYourEmail": "Enter Your Email",
     "yourNewPassword": "Enter Your New Password",
     "password": "Password",
+    "signUpPassword": "Password (Must contain one character and one special character)",
     "confirmPassword": "Confirm Password",
     "confirmPasswordPlaceholder": "Enter your confirm password",
     "passwordPlaceholder": "Enter your password",
@@ -249,7 +250,8 @@
     "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long",
     "fieldRequired": "This field is required",
     "biggerThanOne": "Must be bigger than 1",
-    "smallerThanTen": "Must be smaller than 10"
+    "smallerThanTen": "Must be smaller than 10",
+    "invalidFormat": "Invalid format"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",

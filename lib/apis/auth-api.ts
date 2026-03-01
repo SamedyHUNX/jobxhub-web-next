@@ -1,13 +1,12 @@
 import axios from "axios";
-import {
+import type {
   SignInFormData,
   SignUpFormData,
   AuthResponse,
-  User,
-  ProfileResponse,
   ForgotPasswordFormData,
   ResetPasswordVariables,
-} from "@/types";
+} from "@/types/auth.types";
+import { ProfileResponse, User } from "@/types/user.types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 

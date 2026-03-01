@@ -6,7 +6,6 @@ import {
   clearSelection,
   setSelectedOrgId,
 } from "@/stores/slices/organizations.slice";
-import type { CreateOrgResponse, Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
@@ -14,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { CreateOrgResponse, Organization } from "@/types/organization.types";
 
 interface UseOrgsParams {
   search?: string;

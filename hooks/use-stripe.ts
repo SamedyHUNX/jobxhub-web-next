@@ -4,14 +4,14 @@ import { toast } from "sonner";
 import type { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { extractErrorMessage } from "@/lib/utils";
-import type {
-  CreateSubscriptionDto,
-  UpdateSubscriptionDto,
-  CreateCheckoutSessionDto,
-  Subscription,
-  PaymentHistory,
-} from "@/types/stripe.types";
 import { stripeApi } from "@/lib/apis/stripe-api";
+import type {
+  CreateCheckoutSessionDto,
+  CreateSubscriptionDto,
+  PaymentHistory,
+  Subscription,
+  UpdateSubscriptionDto,
+} from "@/types/subscription.types";
 
 export function useStripe() {
   const successT = useTranslations("apiSuccesses");

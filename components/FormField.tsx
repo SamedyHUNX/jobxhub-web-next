@@ -40,7 +40,7 @@ export function FormField({
     >
       {(field: any) => (
         <div className={`space-y-2 ${className}`}>
-          <Label htmlFor={name} className="tracking-tighter">
+          <Label htmlFor={name} className="tracking-tighter my-3">
             {label}
           </Label>
           {description && (

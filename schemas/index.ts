@@ -16,18 +16,25 @@ export const createSignInSchema = (t: (key: string) => string) => {
 export const createSignUpSchema = (t: (key: string) => string) => {
   return z
     .object({
-      username: z.string().min(1, t("usernameRequired")),
+      username: z.string().min(3, t("usernameMinLength")),
       firstName: z.string().min(1, t("firstNameRequired")),
       lastName: z.string().min(1, t("lastNameRequired")),
       email: z.string().email(t("invalidEmail")),
       phoneNumber: z.string().min(1, t("phoneNumberRequired")),
       dateOfBirth: z.string().min(1, t("dateOfBirthRequired")),
       image: z.any().refine((file) => file instanceof File, t("imageRequired")),
-      password: z.string().min(8, t("passwordMinLength")),
+      password: z
+        .string()
+        .min(8, t("passwordMinLength"))
+        .regex(
+          /^(?=.*[A-Za-z])(?=.*[^A-Za-z0-9]).*$/,
+          t("passwordInvalidFormat"),
+        ),
       confirmPassword: z.string().min(1, t("confirmPasswordRequired")),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("passwordsDoNotMatch"),
+      path: ["confirmPassword"],
     });
 };
 
