@@ -249,7 +249,7 @@
     "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long",
     "fieldRequired": "This field is required",
     "biggerThanOne": "Must be bigger than 1",
-    "smallerThanFive": "Must be smaller than 5"
+    "smallerThanTen": "Must be smaller than 10"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",
@@ -272,7 +272,8 @@
     "aiSearchSuccess": "We have found jobs matching your query",
     "updateMyNotificationSettingsSuccess": "Updated preferences successfully",
     "getMyNotificationSettingsSuccess": "Fetched your preferences successfully",
-    "getOrgUserNotificationSettingsSuccess": "Fetched org perferences successfully"
+    "getOrgUserNotificationSettingsSuccess": "Fetched org perferences successfully",
+    "updateOrgUserNotificationSettingsSuccess": "Updated your preferences successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

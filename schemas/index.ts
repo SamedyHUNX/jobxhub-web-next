@@ -287,7 +287,7 @@ export const orgUserNotificationSettingsSchema = (
     minimumRating: z
       .number()
       .min(1, t("biggerThanOne"))
-      .max(5, t("smallerThanFive"))
+      .max(10, t("smallerThanTen"))
       .nullable(),
   });
 };
