@@ -13,8 +13,8 @@ import {
   jobListingTypes,
   wageIntervals,
   createOrUpdateJobListingSchema,
+  locationRequirements,
 } from "@/schemas";
-import { locationRequirements } from "@/types";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import TextField from "../form/TextField";
@@ -24,8 +24,8 @@ import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import SubmitButton from "../SubmitButton";
 import { useCustomForm } from "@/hooks/use-custom-form";
-import type { JobListing } from "@/types";
 import { ReactNode } from "react";
+import type { JobListing } from "@/types/job-listing.types";
 
 export interface JobListingFormProps {
   // Existing data for edit mode

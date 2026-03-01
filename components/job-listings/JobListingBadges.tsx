@@ -1,4 +1,3 @@
-import type { JobListing } from "@/types";
 import { ComponentProps } from "react";
 import { Badge } from "../ui/badge";
 import {
@@ -16,6 +15,7 @@ import {
   MapPinIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { JobListing } from "@/types/job-listing.types";
 
 export default function JobListingBadges({
   jobListing: {

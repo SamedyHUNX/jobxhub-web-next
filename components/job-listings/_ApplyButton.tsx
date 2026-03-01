@@ -18,7 +18,7 @@ import {
 import { useProfile } from "@/hooks/use-profile";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { NewJobListingApplicationForm } from "@/components/job-listings/NewJobListingApplicationForm";
-import type { Resume } from "@/types";
+import type { Resume } from "@/types/user.types";
 
 export default function ApplyButton({
   jobListingId,
