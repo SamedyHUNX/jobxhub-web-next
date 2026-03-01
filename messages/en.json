@@ -269,7 +269,8 @@
     "deleteResumeSuccess": "Resume deleted successfully",
     "aiSearchSuccess": "We have found jobs matching your query",
     "updateMyNotificationSettingsSuccess": "Updated preferences successfully",
-    "getMyNotificationSettingsSuccess": "Fetched your preferences successfully"
+    "getMyNotificationSettingsSuccess": "Fetched your preferences successfully",
+    "getOrgUserNotificationSettingsSuccess": "Fetched org perferences successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

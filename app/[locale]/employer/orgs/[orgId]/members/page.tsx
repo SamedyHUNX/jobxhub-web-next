@@ -1,13 +1,13 @@
 "use client";
 
+import { NotificationsForm } from "@/components/organizations/NotificationsForm";
 import PageLoader from "@/components/PageLoader";
 import { Card, CardContent } from "@/components/ui/card";
-import { NotificationsForm } from "@/components/users/NotificationsForm";
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";
 import { Suspense, useEffect, useState } from "react";
 
-export default function OrgByIdMembersPage() {
+export default function OrgMembersPage() {
   const { user: currentUser } = useProfile();
   const { selectedOrgId } = useOrgs();
 
@@ -29,17 +29,21 @@ export default function OrgByIdMembersPage() {
 
 function SuspendedForm({ orgId }: { orgId: string }) {
   const { getOrgUserNotificationSettingsMutation } = useOrgs();
-  const [notificationSettings, setNotificationSettings] = useState(null);
+  const [notificationSettings, setNotificationSettings] = useState(undefined);
 
   useEffect(() => {
-    const notifications = getOrgUserNotificationSettingsMutation.mutate(orgId);
-    setNotificationSettings(notificationSettings);
-  }, []);
+    const fetchSettings = async () => {
+      const notifications =
+        await getOrgUserNotificationSettingsMutation.mutateAsync(orgId);
+      setNotificationSettings(notifications);
+    };
+    fetchSettings();
+  }, [orgId]);
 
   return (
     <NotificationsForm
-      notificationSettings={notificationSettings}
       orgId={orgId}
+      notificationSettings={notificationSettings}
     />
   );
 }
