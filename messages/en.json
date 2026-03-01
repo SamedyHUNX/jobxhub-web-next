@@ -247,7 +247,9 @@
     "passwordsDoNotMatch": "Passwords must match",
     "orgNameTooLong": "Organization name cannot be more than 100 characters long",
     "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long",
-    "fieldRequired": "This field is required"
+    "fieldRequired": "This field is required",
+    "biggerThanOne": "Must be bigger than 1",
+    "smallerThanFive": "Must be smaller than 5"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",

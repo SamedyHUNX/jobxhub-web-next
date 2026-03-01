@@ -284,7 +284,11 @@ export const orgUserNotificationSettingsSchema = (
 ) => {
   return z.object({
     newApplicationEmailNotifications: z.boolean(),
-    minimumRating: z.number(),
+    minimumRating: z
+      .number()
+      .min(1, t("biggerThanOne"))
+      .max(5, t("smallerThanFive"))
+      .nullable(),
   });
 };
 
