@@ -1,7 +1,7 @@
 "use client";
 
 import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
-import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
+import { SidebarNavMenuGroup } from "@/components/sidebar/client/SidebarNavMenuGroup";
 import {
   UserIcon,
   ShieldCheckIcon,

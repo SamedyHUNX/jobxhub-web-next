@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { FormField } from "../FormField";
 import { Switch } from "../ui/switch";
 import { useState } from "react";
-import SubmitButton from "../SubmitButton";
+import { SubmitButton } from "../SubmitButton";
 import { useOrgs } from "@/hooks/use-orgs";
 
 export function NotificationsForm({

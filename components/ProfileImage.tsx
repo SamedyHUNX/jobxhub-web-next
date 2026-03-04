@@ -11,7 +11,7 @@ interface ProfileImageProps {
   editable?: boolean;
 }
 
-export default function ProfileImage({
+export function ProfileImage({
   value,
   onChange,
   fallbackInitials = "",

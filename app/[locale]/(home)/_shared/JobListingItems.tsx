@@ -14,7 +14,7 @@ import { Avatar } from "@radix-ui/react-avatar";
 import Link from "next/link";
 import { Suspense } from "react";
 import { differenceInDays } from "date-fns";
-import JobListingBadges from "@/components/job-listings/JobListingBadges";
+import { JobListingBadges } from "@/components/job-listings/JobListingBadges";
 import { searchParamsSchema } from "@/schemas";
 import { useParams, useSearchParams } from "next/navigation";
 import { Star } from "lucide-react";

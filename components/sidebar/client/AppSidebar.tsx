@@ -11,7 +11,7 @@ import {
   SidebarTrigger,
 } from "../../ui/sidebar";
 import { CSSProperties, ReactNode } from "react";
-import BrandLogo from "../../BrandLogo";
+import { BrandLogo } from "../../BrandLogo";
 import { SignedIn } from "../../AuthStatus";
 import { NavBar } from "../../Navbar";
 import { useIsMobile } from "@/hooks/use-mobile";

@@ -2,7 +2,7 @@ import { useCustomForm } from "@/hooks/use-custom-form";
 import { newJobListingApplicationSchema } from "@/schemas";
 import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
-import SubmitButton from "../SubmitButton";
+import { SubmitButton } from "../SubmitButton";
 import { useJobListings } from "@/hooks/use-job-listings";
 
 export function NewJobListingApplicationForm({

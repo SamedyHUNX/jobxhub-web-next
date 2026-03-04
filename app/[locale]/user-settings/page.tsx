@@ -5,7 +5,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { PageLoader } from "@/components/PageLoader";
 import { useTranslations } from "next-intl";
 import { createUpdateProfileSchema } from "@/schemas";
-import ProfileImage from "@/components/ProfileImage";
+import { ProfileImage } from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { SubmitButton } from "@/components/SubmitButton";

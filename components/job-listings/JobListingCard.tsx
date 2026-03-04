@@ -12,7 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import MarkdownPartial from "../markdown/MarkdownPartial";
-import MarkdownRenderer from "../markdown/MarkdownRenderer";
+import { MarkdownRenderer } from "../markdown/MarkdownRenderer";
 import DateComponent from "../DateComponent";
 import type { JobListing } from "@/types/job-listing.types";
 

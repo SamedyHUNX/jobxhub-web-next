@@ -2,13 +2,13 @@
 
 import { FormField } from "@/components/FormField";
 import FormFooter from "@/components/FormFooter";
-import ImageUpload from "@/components/ProfileImage";
+import { ProfileImage } from "@/components/ProfileImage";
 import { useOrgs } from "@/hooks/use-orgs";
 import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { generateSlug } from "@/lib/utils";
-import SubmitButton from "@/components/SubmitButton";
+import { SubmitButton } from "@/components/SubmitButton";
 import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function CreateNewOrgPage() {
@@ -77,7 +77,7 @@ export default function CreateNewOrgPage() {
               }}
             >
               {(field: any) => (
-                <ImageUpload
+                <ProfileImage
                   value={field.state.value}
                   onChange={(file) => field.handleChange(file)}
                   label={newOrgT("uploadPhoto")}

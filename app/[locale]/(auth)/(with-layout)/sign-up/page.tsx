@@ -2,7 +2,7 @@
 
 import { AuthLeftHeader } from "@/components/AuthLeftHeader";
 import { FormField } from "@/components/FormField";
-import ProfileImage from "@/components/ProfileImage";
+import { ProfileImage } from "@/components/ProfileImage";
 import { SubmitButton } from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
