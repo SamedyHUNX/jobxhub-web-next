@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { jobListingsApi } from "@/lib/apis/job-listings-api";
 import {
+  ApplicationStage,
   JobListingAiSearch,
   JobListingFormData,
   NewJobListingApplication,
@@ -252,7 +253,7 @@ export function useJobListings(params?: UseJobListingsParams) {
       );
       return response.data[0];
     },
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       toast.success(successT("createJobListingApplicationSuccess"));
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
     },
@@ -323,6 +324,23 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Update job listing application stage
+  const updateJobListingApplicationStageMutation = useMutation({
+    mutationFn: async ({
+      jobId,
+      stageValue,
+    }: {
+      jobId: string;
+      stageValue: ApplicationStage;
+    }) => {
+      const result = await jobListingsApi.updateJobListingApplicationStage({
+        jobId,
+        stageValue,
+      });
+      return result.data[0];
+    },
+  });
+
   return {
     jobListings,
     count,
@@ -362,5 +380,8 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     getAiJobListingSearchResults:
       getAiJobListingSearchResultsMutation.mutateAsync,
+
+    updateJobListingApplicationStage:
+      updateJobListingApplicationStageMutation.mutateAsync,
   };
 }

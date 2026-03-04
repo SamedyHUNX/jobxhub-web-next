@@ -1,16 +1,26 @@
 "use client";
 
-import { Application } from "@/types/application.types";
-import { Resume, User } from "@/types/user.types";
+import type { Application } from "@/types/application.types";
+import type { Resume, User } from "@/types/user.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { ReactNode, useOptimistic, useTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DataTable } from "../data-table/DataTable";
 import { DataTableSortableColumnHeader } from "../data-table/DataTableSortableColumnHeader";
 import { sortApplicationsByStage } from "@/lib/sortings";
-import { ApplicationStage } from "@/schemas";
+import { ApplicationStage, applicationStages } from "@/schemas";
 import { StageIcon } from "./_StageIcon";
 import { formatJobListingApplicationStage } from "@/lib/formatter";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { ChevronDownIcon } from "lucide-react";
+import { useJobListings } from "@/hooks/use-job-listings";
 
 export type ApplicationCol = Pick<
   Application,
@@ -112,12 +122,43 @@ function StageCell({
 }) {
   const [optimisticStage, setOptimisticStage] = useOptimistic(stage);
   const [isPending, startTransition] = useTransition();
+  const { updateJobListingApplicationStage } = useJobListings();
 
   if (isOwnerAndApplicantManager) {
     return <StageDetails stage={optimisticStage} />;
   }
 
-  return null;
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant={"ghost"}
+          className={cn("-ml-3", isPending && "opacity-50")}
+        >
+          <StageDetails stage={optimisticStage} />
+          <ChevronDownIcon />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {applicationStages
+          .toSorted(sortApplicationsByStage)
+          .map((stageValue) => (
+            <DropdownMenuItem
+              key={stageValue}
+              onClick={() => {
+                startTransition(async () => {
+                  setOptimisticStage(stageValue);
+                  const res = await updateJobListingApplicationStage({
+                    jobId,
+                    stageValue,
+                  });
+                });
+              }}
+            ></DropdownMenuItem>
+          ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 function StageDetails({ stage }: { stage: ApplicationStage }) {

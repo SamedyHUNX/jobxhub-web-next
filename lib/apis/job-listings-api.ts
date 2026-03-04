@@ -1,4 +1,5 @@
 import {
+  ApplicationStage,
   JobListingAiSearch,
   JobListingFormData,
   NewJobListingApplication,
@@ -147,6 +148,22 @@ export const jobListingsApi = {
     const { data: responseData } = await api.post(
       `/job-listings/ai-search`,
       data,
+    );
+    return responseData;
+  },
+
+  // Update job listing application stage
+  updateJobListingApplicationStage: async ({
+    jobId,
+    stageValue,
+  }: {
+    jobId: string;
+    stageValue: ApplicationStage;
+  }) => {
+    assertApiUrl();
+    const { data: responseData } = await api.put(
+      `/job-listings/application/${jobId}/stage`,
+      stageValue,
     );
     return responseData;
   },
