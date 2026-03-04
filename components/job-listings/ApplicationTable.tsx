@@ -13,12 +13,9 @@ export type ApplicationCol = Pick<
 > & {
   coverLetterMarkdown: ReactNode | null;
   user: Pick<User, "id" | "username" | "imageUrl"> & {
-    resume: Pick<
-      Resume,
-      "resumeFileUrl" & {
-        markdownSummary: ReactNode | null;
-      }
-    >;
+    resume: Pick<Resume, "resumeFileUrl"> & {
+      markdownSummary: ReactNode | null;
+    };
   };
 };
 
@@ -43,15 +40,14 @@ function getColumns({
           <div className="flex items-center gap-2">
             <Avatar className="rounded-full size-6">
               <AvatarImage
-                src={row.original.user.imageUrl ?? undefined}
-                alt={row.original.user.username}
-              >
-                <AvatarFallback className="uppercase bg-primary text-primary-foreground text-xs">
-                  {nameInitials}
-                </AvatarFallback>
-              </AvatarImage>
+                src={user.imageUrl ?? undefined}
+                alt={user.username}
+              />
+              <AvatarFallback className="uppercase bg-primary text-primary-foreground text-xs">
+                {nameInitials}
+              </AvatarFallback>
             </Avatar>
-            <span>{row.original.user.username}</span>
+            <span>{user.username}</span>
           </div>
         );
       },
@@ -73,7 +69,7 @@ export function ApplicationTable({
   return (
     <DataTable
       data={applications}
-      columns={getColumns({ isOwnerAndApplicantManager: true })}
+      columns={getColumns({ isOwnerAndApplicantManager })}
     />
   );
 }

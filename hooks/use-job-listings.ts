@@ -227,7 +227,7 @@ export function useJobListings(params?: UseJobListingsParams) {
   >({
     mutationFn: async ({ jobId }: { jobId: string }) => {
       const result = await jobListingsApi.getAllJobListingApplications(jobId);
-      return result.data[0];
+      return result.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
