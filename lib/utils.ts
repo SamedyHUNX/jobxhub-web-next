@@ -1,4 +1,5 @@
 import { JobListing } from "@/types/job-listing.types";
+import { Organization } from "@/types/organization.types";
 import { AxiosError } from "axios";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -68,8 +69,17 @@ export function capitalizeString(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function getJobNameInitial(jobListing: JobListing) {
-  return jobListing?.organization?.orgName
+export function getNameInitial({
+  jobListing,
+  organization,
+}: {
+  jobListing?: JobListing;
+  organization?: Organization;
+}) {
+  const name = jobListing?.organization?.orgName ?? organization?.orgName;
+  if (!name) return "";
+
+  return name
     .split(" ")
     .splice(0, 4)
     .map((word) => word[0])

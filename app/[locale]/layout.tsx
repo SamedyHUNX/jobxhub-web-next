@@ -1,5 +1,4 @@
 import { routing } from "@/i18n/routing";
-import { LocaleType } from "@/types";
 import { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -12,6 +11,7 @@ import { ReduxProvider } from "@/providers/ReduxProvider";
 import ReactQueryProvider from "@/providers/QueryClientProvider";
 import AuthGuard from "@/components/guards/AuthGuard";
 import "./globals.css";
+import { LocaleType } from "@/types/common.types";
 
 const inter = Inter({
   subsets: ["latin"],

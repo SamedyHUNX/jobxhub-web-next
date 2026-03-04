@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { CreateOrgResponse, Organization } from "@/types/organization.types";
+import { create } from "domain";
 
 interface UseOrgsParams {
   search?: string;
@@ -217,15 +218,13 @@ export function useOrgs(params?: UseOrgsParams) {
 
     // Actions
     selectOrganization,
-    createOrganization: createOrganizationMutation.mutate,
     navigateToCreateOrg,
     clearSelectedOrganization,
 
     // Mutation states
-    isCreating: createOrganizationMutation.isPending,
+    createOrganizationMutation,
 
-    updateOrganization: updateOrganizationMutation.mutateAsync,
-    isUpdating: updateOrganizationMutation.isPending,
+    updateOrganizationMutation,
 
     getOrgUserNotificationSettingsQuery,
     updateOrgUserNotificationSettingsMutation,

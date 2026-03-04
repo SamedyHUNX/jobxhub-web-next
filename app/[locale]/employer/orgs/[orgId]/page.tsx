@@ -16,7 +16,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function EmployerOrgIdDashboardPage() {
-  const { selectedOrgData, updateOrganization } = useOrgs();
+  const { selectedOrgData, updateOrganizationMutation } = useOrgs();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { orgId: selectedOrgId } = useParams<{ orgId: string }>();
 
@@ -47,7 +47,10 @@ export default function EmployerOrgIdDashboardPage() {
           formData.append("image", values.imageFile);
         }
 
-        await updateOrganization({ orgId: selectedOrgId!, data: formData });
+        await updateOrganizationMutation.mutateAsync({
+          orgId: selectedOrgId!,
+          data: formData,
+        });
         setIsModalOpen(false);
       } catch (error) {
         // Error handling is done in the hook
