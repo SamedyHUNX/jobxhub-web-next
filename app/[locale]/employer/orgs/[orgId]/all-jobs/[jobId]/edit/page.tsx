@@ -4,30 +4,22 @@ import { useEffect, useState } from "react";
 import JobListingForm from "@/components/job-listings/JobListingForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
-import type { JobListing } from "@/types";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { translations } from "@/lib/translations";
 import { useOrgs } from "@/hooks/use-orgs";
+import type { JobListing } from "@/types/job-listing.types";
 
 export default function EditJobIdPage() {
-  const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
   const { selectedOrgId } = useOrgs();
-  const { fetchJobListingByJobId, saveJobListing, jobListingLoading } =
-    useJobListings();
+  const { saveJobListing, jobListingLoading, jobListings } = useJobListings();
   const jobId = useParams().jobId as string;
   const pageT = useTranslations("jobListings");
   const editFormT = useTranslations("jobListings.form");
 
-  const formTranslations = translations(editFormT);
+  const currentJob = jobListings.find((job: JobListing) => job.id === jobId);
 
-  useEffect(() => {
-    if (jobId) {
-      fetchJobListingByJobId(jobId).then((job) => {
-        setCurrentJob(job);
-      });
-    }
-  }, [jobId, fetchJobListingByJobId]);
+  const formTranslations = translations(editFormT);
 
   if (!currentJob) {
     return null;

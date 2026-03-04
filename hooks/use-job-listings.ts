@@ -330,8 +330,7 @@ export function useJobListings(params?: UseJobListingsParams) {
     deleteJobListingLoading: deleteJobListingMutation.isPending,
 
     // Toggle publish/unpublish
-    toggleJobListingStatus: toggleJobListingStatusMutation.mutate,
-    toggleJobListingStatusLoading: toggleJobListingStatusMutation.isPending,
+    toggleJobListingStatusMutation,
 
     // Toggle feature/unfeature
     toggleJobListingFeatured: toggleJobListingFeaturedMutation.mutate,

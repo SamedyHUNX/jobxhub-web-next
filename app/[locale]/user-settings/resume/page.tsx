@@ -154,8 +154,12 @@ export default function UserResumePage() {
         </CardContent>
       </Card>
 
-      {/* AI Summary */}
-      {resume?.aiSummary && <AiSummaryCard summary={resume.aiSummary} />}
+      {resume &&
+        (resume.aiSummary ? (
+          <AiSummaryCard summary={resume.aiSummary} />
+        ) : (
+          <AiSummaryGenerating />
+        ))}
     </div>
   );
 }
@@ -186,7 +190,7 @@ function ResumeDetails({
           <a
             href={resume.resumeFileUrl}
             target="_blank"
-            rel="noopener noreferrer" // open the page in a new tab
+            rel="noopener noreferrer"
           >
             View
           </a>
@@ -202,6 +206,31 @@ function ResumeDetails({
         </Button>
       </div>
     </div>
+  );
+}
+
+function AiSummaryGenerating() {
+  return (
+    <Card className="border-dashed">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-muted-foreground">
+          <Sparkles className="h-5 w-5 animate-pulse" />
+          AI Summary Generating...
+        </CardTitle>
+        <CardDescription>
+          We're reading your resume and crafting a summary for employers. This
+          usually takes less than a minute — check back shortly!
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {/* Skeleton lines to hint at incoming content */}
+        <div className="space-y-2 animate-pulse">
+          <div className="h-3 bg-muted rounded w-full" />
+          <div className="h-3 bg-muted rounded w-5/6" />
+          <div className="h-3 bg-muted rounded w-4/6" />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

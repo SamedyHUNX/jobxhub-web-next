@@ -8,7 +8,7 @@ import IsBreakpoint from "@/components/IsBreakpoint";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { ClientSheet } from "./_ClientSheet";
 import { useJobListings } from "@/hooks/use-job-listings";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -26,12 +26,6 @@ export default function JobListingById() {
   const jobListingById = jobListings.find(
     (job: JobListing) => job.id === params.jobId,
   );
-
-  // useEffect(() => {
-  //   if (typeof params.jobId === "string") {
-  //     fetchJobListingByJobId(params.jobId);
-  //   }
-  // }, [params.jobId]);
 
   return (
     <PanelGroup direction="horizontal" autoSaveId="jobxhub-panel">
@@ -79,12 +73,10 @@ export default function JobListingById() {
 }
 
 function JobListingDetails({ jobListing }: { jobListing: JobListing }) {
-  console.log(jobListing);
-
   if (!jobListing) {
     return null;
   }
-  
+
   const nameInitials = getJobNameInitial(jobListing);
 
   return (
