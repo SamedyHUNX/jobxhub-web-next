@@ -2,7 +2,7 @@
 
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { JobListingItems } from "../../_shared/JobListingItems";
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { Suspense } from "react";
 import IsBreakpoint from "@/components/IsBreakpoint";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -13,11 +13,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { XIcon } from "lucide-react";
-import JobListingBadges from "@/components/job-listings/JobListingBadges";
-import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
+import { JobListingBadges } from "@/components/job-listings/JobListingBadges";
+import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import ApplyButton from "@/components/job-listings/_ApplyButton";
 import type { JobListing } from "@/types/job-listing.types";
-import { getJobNameInitial } from "@/lib/utils";
+import { getNameInitial } from "@/lib/utils";
 
 export default function JobListingById() {
   const params = useParams();
@@ -77,7 +77,7 @@ function JobListingDetails({ jobListing }: { jobListing: JobListing }) {
     return null;
   }
 
-  const nameInitials = getJobNameInitial(jobListing);
+  const nameInitials = getNameInitial(jobListing);
 
   return (
     <div className="space-y-6 @container">

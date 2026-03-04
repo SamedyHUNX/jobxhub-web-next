@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import JobListingForm from "@/components/job-listings/JobListingForm";
+import { JobListingForm } from "@/components/job-listings/JobListingForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useParams } from "next/navigation";
@@ -12,7 +11,7 @@ import type { JobListing } from "@/types/job-listing.types";
 
 export default function EditJobIdPage() {
   const { selectedOrgId } = useOrgs();
-  const { saveJobListing, jobListingLoading, jobListings } = useJobListings();
+  const { saveJobListing, jobListingMutation, jobListings } = useJobListings();
   const jobId = useParams().jobId as string;
   const pageT = useTranslations("jobListings");
   const editFormT = useTranslations("jobListings.form");
@@ -40,7 +39,7 @@ export default function EditJobIdPage() {
             onSubmit={(data) => saveJobListing(currentJob.id, data)}
             translations={formTranslations}
             orgId={selectedOrgId}
-            isLoading={jobListingLoading}
+            isLoading={jobListingMutation.isPending}
             mode="edit"
           />
         </CardContent>

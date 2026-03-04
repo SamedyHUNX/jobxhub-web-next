@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import { createSignInSchema } from "@/schemas";
 import { FormField } from "@/components/FormField";
 import Link from "next/link";
-import AuthLeftHeader from "@/components/AuthLeftHeader";
-import SubmitButton from "@/components/SubmitButton";
+import { AuthLeftHeader } from "@/components/AuthLeftHeader";
+import { SubmitButton } from "@/components/SubmitButton";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import type { SignInFormData } from "@/types/auth.types";
 

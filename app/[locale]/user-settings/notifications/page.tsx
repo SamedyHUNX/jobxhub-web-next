@@ -1,10 +1,10 @@
 "use client";
 
 import { NotificationsForm } from "@/components/users/NotificationsForm";
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { Card, CardContent } from "@/components/ui/card";
 import { useProfile } from "@/hooks/use-profile";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 
 export default function NotificationsPage() {
   const { user: currentUser } = useProfile();

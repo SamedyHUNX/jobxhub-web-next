@@ -1,6 +1,6 @@
 "use client";
 
-import SubmitButton from "@/components/SubmitButton";
+import { SubmitButton } from "@/components/SubmitButton";
 import PricingCard from "@/components/subscription/PricingCard";
 import { stripeSubscriptionPlansConst } from "@/constants/subscription-plans";
 import { useProfile } from "@/hooks/use-profile";

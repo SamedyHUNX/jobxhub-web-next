@@ -15,16 +15,12 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { User } from "@/types";
+import type { User } from "@/types/user.types";
 import { ChevronsUpDown, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function SidebarUserButton({
-  currentUser,
-}: {
-  currentUser: User;
-}) {
+export function SidebarUserButton({ currentUser }: { currentUser: User }) {
   return (
     <SidebarUserButtonClient
       user={currentUser}

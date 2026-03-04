@@ -22,7 +22,7 @@ import SelectField from "../form/SelectField";
 import { states } from "@/constants/australia-state";
 import { FormField } from "../FormField";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
-import SubmitButton from "../SubmitButton";
+import { SubmitButton } from "../SubmitButton";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { ReactNode } from "react";
 import type { JobListing } from "@/types/job-listing.types";
@@ -77,7 +77,7 @@ export interface JobListingFormProps {
   orgId?: string;
 }
 
-export default function JobListingForm({
+export function JobListingForm({
   jobListing,
   onSubmit,
   defaultValues,

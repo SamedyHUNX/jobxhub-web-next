@@ -1,6 +1,6 @@
 "use client";
 
-import JobListingForm from "@/components/job-listings/JobListingForm";
+import { JobListingForm } from "@/components/job-listings/JobListingForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useOrgs } from "@/hooks/use-orgs";

@@ -1,6 +1,6 @@
 "use client";
 
-import BrandLogo from "@/components/BrandLogo";
+import { BrandLogo } from "@/components/BrandLogo";
 import { ReactNode } from "react";
 import Testimonial from "@/components/Testimonial";
 import DashboardPreview from "./_DashboardPreview";

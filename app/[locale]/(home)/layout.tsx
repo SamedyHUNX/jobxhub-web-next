@@ -1,8 +1,8 @@
 "use client";
 
 import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
-import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
-import SidebarUserButton from "@/components/sidebar/client/SidebarUserButton";
+import { SidebarNavMenuGroup } from "@/components/sidebar/client/SidebarNavMenuGroup";
+import { SidebarUserButton } from "@/components/sidebar/client/SidebarUserButton";
 import { useProfile } from "@/hooks/use-profile";
 import {
   BrainCircuitIcon,

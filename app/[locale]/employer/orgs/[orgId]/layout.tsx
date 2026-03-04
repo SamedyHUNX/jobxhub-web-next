@@ -1,8 +1,8 @@
 "use client";
 
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
-import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
+import { SidebarNavMenuGroup } from "@/components/sidebar/client/SidebarNavMenuGroup";
 import SidebarOrganizationButton from "@/components/sidebar/organization/SidebarOrganizationButton";
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";

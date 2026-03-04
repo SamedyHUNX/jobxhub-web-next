@@ -1,9 +1,9 @@
 "use client";
 
-import AuthLeftHeader from "@/components/AuthLeftHeader";
-import BrandLogo from "@/components/BrandLogo";
+import { AuthLeftHeader } from "@/components/AuthLeftHeader";
+import { BrandLogo } from "@/components/BrandLogo";
 import { FormField } from "@/components/FormField";
-import SubmitButton from "@/components/SubmitButton";
+import { SubmitButton } from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { createResetPasswordSchema } from "@/schemas";

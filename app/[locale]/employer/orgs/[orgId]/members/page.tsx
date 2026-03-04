@@ -1,7 +1,7 @@
 "use client";
 
 import { NotificationsForm } from "@/components/organizations/NotificationsForm";
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { Card, CardContent } from "@/components/ui/card";
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";

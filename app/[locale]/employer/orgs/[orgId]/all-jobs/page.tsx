@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { Search, Filter, Briefcase } from "lucide-react";
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import JobListingCard from "@/components/job-listings/JobListingCard";
 import {

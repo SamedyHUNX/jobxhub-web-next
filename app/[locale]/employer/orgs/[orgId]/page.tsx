@@ -2,10 +2,10 @@
 
 import { FormField } from "@/components/FormField";
 import { Modal } from "@/components/Modal";
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import ProfileImage from "@/components/ProfileImage";
-import ProfileItem from "@/components/ProfileItem";
-import SubmitButton from "@/components/SubmitButton";
+import { ProfileItem } from "@/components/ProfileItem";
+import { SubmitButton } from "@/components/SubmitButton";
 import { Button } from "@/components/ui/button";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { useOrgs } from "@/hooks/use-orgs";

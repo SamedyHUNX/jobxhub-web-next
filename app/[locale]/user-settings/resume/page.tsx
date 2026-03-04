@@ -1,7 +1,7 @@
 "use client";
 
-import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
-import PageLoader from "@/components/PageLoader";
+import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
+import { PageLoader } from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import {
   Card,

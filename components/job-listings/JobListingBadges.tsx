@@ -17,7 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { JobListing } from "@/types/job-listing.types";
 
-export default function JobListingBadges({
+export function JobListingBadges({
   jobListing: {
     isFeatured,
     wage,

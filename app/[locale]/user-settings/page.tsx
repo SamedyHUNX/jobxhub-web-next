@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useProfile } from "@/hooks/use-profile";
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { useTranslations } from "next-intl";
 import { createUpdateProfileSchema } from "@/schemas";
 import ProfileImage from "@/components/ProfileImage";
 import { Button } from "@/components/ui/button";
 import { useCustomForm } from "@/hooks/use-custom-form";
-import SubmitButton from "@/components/SubmitButton";
+import { SubmitButton } from "@/components/SubmitButton";
 import { FormField } from "@/components/FormField";
 import { Modal } from "@/components/Modal";
-import ProfileItem from "@/components/ProfileItem";
+import { ProfileItem } from "@/components/ProfileItem";
 
 export default function UserSettingsPage() {
   const { user: currentUser, updateProfile } = useProfile();

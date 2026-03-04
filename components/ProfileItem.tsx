@@ -1,10 +1,4 @@
-export default function ProfileItem({
-  title,
-  value,
-}: {
-  title: string;
-  value: any;
-}) {
+export function ProfileItem({ title, value }: { title: string; value: any }) {
   return (
     <div className="flex justify-between items-center">
       <span className="text-sm text-gray-600 dark:text-gray-400">{title}</span>

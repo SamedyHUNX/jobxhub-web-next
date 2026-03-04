@@ -1,6 +1,6 @@
 "use client";
 
-import JobListingBadges from "@/components/job-listings/JobListingBadges";
+import { JobListingBadges } from "@/components/job-listings/JobListingBadges";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useJobListings } from "@/hooks/use-job-listings";
@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
+import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import { useProfile } from "@/hooks/use-profile";
 import { SubscriptionPlans } from "@/constants/subscription-plans";
 import {
