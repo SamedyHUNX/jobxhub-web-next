@@ -2,8 +2,8 @@
 
 import { BrandLogo } from "@/components/BrandLogo";
 import { ReactNode } from "react";
-import Testimonial from "@/components/Testimonial";
-import DashboardPreview from "./_DashboardPreview";
+import { Testimonial } from "@/components/Testimonial";
+import { ImagePreview } from "./_ImagePreview";
 import { NavBar } from "@/components/Navbar";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -28,7 +28,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         />
 
         <div className="flex-1 relative rounded-4xl">
-          <DashboardPreview />
+          <ImagePreview />
         </div>
       </section>
     </main>

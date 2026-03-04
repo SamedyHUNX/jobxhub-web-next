@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import dashboardImg from "@/public/assets/images/dashboard.jpg";
 
-export default function DashboardPreview() {
+export function ImagePreview() {
   const [mounted, setMounted] = useState(false);
 
   // Prevent hydration mismatch

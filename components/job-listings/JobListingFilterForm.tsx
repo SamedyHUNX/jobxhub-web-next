@@ -19,7 +19,7 @@ import {
   formatJobType,
   formatLocationRequirement,
 } from "@/lib/formatter";
-import SubmitButton from "../SubmitButton";
+import { SubmitButton } from "../SubmitButton";
 import { useSidebar } from "../ui/sidebar";
 
 const ANY_VALUE = "any";
@@ -36,7 +36,7 @@ const jobListingFilterSchema = z.object({
     .optional(),
 });
 
-export default function JobListingFilterForm() {
+export function JobListingFilterForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { setOpen } = useSidebar();
