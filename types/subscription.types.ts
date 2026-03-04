@@ -1,4 +1,21 @@
-// types/stripe.ts
+// export interface Subscription {
+//   id: string;
+//   userId: string;
+//   planName: "basic" | "growth" | "enterprise";
+//   status: "active" | "canceled" | "past_due" | "trialing" | "unpaid";
+//   interval: "month" | "year";
+//   stripeCustomerId: string;
+//   stripeSubscriptionId: string;
+//   stripePriceId: string;
+//   currentPeriodStart: string;
+//   currentPeriodEnd: string;
+//   cancelAtPeriodEnd: boolean;
+//   canceledAt: string | null;
+//   trialStart: string | null;
+//   trialEnd: string | null;
+//   createdAt: string;
+//   updatedAt: string;
+// }
 
 // Stripe subscription status
 export type SubscriptionStatus =

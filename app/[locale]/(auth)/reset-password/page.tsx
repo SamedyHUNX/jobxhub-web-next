@@ -1,13 +1,13 @@
 "use client";
 
-import AuthLeftHeader from "@/components/AuthLeftHeader";
-import BrandLogo from "@/components/BrandLogo";
+import { AuthLeftHeader } from "@/components/AuthLeftHeader";
+import { BrandLogo } from "@/components/BrandLogo";
 import { FormField } from "@/components/FormField";
-import SubmitButton from "@/components/SubmitButton";
+import { SubmitButton } from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { createResetPasswordSchema } from "@/schemas";
-import type { ResetPasswordVariables } from "@/types";
+import type { ResetPasswordVariables } from "@/types/auth.types";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";

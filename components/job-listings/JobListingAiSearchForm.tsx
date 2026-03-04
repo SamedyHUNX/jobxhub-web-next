@@ -4,7 +4,7 @@ import { useCustomForm } from "@/hooks/use-custom-form";
 import { jobListingAiSearchSchema } from "@/schemas";
 import { useTranslations } from "next-intl";
 import { FormField } from "../FormField";
-import SubmitButton from "../SubmitButton";
+import { SubmitButton } from "../SubmitButton";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useRouter } from "next/navigation";
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import starSvg from "@/public/assets/icons/star.svg";
 
-export default function Testimonial({
+export function Testimonial({
   quote,
   author,
   occupation,

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 
 import { useAppSelector } from "@/stores/hooks";
-import PageLoader from "../PageLoader";
+import { PageLoader } from "../PageLoader";
 export default function AuthGuard({ children }: { children: ReactNode }) {
   const { user, isInitialized } = useAppSelector((state) => state.auth);
   const router = useRouter();

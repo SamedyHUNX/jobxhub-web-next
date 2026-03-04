@@ -1,6 +1,6 @@
-import BrandLogo from "./BrandLogo";
+import { BrandLogo } from "./BrandLogo";
 
-export default function PageLoader({
+export function PageLoader({
   message = "Loading...",
   showLogo = true,
 }: {

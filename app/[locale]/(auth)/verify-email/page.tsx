@@ -6,10 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
+import { extractErrorMessage } from "@/lib/utils";
 import failedImg from "@/public/assets/images/failed.webp";
 import successImg from "@/public/assets/images/success.webp";
-import BrandLogo from "@/components/BrandLogo";
-import { extractErrorMessage } from "@/lib/utils";
 
 export default function VerifyEmailPage() {
   // Translations

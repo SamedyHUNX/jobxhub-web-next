@@ -11,10 +11,7 @@ interface MarkdownRendererProps {
   className?: string;
 }
 
-export default function MarkdownRenderer({
-  className,
-  source,
-}: MarkdownRendererProps) {
+export function MarkdownRenderer({ className, source }: MarkdownRendererProps) {
   return (
     <div className={cn(markdownClassNames, className)}>
       <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>

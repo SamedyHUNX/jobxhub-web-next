@@ -1,4 +1,4 @@
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { JobListingItems } from "./_shared/JobListingItems";
 import { Suspense } from "react";
 

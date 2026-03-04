@@ -1,4 +1,4 @@
-export default function AuthLeftHeader({
+export function AuthLeftHeader({
   title,
   description,
 }: {

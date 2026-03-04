@@ -2,10 +2,10 @@
 
 import { FormField } from "@/components/FormField";
 import { Modal } from "@/components/Modal";
-import PageLoader from "@/components/PageLoader";
-import ProfileImage from "@/components/ProfileImage";
-import ProfileItem from "@/components/ProfileItem";
-import SubmitButton from "@/components/SubmitButton";
+import { PageLoader } from "@/components/PageLoader";
+import { ProfileImage } from "@/components/ProfileImage";
+import { ProfileItem } from "@/components/ProfileItem";
+import { SubmitButton } from "@/components/SubmitButton";
 import { Button } from "@/components/ui/button";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { useOrgs } from "@/hooks/use-orgs";
@@ -16,7 +16,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function EmployerOrgIdDashboardPage() {
-  const { selectedOrgData, updateOrganization } = useOrgs();
+  const { selectedOrgData, updateOrganizationMutation } = useOrgs();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { orgId: selectedOrgId } = useParams<{ orgId: string }>();
 
@@ -47,7 +47,10 @@ export default function EmployerOrgIdDashboardPage() {
           formData.append("image", values.imageFile);
         }
 
-        await updateOrganization({ orgId: selectedOrgId!, data: formData });
+        await updateOrganizationMutation.mutateAsync({
+          orgId: selectedOrgId!,
+          data: formData,
+        });
         setIsModalOpen(false);
       } catch (error) {
         // Error handling is done in the hook

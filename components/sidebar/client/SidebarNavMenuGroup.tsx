@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function SidebarNavMenuGroup({
+export function SidebarNavMenuGroup({
   items,
   className,
 }: {
@@ -28,7 +28,7 @@ export default function SidebarNavMenuGroup({
       <SidebarMenu>
         {items.map((item) => (
           <div className="py-1" key={item.href}>
-            <SidebarMenuItem >
+            <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={pathname === item.href}>
                 <Link href={item.href}>
                   {item.icon}

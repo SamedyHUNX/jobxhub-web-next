@@ -1,7 +1,7 @@
 "use client";
 
-import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
-import PageLoader from "@/components/PageLoader";
+import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
+import { PageLoader } from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,18 +13,16 @@ import {
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useProfile } from "@/hooks/use-profile";
 import { cn } from "@/lib/utils";
-import { Resume } from "@/types";
+import type { Resume } from "@/types/user.types";
 import { FileText, Loader2, Sparkles, UploadCloud } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 export default function UserResumePage() {
   const {
-    getUserResume,
-    uploadResume,
-    uploadResumeLoading,
-    deleteResume,
-    isDeletingResume,
+    getUserResumeMutation,
+    uploadResumeMutation,
+    deleteUserResumeMutation,
   } = useJobListings();
 
   const { user: currentUser } = useProfile();
@@ -40,7 +38,7 @@ export default function UserResumePage() {
 
     setResumeLoading(true);
 
-    getUserResume(currentUser.id, {
+    getUserResumeMutation.mutate(currentUser.id, {
       onSuccess: (data) => {
         setResume(data ?? null);
         setResumeLoading(false);
@@ -49,12 +47,12 @@ export default function UserResumePage() {
         setResumeLoading(false);
       },
     });
-  }, [currentUser?.id, getUserResume]);
+  }, [currentUser?.id, getUserResumeMutation]);
 
   if (resumeLoading) return <PageLoader />;
 
   const handleFile = (file: File) => {
-    if (uploadResumeLoading) return;
+    if (uploadResumeMutation.isPending) return;
 
     if (file.type !== "application/pdf") {
       toast.error("Only PDF files are allowed");
@@ -66,7 +64,7 @@ export default function UserResumePage() {
       return;
     }
 
-    uploadResume(
+    uploadResumeMutation.mutate(
       { file },
       {
         onSuccess: (data) => setResume(data),
@@ -85,7 +83,7 @@ export default function UserResumePage() {
   const handleDelete = () => {
     if (!currentUser?.id) return;
 
-    deleteResume(currentUser.id, {
+    deleteUserResumeMutation.mutate(currentUser.id, {
       onSuccess: () => setResume(null),
     });
   };
@@ -115,7 +113,7 @@ export default function UserResumePage() {
                   : "border-muted-foreground/30 hover:border-primary/50",
               )}
             >
-              {uploadResumeLoading ? (
+              {uploadResumeMutation.isPending ? (
                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
                   <Loader2 className="h-8 w-8 animate-spin" />
                   <p>Uploading...</p>
@@ -150,14 +148,18 @@ export default function UserResumePage() {
             <ResumeDetails
               resume={resume}
               onDelete={handleDelete}
-              isDeleting={isDeletingResume}
+              isDeleting={deleteUserResumeMutation.isPending}
             />
           )}
         </CardContent>
       </Card>
 
-      {/* AI Summary */}
-      {resume?.aiSummary && <AiSummaryCard summary={resume.aiSummary} />}
+      {resume &&
+        (resume.aiSummary ? (
+          <AiSummaryCard summary={resume.aiSummary} />
+        ) : (
+          <AiSummaryGenerating />
+        ))}
     </div>
   );
 }
@@ -188,7 +190,7 @@ function ResumeDetails({
           <a
             href={resume.resumeFileUrl}
             target="_blank"
-            rel="noopener noreferrer" // open the page in a new tab
+            rel="noopener noreferrer"
           >
             View
           </a>
@@ -204,6 +206,31 @@ function ResumeDetails({
         </Button>
       </div>
     </div>
+  );
+}
+
+function AiSummaryGenerating() {
+  return (
+    <Card className="border-dashed">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-muted-foreground">
+          <Sparkles className="h-5 w-5 animate-pulse" />
+          AI Summary Generating...
+        </CardTitle>
+        <CardDescription>
+          We're reading your resume and crafting a summary for employers. This
+          usually takes less than a minute — check back shortly!
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {/* Skeleton lines to hint at incoming content */}
+        <div className="space-y-2 animate-pulse">
+          <div className="h-3 bg-muted rounded w-full" />
+          <div className="h-3 bg-muted rounded w-5/6" />
+          <div className="h-3 bg-muted rounded w-4/6" />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { AppSidebar } from "@/components/sidebar/client/AppSidebar";
-import SidebarNavMenuGroup from "@/components/sidebar/client/SidebarNavMenuGroup";
+import { SidebarNavMenuGroup } from "@/components/sidebar/client/SidebarNavMenuGroup";
 import SidebarOrganizationButton from "@/components/sidebar/organization/SidebarOrganizationButton";
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";
@@ -10,6 +10,7 @@ import {
   FilePlusIcon,
   ClipboardMinusIcon,
   SquareChartGanttIcon,
+  UserIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
@@ -52,6 +53,11 @@ export default function EmployerOrgsDashboardLayout({
                 href: `/employer/orgs/${selectedOrgData?.id}/new`,
                 icon: <FilePlusIcon />,
                 label: employerT("createJob"),
+              },
+              {
+                href: `/employer/orgs/${selectedOrgData?.id}/members`,
+                icon: <UserIcon />,
+                label: employerT("members"),
               },
             ]}
           />

@@ -1,14 +1,14 @@
 "use client";
 
-import AuthLeftHeader from "@/components/AuthLeftHeader";
+import { AuthLeftHeader } from "@/components/AuthLeftHeader";
 import { FormField } from "@/components/FormField";
-import ProfileImage from "@/components/ProfileImage";
-import SubmitButton from "@/components/SubmitButton";
+import { ProfileImage } from "@/components/ProfileImage";
+import { SubmitButton } from "@/components/SubmitButton";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomForm } from "@/hooks/use-custom-form";
 import { countries } from "@/lib/constants";
 import { createSignUpSchema } from "@/schemas";
-import type { SignUpFormData } from "@/types";
+import type { SignUpFormData } from "@/types/auth.types";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 

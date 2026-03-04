@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import brandLogo from "@/public/assets/images/jobxhub.png";
 
-export default function BrandLogo({
+export function BrandLogo({
   className,
   onClickRedirect = true,
   width = 230,

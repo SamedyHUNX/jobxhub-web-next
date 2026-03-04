@@ -1,6 +1,6 @@
 "use client";
 
-import JobListingForm from "@/components/job-listings/JobListingForm";
+import { JobListingForm } from "@/components/job-listings/JobListingForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useOrgs } from "@/hooks/use-orgs";
@@ -16,7 +16,7 @@ export default function CreateJobPage() {
 
   const { selectedOrgId } = useOrgs();
 
-  const { saveJobListing, jobListingLoading } = useJobListings();
+  const { saveJobListing, jobListingMutation } = useJobListings();
 
   return (
     <div className="w-full p-8 mx-auto h-fit flex flex-col">
@@ -32,7 +32,7 @@ export default function CreateJobPage() {
             onSubmit={(data) => saveJobListing(undefined, data)}
             translations={formTranslations}
             orgId={selectedOrgId}
-            isLoading={jobListingLoading}
+            isLoading={jobListingMutation.isPending}
           />
         </CardContent>
       </Card>

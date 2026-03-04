@@ -3,14 +3,7 @@
 import { useState, useMemo } from "react";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { Search, Filter, Briefcase } from "lucide-react";
-import type {
-  ExperienceLevel,
-  JobListing,
-  JobListingStatus,
-  JobListingType,
-  LocationRequirement,
-} from "@/types";
-import PageLoader from "@/components/PageLoader";
+import { PageLoader } from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import JobListingCard from "@/components/job-listings/JobListingCard";
 import {
@@ -33,6 +26,13 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useOrgs } from "@/hooks/use-orgs";
+import type { JobListing } from "@/types/job-listing.types";
+import {
+  ExperienceLevel,
+  JobListingStatus,
+  JobListingType,
+  LocationRequirement,
+} from "@/schemas";
 
 type SortOption = "newest" | "oldest" | "wage-high" | "wage-low" | "title";
 

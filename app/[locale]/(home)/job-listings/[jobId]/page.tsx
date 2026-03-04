@@ -2,31 +2,30 @@
 
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { JobListingItems } from "../../_shared/JobListingItems";
-import PageLoader from "@/components/PageLoader";
-import { Suspense, useEffect, useState } from "react";
+import { PageLoader } from "@/components/PageLoader";
+import { Suspense } from "react";
 import IsBreakpoint from "@/components/IsBreakpoint";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { ClientSheet } from "./_ClientSheet";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { JobListing } from "@/types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { XIcon } from "lucide-react";
-import JobListingBadges from "@/components/job-listings/JobListingBadges";
-import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
+import { JobListingBadges } from "@/components/job-listings/JobListingBadges";
+import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import ApplyButton from "@/components/job-listings/_ApplyButton";
+import type { JobListing } from "@/types/job-listing.types";
+import { getNameInitial } from "@/lib/utils";
 
 export default function JobListingById() {
   const params = useParams();
-  const { fetchJobListingByJobId } = useJobListings();
+  const { jobListings } = useJobListings();
 
-  useEffect(() => {
-    if (typeof params.jobId === "string") {
-      fetchJobListingByJobId(params.jobId);
-    }
-  }, [params.jobId]);
+  const jobListingById = jobListings.find(
+    (job: JobListing) => job.id === params.jobId,
+  );
 
   return (
     <PanelGroup direction="horizontal" autoSaveId="jobxhub-panel">
@@ -56,7 +55,7 @@ export default function JobListingById() {
                   <SheetTitle>Job Listing Details</SheetTitle>
                 </SheetHeader>
                 <Suspense fallback={<PageLoader />}>
-                  <JobListingDetails />
+                  <JobListingDetails jobListing={jobListingById} />
                 </Suspense>
               </SheetContent>
             </ClientSheet>
@@ -64,7 +63,7 @@ export default function JobListingById() {
         >
           <div className="p-4 h-screen overflow-y-auto">
             <Suspense fallback={<PageLoader />}>
-              <JobListingDetails />
+              <JobListingDetails jobListing={jobListingById} />
             </Suspense>
           </div>
         </IsBreakpoint>
@@ -73,28 +72,12 @@ export default function JobListingById() {
   );
 }
 
-function JobListingDetails() {
-  const jobId = useParams().jobId as string;
-  const { fetchJobListingByJobId } = useJobListings();
-  const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
-
-  useEffect(() => {
-    if (jobId) {
-      fetchJobListingByJobId(jobId).then((job) => {
-        setCurrentJob(job);
-      });
-    }
-  }, [jobId]);
-
-  if (!currentJob) {
+function JobListingDetails({ jobListing }: { jobListing: JobListing }) {
+  if (!jobListing) {
     return null;
   }
 
-  const nameInitials = currentJob?.organization?.orgName
-    .split(" ")
-    .splice(0, 4)
-    .map((word) => word[0])
-    .join("");
+  const nameInitials = getNameInitial(jobListing);
 
   return (
     <div className="space-y-6 @container">
@@ -102,8 +85,8 @@ function JobListingDetails() {
         <div className="flex gap-4 items-start">
           <Avatar className="size-14 @max-md:hidden">
             <AvatarImage
-              src={currentJob?.organization?.imageUrl ?? undefined}
-              alt={currentJob?.organization?.orgName}
+              src={jobListing?.organization?.imageUrl ?? undefined}
+              alt={jobListing?.organization?.orgName}
             />
             <AvatarFallback className="uppercase bg-primary text-primary-foreground">
               {nameInitials}
@@ -111,21 +94,21 @@ function JobListingDetails() {
           </Avatar>
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl font-bold tracking-tight">
-              {currentJob?.title}
+              {jobListing?.title}
             </h1>
             <div className="text-base text-muted-foreground">
-              {currentJob?.organization?.orgName}
+              {jobListing?.organization?.orgName}
             </div>
-            {currentJob?.postedAt != null && (
+            {jobListing?.postedAt != null && (
               <div className="text-sm text-muted-foreground @min-lg:hidden">
-                {new Date(currentJob.postedAt).toLocaleDateString()}
+                {new Date(jobListing.postedAt).toLocaleDateString()}
               </div>
             )}
           </div>
           <div className="ml-auto flex items-center gap-4">
-            {currentJob?.postedAt != null && (
+            {jobListing?.postedAt != null && (
               <div className="text-sm text-muted-foreground @max-lg:hidden">
-                {new Date(currentJob.postedAt).toLocaleDateString()}
+                {new Date(jobListing.postedAt).toLocaleDateString()}
               </div>
             )}
 
@@ -138,14 +121,14 @@ function JobListingDetails() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
-          <JobListingBadges jobListing={currentJob} />
+          <JobListingBadges jobListing={jobListing} />
         </div>
         <Suspense fallback={<Button disabled>Apply</Button>}>
-          <ApplyButton jobListingId={currentJob.id} />
+          <ApplyButton jobId={jobListing.id} />
         </Suspense>
       </div>
 
-      <MarkdownRenderer source={currentJob.description} />
+      <MarkdownRenderer source={jobListing.description} />
     </div>
   );
 }

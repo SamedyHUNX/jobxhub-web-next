@@ -8,7 +8,10 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/lib/utils";
 import { AxiosError } from "axios";
-import { ProfileResponse, UpdateNotificationSettings } from "@/types";
+import {
+  ProfileResponse,
+  UpdateNotificationSettings,
+} from "@/types/user.types";
 
 export function useProfile() {
   const dispatch = useAppDispatch();
@@ -18,7 +21,7 @@ export function useProfile() {
   const errorT = useTranslations("apiErrors");
 
   const {
-    data: profileData,
+    data: currentUser,
     isLoading,
     error,
     refetch,
@@ -33,10 +36,10 @@ export function useProfile() {
 
   // Sync profile data to Redux when it's fetched
   useEffect(() => {
-    if (profileData) {
-      dispatch(setAuth({ user: profileData }));
+    if (currentUser) {
+      dispatch(setAuth({ user: currentUser }));
     }
-  }, [profileData, dispatch]);
+  }, [currentUser, dispatch]);
 
   // Update profile mutation
   const updateProfileMutation = useMutation<
@@ -61,20 +64,11 @@ export function useProfile() {
   });
 
   // Get user notifcation settings
-  const getMyNotificationSettingsMutation = useMutation({
-    mutationFn: () => usersApi.getMyNotificationSettings(),
-    onSuccess: (response) => {
-      if (response.data && response.data.length > 0) {
-        queryClient.invalidateQueries({ queryKey: ["profile"] });
-        toast.success(successT("getMyNotificationSettingsSuccess"));
-        return response.data[0];
-      } else {
-        toast.error(errorT("getMyNotificationSettingsFailed"));
-      }
-    },
-    // onError(error: AxiosError) {
-    //   toast.error(extractErrorMessage(error, errorT));
-    // },
+  const getMyNotificationSettingsQuery = useQuery({
+    queryKey: ["myNotificationSettings"],
+    queryFn: () =>
+      usersApi.getMyNotificationSettings().then((res) => res.data[0]),
+    enabled: !!currentUser?.id,
   });
 
   // Update my notification settings
@@ -86,13 +80,11 @@ export function useProfile() {
         queryClient.invalidateQueries({ queryKey: ["profile"] });
         toast.success(successT("updateMyNotificationSettingsSuccess"));
         return response.data[0];
-      } else {
-        toast.error(errorT("updateMyNotificationSettingsFailed"));
       }
     },
-    // onError(error: AxiosError) {
-    //   toast.error(extractErrorMessage(error, errorT));
-    // },
+    onError(error: AxiosError) {
+      toast.error(extractErrorMessage(error, errorT));
+    },
   });
 
   return {
@@ -107,7 +99,7 @@ export function useProfile() {
     updateProfile: updateProfileMutation.mutateAsync,
 
     // Get user notifcation settings
-    getMyNotificationSettings: getMyNotificationSettingsMutation.mutateAsync,
+    getMyNotificationSettingsQuery,
 
     updateMyNotificationSettings:
       updateMyNotificationSettingsMutation.mutateAsync,

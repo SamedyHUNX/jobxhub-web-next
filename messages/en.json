@@ -12,7 +12,8 @@
     "jobs": {
       "overview": "Overview",
       "createJob": "Create Job Listing",
-      "allJobs": "All Jobs"
+      "allJobs": "All Jobs",
+      "members": "All Members"
     }
   },
   "auth": {
@@ -23,6 +24,7 @@
     "enterYourEmail": "Enter Your Email",
     "yourNewPassword": "Enter Your New Password",
     "password": "Password",
+    "signUpPassword": "Password (Must contain one character and one special character)",
     "confirmPassword": "Confirm Password",
     "confirmPasswordPlaceholder": "Enter your confirm password",
     "passwordPlaceholder": "Enter your password",
@@ -246,7 +248,10 @@
     "passwordsDoNotMatch": "Passwords must match",
     "orgNameTooLong": "Organization name cannot be more than 100 characters long",
     "orgDescriptionTooLong": "Organization description cannot be more than 1000 characters long",
-    "fieldRequired": "This field is required"
+    "fieldRequired": "This field is required",
+    "biggerThanOne": "Must be bigger than 1",
+    "smallerThanTen": "Must be smaller than 10",
+    "invalidFormat": "Invalid format"
   },
   "apiSuccesses": {
     "signInSuccess": "Signed in successfully",
@@ -268,7 +273,9 @@
     "deleteResumeSuccess": "Resume deleted successfully",
     "aiSearchSuccess": "We have found jobs matching your query",
     "updateMyNotificationSettingsSuccess": "Updated preferences successfully",
-    "getMyNotificationSettingsSuccess": "Fetched your preferences successfully"
+    "getMyNotificationSettingsSuccess": "Fetched your preferences successfully",
+    "getOrgUserNotificationSettingsSuccess": "Fetched org perferences successfully",
+    "updateOrgUserNotificationSettingsSuccess": "Updated your preferences successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",

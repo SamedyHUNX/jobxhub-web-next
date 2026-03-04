@@ -5,10 +5,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { forgotPasswordSchema } from "@/schemas";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import AuthLeftHeader from "@/components/AuthLeftHeader";
+import { AuthLeftHeader } from "@/components/AuthLeftHeader";
 import { useCustomForm } from "@/hooks/use-custom-form";
-import SubmitButton from "@/components/SubmitButton";
-import type { ForgotPasswordFormData } from "@/types";
+import { SubmitButton } from "@/components/SubmitButton";
+import { ForgotPasswordFormData } from "@/types/auth.types";
 
 export default function ForgotPasswordPage() {
   // Translations

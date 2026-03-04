@@ -1,13 +1,11 @@
 "use client";
 
-import JobListingBadges from "@/components/job-listings/JobListingBadges";
-import MarkdownPartial from "@/components/markdown/MarkdownPartial";
+import { JobListingBadges } from "@/components/job-listings/JobListingBadges";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { useOrgs } from "@/hooks/use-orgs";
 import { formatJobListingStatus } from "@/lib/formatter";
-import type { JobListing } from "@/types";
 import {
   EditIcon,
   ToggleRightIcon,
@@ -17,8 +15,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
+import { useState } from "react";
+import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import { useProfile } from "@/hooks/use-profile";
 import { SubscriptionPlans } from "@/constants/subscription-plans";
 import {
@@ -27,43 +25,33 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CustomDialog from "@/components/CustomDialog";
+import type { JobListing } from "@/types/job-listing.types";
 
 export default function JobIdPage() {
   const {
-    fetchJobListingByJobId,
-    toggleJobListingStatus,
-    toggleJobListingFeatured,
+    toggleJobListingFeaturedMutation,
+    toggleJobListingStatusMutation,
     publishedJobListings,
     featuredJobListings,
     deleteJobListing,
+    jobListings,
   } = useJobListings();
+  const jobId = useParams().jobId as string;
   const { selectedOrgId } = useOrgs();
   const { user: currentUser } = useProfile();
-  const jobId = useParams().jobId as string;
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
-  const [currentJob, setCurrentJob] = useState<JobListing | null>(null);
 
-  useEffect(() => {
-    if (jobId) {
-      fetchJobListingByJobId(jobId).then((job) => {
-        setCurrentJob(job);
-      });
-    }
-  }, [jobId]);
+  const currentJob = jobListings.find((job: JobListing) => job.id === jobId);
 
-  if (!currentJob) {
-    return null;
-  }
+  if (!currentJob) return null;
 
   const isOwner = currentJob.organizationId === selectedOrgId;
 
-  // Get current plan limits
   const currentPlanName = currentUser?.subscription?.planName;
   const currentPlan = currentPlanName
     ? SubscriptionPlans[currentPlanName as keyof typeof SubscriptionPlans]
     : null;
 
-  // Check if user can publish/feature more jobs
   const publishedJobsCount = publishedJobListings.length;
   const canPublishMore = currentPlan
     ? publishedJobsCount < currentPlan.limits.jobPostings
@@ -72,46 +60,23 @@ export default function JobIdPage() {
     ? featuredJobListings.length < currentPlan.limits.featuredListings
     : false;
 
-  // If trying to publish and at limit, block the action
   const canToggleToPublished =
-    currentJob.status === "draft" ? canPublishMore : true; // Always allow unpublishing
+    currentJob.status === "draft" ? canPublishMore : true;
 
   const onToggleStatus = () => {
-    try {
-      const newStatus =
-        currentJob.status === "published" ? "draft" : "published";
-
-      // Update UI immediately (optimistic)
-      setCurrentJob({ ...currentJob, status: newStatus });
-
-      toggleJobListingStatus({
-        id: jobId,
-        status: newStatus,
-      });
-    } catch (error) {
-      console.error("Failed to toggle job listing status:", error);
-      fetchJobListingByJobId(jobId).then(setCurrentJob);
-    }
+    toggleJobListingStatusMutation.mutate({
+      id: jobId,
+      status: currentJob.status === "published" ? "draft" : "published",
+    });
   };
 
-  // Check if user can feature more jobs
-  const canToggleToFeatured = !currentJob.isFeatured ? canFeatureMore : true; // Always allow un-featuring
+  const canToggleToFeatured = !currentJob.isFeatured ? canFeatureMore : true;
 
   const onToggleFeatured = () => {
-    try {
-      const newFeaturedStatus = !currentJob.isFeatured;
-
-      // Update UI immediately (optimistic)
-      setCurrentJob({ ...currentJob, isFeatured: newFeaturedStatus });
-
-      toggleJobListingFeatured({
-        id: jobId,
-        isFeatured: newFeaturedStatus,
-      });
-    } catch (error) {
-      console.error("Failed to toggle job listing featured status:", error);
-      fetchJobListingByJobId(jobId).then(setCurrentJob);
-    }
+    toggleJobListingFeaturedMutation.mutate({
+      id: jobId,
+      isFeatured: !currentJob.isFeatured,
+    });
   };
 
   const handleDeleteConfirm = () => {
@@ -189,6 +154,7 @@ export default function JobIdPage() {
         }
         dialogTitle="Description"
       /> */}
+
       <div className="prose max-w-none prose-sm">
         <MarkdownRenderer source={currentJob.description} />
       </div>

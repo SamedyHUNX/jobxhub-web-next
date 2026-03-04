@@ -2,13 +2,13 @@
 
 import { FormField } from "@/components/FormField";
 import FormFooter from "@/components/FormFooter";
-import ImageUpload from "@/components/ProfileImage";
+import { ProfileImage } from "@/components/ProfileImage";
 import { useOrgs } from "@/hooks/use-orgs";
 import { createOrganizationSchema, CreateOrgFormData } from "@/schemas";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { generateSlug } from "@/lib/utils";
-import SubmitButton from "@/components/SubmitButton";
+import { SubmitButton } from "@/components/SubmitButton";
 import { useCustomForm } from "@/hooks/use-custom-form";
 
 export default function CreateNewOrgPage() {
@@ -16,7 +16,7 @@ export default function CreateNewOrgPage() {
   const t = useTranslations();
   const newOrgT = (key: string) => t(`organizations.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
-  const { createOrganization, isCreating } = useOrgs();
+  const { createOrganizationMutation } = useOrgs();
 
   const createOrganizationFormSchema = createOrganizationSchema(validationT);
   const createOrgForm = useCustomForm({
@@ -39,7 +39,9 @@ export default function CreateNewOrgPage() {
       formData.append("orgSlug", values.orgSlug);
       formData.append("image", values.orgImage);
 
-      createOrganization(formData as unknown as CreateOrgFormData);
+      createOrganizationMutation.mutateAsync(
+        formData as unknown as CreateOrgFormData,
+      );
     },
   });
 
@@ -75,7 +77,7 @@ export default function CreateNewOrgPage() {
               }}
             >
               {(field: any) => (
-                <ImageUpload
+                <ProfileImage
                   value={field.state.value}
                   onChange={(file) => field.handleChange(file)}
                   label={newOrgT("uploadPhoto")}
@@ -144,7 +146,7 @@ export default function CreateNewOrgPage() {
 
           {/* Submit Button */}
           <SubmitButton
-            isSubmitting={isCreating}
+            isSubmitting={createOrganizationMutation.isPending}
             buttonText={newOrgT("create")}
           />
         </form>

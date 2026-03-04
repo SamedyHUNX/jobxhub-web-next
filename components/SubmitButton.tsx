@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { LoadingSwap } from "./LoadingSwap";
 import { Button } from "./ui/button";
 
-export default function SubmitButton({
+export function SubmitButton({
   isSubmitting,
   buttonText,
   buttonClassname,

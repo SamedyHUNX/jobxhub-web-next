@@ -1,12 +1,12 @@
 // lib/api/stripe.ts
-import axios from "axios";
-import type {
-  CreateSubscriptionDto,
-  UpdateSubscriptionDto,
+import {
   CreateCheckoutSessionDto,
-  Subscription,
+  CreateSubscriptionDto,
   PaymentHistory,
-} from "@/types/stripe.types";
+  Subscription,
+  UpdateSubscriptionDto,
+} from "@/types/subscription.types";
+import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 

@@ -9,16 +9,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
-import { cn } from "@/lib/utils";
-import type { JobListing, Organization } from "@/types";
+import { cn, getNameInitial } from "@/lib/utils";
 import { Avatar } from "@radix-ui/react-avatar";
 import Link from "next/link";
 import { Suspense } from "react";
 import { differenceInDays } from "date-fns";
-import JobListingBadges from "@/components/job-listings/JobListingBadges";
+import { JobListingBadges } from "@/components/job-listings/JobListingBadges";
 import { searchParamsSchema } from "@/schemas";
 import { useParams, useSearchParams } from "next/navigation";
 import { Star } from "lucide-react";
+import type { JobListing } from "@/types/job-listing.types";
+import type { Organization } from "@/types/organization.types";
 
 export function JobListingItems() {
   const rawParams = useSearchParams();
@@ -62,10 +63,7 @@ export function JobListingItems() {
             key={jobListing.id}
             href={`/job-listings/${jobListing.id}`}
           >
-            <JobListingListItem
-              jobListing={jobListing}
-              organization={jobListing.organization}
-            />
+            <JobListingListItem jobListing={jobListing} />
           </Link>
         ))}
       </div>
@@ -73,18 +71,8 @@ export function JobListingItems() {
   );
 }
 
-function JobListingListItem({
-  jobListing,
-  organization,
-}: {
-  jobListing: JobListing;
-  organization: Organization;
-}) {
-  const nameInitials = organization?.orgName
-    .split(" ")
-    .splice(0, 4)
-    .map((word) => word[0])
-    .join("");
+function JobListingListItem({ jobListing }: { jobListing: JobListing }) {
+  const nameInitials = getNameInitial(jobListing);
 
   return (
     <Card
@@ -103,8 +91,8 @@ function JobListingListItem({
         <div className="flex gap-4 w-full">
           <Avatar className="size-14 @max-sm:hidden">
             <AvatarImage
-              src={organization.imageUrl ?? undefined}
-              alt={organization.orgName}
+              src={jobListing.organization.imageUrl ?? undefined}
+              alt={jobListing.organization.orgName}
             />
             <AvatarFallback className="uppercase bg-primary text-primary-foreground">
               {nameInitials}
@@ -113,7 +101,7 @@ function JobListingListItem({
           <div className="flex flex-col gap-1">
             <CardTitle className="text-xl">{jobListing.title}</CardTitle>
             <CardDescription className="text-base">
-              {organization.orgName}
+              {jobListing.organization.orgName}
             </CardDescription>
             {jobListing.postedAt != null && (
               <span className="ml-auto @max-md:hidden inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">

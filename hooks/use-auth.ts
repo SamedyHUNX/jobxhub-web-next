@@ -8,7 +8,7 @@ import {
   ResetPasswordVariables,
   SignInFormData,
   SignUpFormData,
-} from "@/types";
+} from "@/types/auth.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";

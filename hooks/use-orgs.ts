@@ -1,12 +1,11 @@
 import { orgsApi } from "@/lib/apis/orgs-api";
 import { extractErrorMessage } from "@/lib/utils";
-import { CreateOrgFormData } from "@/schemas";
+import { CreateOrgFormData, OrgUserNotificationSettings } from "@/schemas";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import {
   clearSelection,
   setSelectedOrgId,
 } from "@/stores/slices/organizations.slice";
-import type { CreateOrgResponse, Organization } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
@@ -14,6 +13,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { CreateOrgResponse, Organization } from "@/types/organization.types";
+import { create } from "domain";
 
 interface UseOrgsParams {
   search?: string;
@@ -178,6 +179,35 @@ export function useOrgs(params?: UseOrgsParams) {
     },
   });
 
+  const getOrgUserNotificationSettingsQuery = (orgId: string) =>
+    useQuery({
+      queryKey: ["orgUserNotificationSettings", orgId],
+      queryFn: () =>
+        orgsApi
+          .getOrgUserNotificationSettings(orgId)
+          .then((res) => res.data[0]),
+    });
+
+  const updateOrgUserNotificationSettingsMutation = useMutation({
+    mutationFn: ({
+      orgId,
+      data,
+    }: {
+      orgId: string;
+      data: OrgUserNotificationSettings;
+    }) => orgsApi.updateOrgUserNotificationSettings(orgId, data),
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        queryClient.invalidateQueries({ queryKey: ["organizations"] });
+        toast.success(successT("updateOrgUserNotificationSettingsSuccess"));
+        return response.data[0];
+      }
+    },
+    onError(error: AxiosError) {
+      toast.error(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     // Data
     allOrgs,
@@ -188,14 +218,15 @@ export function useOrgs(params?: UseOrgsParams) {
 
     // Actions
     selectOrganization,
-    createOrganization: createOrganizationMutation.mutate,
     navigateToCreateOrg,
     clearSelectedOrganization,
 
     // Mutation states
-    isCreating: createOrganizationMutation.isPending,
+    createOrganizationMutation,
 
-    updateOrganization: updateOrganizationMutation.mutateAsync,
-    isUpdating: updateOrganizationMutation.isPending,
+    updateOrganizationMutation,
+
+    getOrgUserNotificationSettingsQuery,
+    updateOrgUserNotificationSettingsMutation,
   };
 }

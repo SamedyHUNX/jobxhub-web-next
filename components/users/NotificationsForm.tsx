@@ -10,7 +10,7 @@ import { FormField } from "../FormField";
 import { Switch } from "../ui/switch";
 import { useStore } from "@tanstack/react-form";
 import { useState } from "react";
-import SubmitButton from "../SubmitButton";
+import { SubmitButton } from "../SubmitButton";
 import { useProfile } from "@/hooks/use-profile";
 
 export function NotificationsForm({

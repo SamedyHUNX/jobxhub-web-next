@@ -1,4 +1,4 @@
-import BrandLogo from "../BrandLogo";
+import { BrandLogo } from "../BrandLogo";
 import { defaultTranslations } from "./_DefaultTranslation";
 
 export default function OrgListHeader({

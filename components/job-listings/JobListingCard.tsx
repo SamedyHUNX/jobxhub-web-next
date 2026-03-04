@@ -1,14 +1,5 @@
-import { formatDate, formatWage } from "@/lib/formatter";
-import type { JobListing } from "@/types";
-import {
-  Briefcase,
-  Calendar,
-  DollarSign,
-  MapPin,
-  Star,
-  TrendingUp,
-  Calculator,
-} from "lucide-react";
+import { formatWage } from "@/lib/formatter";
+import { Briefcase, DollarSign, MapPin, Star, Calculator } from "lucide-react";
 import Link from "next/link";
 import { ComponentType } from "react";
 import {
@@ -21,8 +12,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import MarkdownPartial from "../markdown/MarkdownPartial";
-import MarkdownRenderer from "../markdown/MarkdownRenderer";
+import { MarkdownRenderer } from "../markdown/MarkdownRenderer";
 import DateComponent from "../DateComponent";
+import type { JobListing } from "@/types/job-listing.types";
 
 const JobListingCardItem = ({
   icon: Icon,
