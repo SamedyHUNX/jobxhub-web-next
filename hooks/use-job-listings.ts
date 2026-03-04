@@ -311,13 +311,14 @@ export function useJobListings(params?: UseJobListingsParams) {
     error,
     refetch,
 
+    jobListingMutation,
+
     getOwnJobListingApplicationMutation,
     getUserResumeMutation,
     createJobListingApplicationMutation,
 
     // Create or Update job listing
     saveJobListing,
-    jobListingLoading: jobListingMutation.isPending,
 
     // Upload resume
     uploadResumeMutation,
@@ -333,8 +334,8 @@ export function useJobListings(params?: UseJobListingsParams) {
     toggleJobListingStatusMutation,
 
     // Toggle feature/unfeature
-    toggleJobListingFeatured: toggleJobListingFeaturedMutation.mutate,
-    toggleJobListingFeaturedLoading: toggleJobListingFeaturedMutation.isPending,
+    toggleJobListingFeaturedMutation,
+
     publishedJobListings,
     featuredJobListings,
 

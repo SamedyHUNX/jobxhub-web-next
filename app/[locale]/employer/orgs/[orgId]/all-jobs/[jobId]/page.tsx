@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { useProfile } from "@/hooks/use-profile";
 import { SubscriptionPlans } from "@/constants/subscription-plans";
@@ -25,20 +25,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CustomDialog from "@/components/CustomDialog";
-import { JobListing } from "@/types/job-listing.types";
+import type { JobListing } from "@/types/job-listing.types";
 
 export default function JobIdPage() {
   const {
-    toggleJobListingFeatured,
+    toggleJobListingFeaturedMutation,
     toggleJobListingStatusMutation,
     publishedJobListings,
     featuredJobListings,
     deleteJobListing,
     jobListings,
   } = useJobListings();
+  const jobId = useParams().jobId as string;
   const { selectedOrgId } = useOrgs();
   const { user: currentUser } = useProfile();
-  const jobId = useParams().jobId as string;
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const currentJob = jobListings.find((job: JobListing) => job.id === jobId);
@@ -73,7 +73,7 @@ export default function JobIdPage() {
   const canToggleToFeatured = !currentJob.isFeatured ? canFeatureMore : true;
 
   const onToggleFeatured = () => {
-    toggleJobListingFeatured({
+    toggleJobListingFeaturedMutation.mutate({
       id: jobId,
       isFeatured: !currentJob.isFeatured,
     });
@@ -154,6 +154,7 @@ export default function JobIdPage() {
         }
         dialogTitle="Description"
       /> */}
+
       <div className="prose max-w-none prose-sm">
         <MarkdownRenderer source={currentJob.description} />
       </div>
