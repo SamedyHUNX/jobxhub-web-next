@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import { useProfile } from "@/hooks/use-profile";
 import { SubscriptionPlans } from "@/constants/subscription-plans";
@@ -26,6 +26,13 @@ import {
 } from "@/components/ui/popover";
 import CustomDialog from "@/components/CustomDialog";
 import type { JobListing } from "@/types/job-listing.types";
+import { Separator } from "@/components/ui/separator";
+import {
+  ApplicationCol,
+  ApplicationTable,
+  SkeletonApplicationTable,
+} from "@/components/job-listings/ApplicationTable";
+import { Application } from "@/types/application.types";
 
 export default function JobIdPage() {
   const {
@@ -62,6 +69,10 @@ export default function JobIdPage() {
 
   const canToggleToPublished =
     currentJob.status === "draft" ? canPublishMore : true;
+
+  const isOwnerAndApplicantManager =
+    isOwner &&
+    (currentPlan?.allowedRoles.includes("APPLICANT_MANAGER") ?? false);
 
   const onToggleStatus = () => {
     toggleJobListingStatusMutation.mutate({
@@ -157,6 +168,18 @@ export default function JobIdPage() {
 
       <div className="prose max-w-none prose-sm">
         <MarkdownRenderer source={currentJob.description} />
+      </div>
+
+      <Separator />
+
+      <div className="space-y-6">
+        <h2 className="text-x; font-semibold">Applications</h2>
+        <Suspense fallback={<SkeletonApplicationTable />}>
+          <Applications
+            jobId={jobId}
+            isOwnerAndApplicantManager={isOwnerAndApplicantManager}
+          />
+        </Suspense>
       </div>
     </div>
   );
@@ -364,4 +387,34 @@ function FeaturedToggleButton({
 
 function statusToggleButtonText(status: string) {
   return status === "published" ? "Unpublish" : "Publish";
+}
+
+function Applications({
+  jobId,
+  isOwnerAndApplicantManager,
+}: {
+  jobId: string;
+  isOwnerAndApplicantManager: boolean;
+}) {
+  const { getAllJobListingApplicationForOrgIdMutation } = useJobListings();
+  const [applications, setApplications] = useState<ApplicationCol[]>([]);
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      const data =
+        await getAllJobListingApplicationForOrgIdMutation.mutateAsync({
+          jobId,
+        });
+      setApplications(data);
+    };
+
+    fetchApplications();
+  }, [jobId]);
+
+  return (
+    <ApplicationTable
+      applications={applications}
+      isOwnerAndApplicantManager={isOwnerAndApplicantManager}
+    />
+  );
 }

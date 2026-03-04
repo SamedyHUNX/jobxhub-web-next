@@ -97,6 +97,13 @@ export const jobListingsApi = {
     return data;
   },
 
+  // Get all job listing application
+  getAllJobListingApplications: async (jobId: string) => {
+    assertApiUrl();
+    const { data } = await api.get(`/job-listings/applications/${jobId}`);
+    return data;
+  },
+
   // Get user resume
   getUserResume: async (userId: string) => {
     assertApiUrl();

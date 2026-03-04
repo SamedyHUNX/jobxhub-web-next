@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { differenceInDays } from "date-fns";
 import {
@@ -20,7 +20,7 @@ import { useJobListings } from "@/hooks/use-job-listings";
 import { NewJobListingApplicationForm } from "@/components/job-listings/NewJobListingApplicationForm";
 import type { Resume } from "@/types/user.types";
 
-export default function ApplyButton({ jobId }: { jobId: string }) {
+export function ApplyButton({ jobId }: { jobId: string }) {
   const { user: currentUser } = useProfile();
   const { getOwnJobListingApplicationMutation, getUserResumeMutation } =
     useJobListings();
@@ -29,34 +29,40 @@ export default function ApplyButton({ jobId }: { jobId: string }) {
   const [userResume, setUserResume] = useState<Resume | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
+  // Keep a stable ref to the latest mutateAsync functions so the effect
+  // never needs to re-run just because React Query replaced the object.
+  const getApplicationRef = useRef(
+    getOwnJobListingApplicationMutation.mutateAsync,
+  );
+  const getResumeRef = useRef(getUserResumeMutation.mutateAsync);
+
+  // Keep refs up-to-date on every render without re-triggering the effect
+  getApplicationRef.current = getOwnJobListingApplicationMutation.mutateAsync;
+  getResumeRef.current = getUserResumeMutation.mutateAsync;
+
   useEffect(() => {
-    // Define the async logic inside the effect
+    if (!currentUser?.id) return;
+
     const fetchData = async () => {
-      if (!currentUser?.id) return;
+      try {
+        const app = await getApplicationRef.current({ jobId });
+        setApplication(app);
+      } catch {
+        // 404 → user hasn't applied yet, that's fine
+      }
 
       try {
-        // 1. Fetch application
-        const app = await getOwnJobListingApplicationMutation.mutateAsync({
-          jobId,
-        });
-        setApplication(app);
-
-        // 2. Fetch resume
-        const resume = await getUserResumeMutation.mutateAsync(currentUser.id);
+        const resume = await getResumeRef.current(currentUser.id);
         setUserResume(resume);
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
+      } catch {
+        // 404 → no resume uploaded yet, that's fine
       }
     };
 
     fetchData();
-  }, [
-    currentUser?.id,
-    jobId,
-    getOwnJobListingApplicationMutation,
-    getUserResumeMutation,
-  ]);
+  }, [currentUser?.id, jobId]);
 
+  // ─── Not logged in ──────────────────────────────────────────────────────────
   if (currentUser?.id == null) {
     return (
       <Popover>
@@ -75,16 +81,16 @@ export default function ApplyButton({ jobId }: { jobId: string }) {
     );
   }
 
+  // ─── Already applied ────────────────────────────────────────────────────────
   if (application != null) {
     const formatter = new Intl.RelativeTimeFormat(undefined, {
       style: "short",
       numeric: "always",
     });
-
-    // Convert string to Date
-    const createdAtDate = new Date(application.createdAt);
-
-    const difference = differenceInDays(createdAtDate, new Date());
+    const difference = differenceInDays(
+      new Date(application.createdAt),
+      new Date(),
+    );
 
     return (
       <div className="text-muted-foreground text-sm">
@@ -94,7 +100,8 @@ export default function ApplyButton({ jobId }: { jobId: string }) {
     );
   }
 
-  if (userResume == null || !userResume) {
+  // ─── No resume uploaded ─────────────────────────────────────────────────────
+  if (!userResume) {
     return (
       <Popover>
         <PopoverTrigger asChild>
@@ -110,6 +117,7 @@ export default function ApplyButton({ jobId }: { jobId: string }) {
     );
   }
 
+  // ─── Ready to apply ─────────────────────────────────────────────────────────
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
@@ -128,10 +136,12 @@ export default function ApplyButton({ jobId }: { jobId: string }) {
             jobId={jobId}
             buttonText="Apply"
             onSuccess={async () => {
-              const app = await getOwnJobListingApplicationMutation.mutateAsync(
-                { jobId },
-              );
-              setApplication(app);
+              try {
+                const app = await getApplicationRef.current({ jobId });
+                setApplication(app);
+              } catch {
+                // ignore
+              }
               setDialogOpen(false);
             }}
           />

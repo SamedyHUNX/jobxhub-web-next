@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 import { setSelectedJobListing } from "@/stores/slices/job-listings.slice";
 import type { Application } from "@/types/application.types";
 import { JobListing, JobListingFormResponse } from "@/types/job-listing.types";
+import { ApplicationCol } from "@/components/job-listings/ApplicationTable";
 
 interface UseJobListingsParams {
   search?: string;
@@ -200,7 +201,7 @@ export function useJobListings(params?: UseJobListingsParams) {
     (job: JobListing) => job.isFeatured,
   );
 
-  // Get job listing application
+  // Get own job listing application
   const getOwnJobListingApplicationMutation = useMutation<
     Application,
     AxiosError,
@@ -208,6 +209,24 @@ export function useJobListings(params?: UseJobListingsParams) {
   >({
     mutationFn: async ({ jobId }: { jobId: string }) => {
       const result = await jobListingsApi.getOwnJobListingApplication(jobId);
+      return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Get all job listing application
+  const getAllJobListingApplicationForOrgIdMutation = useMutation<
+    ApplicationCol[],
+    AxiosError,
+    { jobId: string }
+  >({
+    mutationFn: async ({ jobId }: { jobId: string }) => {
+      const result = await jobListingsApi.getAllJobListingApplications(jobId);
       return result.data[0];
     },
     onSuccess: () => {
@@ -316,6 +335,8 @@ export function useJobListings(params?: UseJobListingsParams) {
     getOwnJobListingApplicationMutation,
     getUserResumeMutation,
     createJobListingApplicationMutation,
+
+    getAllJobListingApplicationForOrgIdMutation,
 
     // Create or Update job listing
     saveJobListing,
