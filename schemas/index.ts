@@ -226,6 +226,7 @@ export const jobListingTypes = [
 // JobListingApplication
 export const applicationStages = [
   "denied",
+  "interested",
   "applied",
   "interviewed",
   "hired",

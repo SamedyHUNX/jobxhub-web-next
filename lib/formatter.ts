@@ -1,11 +1,12 @@
 import {
+  ApplicationStage,
   ExperienceLevel,
-  JobListing,
   JobListingStatus,
   JobListingType,
   LocationRequirement,
   WageInterval,
-} from "@/types";
+} from "@/schemas";
+import { JobListing } from "@/types/job-listing.types";
 
 export function formatWageInterval(interval: WageInterval) {
   switch (interval) {
@@ -172,3 +173,20 @@ export const sortJobs = (jobs: JobListing[], sortBy: string): JobListing[] => {
     }
   });
 };
+
+export function formatJobListingApplicationStage(stage: ApplicationStage) {
+  switch (stage) {
+    case "applied":
+      return "Applied";
+    case "interested":
+      return "Interested";
+    case "denied":
+      return "Denied";
+    case "interviewed":
+      return "Interviewed";
+    case "hired":
+      return "Hired";
+    default:
+      throw new Error(`Unknown application stage: ${stage satisfies never}`);
+  }
+}

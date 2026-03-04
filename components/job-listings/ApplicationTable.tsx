@@ -3,9 +3,14 @@
 import { Application } from "@/types/application.types";
 import { Resume, User } from "@/types/user.types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ReactNode } from "react";
+import { ReactNode, useOptimistic, useTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DataTable } from "../data-table/DataTable";
+import { DataTableSortableColumnHeader } from "../data-table/DataTableSortableColumnHeader";
+import { sortApplicationsByStage } from "@/lib/sortings";
+import { ApplicationStage } from "@/schemas";
+import { StageIcon } from "./_StageIcon";
+import { formatJobListingApplicationStage } from "@/lib/formatter";
 
 export type ApplicationCol = Pick<
   Application,
@@ -52,6 +57,26 @@ function getColumns({
         );
       },
     },
+    {
+      accessorKey: "stage",
+      header: ({ column }) => (
+        <DataTableSortableColumnHeader title="Stage" column={column} />
+      ),
+      sortingFn: ({ original: a }, { original: b }) => {
+        return sortApplicationsByStage(a.stage, b.stage);
+      },
+      filterFn: ({ original }, _, value) => {
+        return value.include(original.stage);
+      },
+      cell: ({ row }) => (
+        <StageCell
+          isOwnerAndApplicantManager={isOwnerAndApplicantManager}
+          stage={row.original.stage}
+          jobId={row.original.jobListingId}
+          userId={row.original.user.id}
+        />
+      ),
+    },
   ];
 }
 
@@ -71,5 +96,35 @@ export function ApplicationTable({
       data={applications}
       columns={getColumns({ isOwnerAndApplicantManager })}
     />
+  );
+}
+
+function StageCell({
+  isOwnerAndApplicantManager,
+  stage,
+  userId,
+  jobId,
+}: {
+  stage: ApplicationStage;
+  jobId: string;
+  userId: string;
+  isOwnerAndApplicantManager: boolean;
+}) {
+  const [optimisticStage, setOptimisticStage] = useOptimistic(stage);
+  const [isPending, startTransition] = useTransition();
+
+  if (isOwnerAndApplicantManager) {
+    return <StageDetails stage={optimisticStage} />;
+  }
+
+  return null;
+}
+
+function StageDetails({ stage }: { stage: ApplicationStage }) {
+  return (
+    <div className="flex gap-2 items-center">
+      <StageIcon stage={stage} className="size-5 text-inherit" />
+      <div>{formatJobListingApplicationStage(stage)}</div>
+    </div>
   );
 }
