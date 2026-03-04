@@ -20,13 +20,10 @@ import { useJobListings } from "@/hooks/use-job-listings";
 import { NewJobListingApplicationForm } from "@/components/job-listings/NewJobListingApplicationForm";
 import type { Resume } from "@/types/user.types";
 
-export default function ApplyButton({
-  jobListingId,
-}: {
-  jobListingId: string;
-}) {
+export default function ApplyButton({ jobId }: { jobId: string }) {
   const { user: currentUser } = useProfile();
-  const { getOwnJobApplication, getUserResume } = useJobListings();
+  const { getOwnJobListingApplicationMutation, getUserResumeMutation } =
+    useJobListings();
 
   const [application, setApplication] = useState<any | null>(null);
   const [userResume, setUserResume] = useState<Resume | null>(null);
@@ -39,13 +36,13 @@ export default function ApplyButton({
 
       try {
         // 1. Fetch application
-        const app = await getOwnJobApplication({
-          jobId: jobListingId,
+        const app = await getOwnJobListingApplicationMutation.mutateAsync({
+          jobId,
         });
         setApplication(app);
 
         // 2. Fetch resume
-        const resume = await getUserResume(currentUser.id);
+        const resume = await getUserResumeMutation.mutateAsync(currentUser.id);
         setUserResume(resume);
       } catch (error) {
         console.error("Failed to fetch user data:", error);
@@ -53,7 +50,12 @@ export default function ApplyButton({
     };
 
     fetchData();
-  }, [currentUser?.id, jobListingId, getOwnJobApplication, getUserResume]);
+  }, [
+    currentUser?.id,
+    jobId,
+    getOwnJobListingApplicationMutation,
+    getUserResumeMutation,
+  ]);
 
   if (currentUser?.id == null) {
     return (
@@ -123,10 +125,12 @@ export default function ApplyButton({
         </DialogHeader>
         <div className="flex-1 overflow-y-auto">
           <NewJobListingApplicationForm
-            jobListingId={jobListingId}
+            jobId={jobId}
             buttonText="Apply"
             onSuccess={async () => {
-              const app = await getOwnJobApplication({ jobId: jobListingId });
+              const app = await getOwnJobListingApplicationMutation.mutateAsync(
+                { jobId },
+              );
               setApplication(app);
               setDialogOpen(false);
             }}

@@ -1,3 +1,4 @@
+import { JobListing } from "@/types/job-listing.types";
 import { AxiosError } from "axios";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -65,4 +66,12 @@ export const generateSlug = (name: string) => {
 
 export function capitalizeString(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function getJobNameInitial(jobListing: JobListing) {
+  return jobListing?.organization?.orgName
+    .split(" ")
+    .splice(0, 4)
+    .map((word) => word[0])
+    .join("");
 }

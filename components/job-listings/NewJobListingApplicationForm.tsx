@@ -6,23 +6,23 @@ import SubmitButton from "../SubmitButton";
 import { useJobListings } from "@/hooks/use-job-listings";
 
 export function NewJobListingApplicationForm({
-  jobListingId,
+  jobId,
   buttonText,
   onSuccess,
 }: {
-  jobListingId: string;
+  jobId: string;
   buttonText?: string;
   onSuccess?: () => void;
 }) {
-  const { createJobListingApplication } = useJobListings();
+  const { createJobListingApplicationMutation } = useJobListings();
 
   const form = useCustomForm({
     defaultValues: { coverLetter: "" },
     validationSchema: newJobListingApplicationSchema,
     onSubmit: async (values) => {
-      createJobListingApplication(
+      createJobListingApplicationMutation.mutate(
         {
-          jobListingId: jobListingId,
+          jobId,
           dto: values,
         },
         { onSuccess },

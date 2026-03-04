@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { cn } from "@/lib/utils";
-import type { JobListing, Organization } from "@/types";
 import { Avatar } from "@radix-ui/react-avatar";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -19,6 +18,8 @@ import JobListingBadges from "@/components/job-listings/JobListingBadges";
 import { searchParamsSchema } from "@/schemas";
 import { useParams, useSearchParams } from "next/navigation";
 import { Star } from "lucide-react";
+import type { JobListing } from "@/types/job-listing.types";
+import type { Organization } from "@/types/organization.types";
 
 export function JobListingItems() {
   const rawParams = useSearchParams();

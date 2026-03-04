@@ -5,7 +5,6 @@ import {
   JobListingAiSearch,
   JobListingFormData,
   NewJobListingApplication,
-  newJobListingApplicationSchema,
 } from "@/schemas";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
@@ -103,15 +102,6 @@ export function useJobListings(params?: UseJobListingsParams) {
       }
     }
   }, [selectedJobListingId, jobListings, dispatch]);
-
-  const fetchJobListingByJobId = async (id: string) => {
-    const result = await queryClient.fetchQuery({
-      queryKey: ["jobListing", id],
-      queryFn: () => jobListingsApi.findOne(id),
-    });
-
-    return result.data[0];
-  };
 
   // In hook
   const jobListingMutation = useMutation<
@@ -211,7 +201,7 @@ export function useJobListings(params?: UseJobListingsParams) {
   );
 
   // Get job listing application
-  const getJobListingApplicationMutation = useMutation<
+  const getOwnJobListingApplicationMutation = useMutation<
     Application,
     AxiosError,
     { jobId: string }
@@ -231,14 +221,14 @@ export function useJobListings(params?: UseJobListingsParams) {
   // Create job listing application
   const createJobListingApplicationMutation = useMutation({
     mutationFn: async ({
-      jobListingId,
+      jobId,
       dto,
     }: {
-      jobListingId: string;
+      jobId: string;
       dto: NewJobListingApplication;
     }) => {
       const response = await jobListingsApi.createJobListingApplication(
-        jobListingId,
+        jobId,
         dto,
       );
       return response.data[0];
@@ -321,24 +311,19 @@ export function useJobListings(params?: UseJobListingsParams) {
     error,
     refetch,
 
-    getOwnJobApplication: getJobListingApplicationMutation.mutateAsync,
-    getUserResume: getUserResumeMutation.mutateAsync,
-    createJobListingApplication: createJobListingApplicationMutation.mutate,
+    getOwnJobListingApplicationMutation,
+    getUserResumeMutation,
+    createJobListingApplicationMutation,
 
     // Create or Update job listing
     saveJobListing,
     jobListingLoading: jobListingMutation.isPending,
 
     // Upload resume
-    uploadResume: uploadResumeMutation.mutate,
-    uploadResumeLoading: uploadResumeMutation.isPending,
-
-    // Fetch job by jobId
-    fetchJobListingByJobId,
+    uploadResumeMutation,
 
     // Delete user resume
-    deleteResume: deleteUserResumeMutation.mutate,
-    isDeletingResume: deleteUserResumeMutation.isPending,
+    deleteUserResumeMutation,
 
     // Delete job listing
     deleteJobListing: deleteJobListingMutation.mutate,
