@@ -112,8 +112,8 @@ export function ApplicationTable({
 function StageCell({
   isOwnerAndApplicantManager,
   stage,
-  userId,
   jobId,
+  userId,
 }: {
   stage: ApplicationStage;
   jobId: string;
@@ -124,7 +124,7 @@ function StageCell({
   const [isPending, startTransition] = useTransition();
   const { updateJobListingApplicationStage } = useJobListings();
 
-  if (isOwnerAndApplicantManager) {
+  if (!isOwnerAndApplicantManager) {
     return <StageDetails stage={optimisticStage} />;
   }
 
@@ -148,13 +148,16 @@ function StageCell({
               onClick={() => {
                 startTransition(async () => {
                   setOptimisticStage(stageValue);
-                  const res = await updateJobListingApplicationStage({
+                  await updateJobListingApplicationStage({
                     jobId,
+                    userId,
                     stageValue,
                   });
                 });
               }}
-            ></DropdownMenuItem>
+            >
+              <StageDetails stage={stageValue} />
+            </DropdownMenuItem>
           ))}
       </DropdownMenuContent>
     </DropdownMenu>

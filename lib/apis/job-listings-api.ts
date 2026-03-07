@@ -155,15 +155,17 @@ export const jobListingsApi = {
   // Update job listing application stage
   updateJobListingApplicationStage: async ({
     jobId,
+    userId,
     stageValue,
   }: {
     jobId: string;
+    userId: string;
     stageValue: ApplicationStage;
   }) => {
     assertApiUrl();
-    const { data: responseData } = await api.put(
+    const { data: responseData } = await await api.put(
       `/job-listings/application/${jobId}/stage`,
-      stageValue,
+      { userId, stage: stageValue },
     );
     return responseData;
   },

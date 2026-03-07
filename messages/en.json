@@ -275,7 +275,8 @@
     "updateMyNotificationSettingsSuccess": "Updated preferences successfully",
     "getMyNotificationSettingsSuccess": "Fetched your preferences successfully",
     "getOrgUserNotificationSettingsSuccess": "Fetched org perferences successfully",
-    "updateOrgUserNotificationSettingsSuccess": "Updated your preferences successfully"
+    "updateOrgUserNotificationSettingsSuccess": "Updated your preferences successfully",
+    "updateJobListingApplicationStageSuccess": "Updated job listing application stage successfully"
   },
   "apiErrors": {
     "invalidCredentials": "Invalid email or password",
