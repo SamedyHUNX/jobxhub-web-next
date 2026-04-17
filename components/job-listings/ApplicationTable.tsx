@@ -3,7 +3,7 @@
 import type { Application } from "@/types/application.types";
 import type { Resume, User } from "@/types/user.types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ReactNode, useOptimistic, useTransition } from "react";
+import { ReactNode, useOptimistic, useState, useTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DataTable } from "../data-table/DataTable";
 import { DataTableSortableColumnHeader } from "../data-table/DataTableSortableColumnHeader";
@@ -19,7 +19,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, MoreHorizontalIcon } from "lucide-react";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { RatingIcons } from "../RatingIcons";
 import { RATING_OPTIONS } from "@/constants/constants";
@@ -106,6 +106,30 @@ function getColumns({
         />
       ),
     },
+    {
+      accessorKey: "createdAt",
+      accessorFn: (row) => row.createdAt,
+      header: ({ column }) => (
+        <DataTableSortableColumnHeader title="Applied On" column={column} />
+      ),
+      cell: ({ row }) => row.original.createdAt,
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const jobListing = row.original;
+        const resume = jobListing.user.resume;
+
+        return (
+          <ActionCell
+            coverLetterMarkdown={jobListing?.coverLetterMarkdown}
+            resumeMarkdown={resume?.markdownSummary}
+            resumeUrl={resume?.resumeFileUrl}
+            userName={jobListing?.user.username}
+          />
+        );
+      },
+    },
   ];
 }
 
@@ -141,10 +165,7 @@ function StageCell({
 }) {
   const [optimisticStage, setOptimisticStage] = useOptimistic(stage);
   const [isPending, startTransition] = useTransition();
-  const {
-    updateJobListingApplicationStage,
-    updateJobListingApplicationRating,
-  } = useJobListings();
+  const { updateJobListingApplicationStage } = useJobListings();
 
   if (!isOwnerAndApplicantManager) {
     return <StageDetails stage={optimisticStage} />;
@@ -195,6 +216,35 @@ function StageDetails({ stage }: { stage: ApplicationStage }) {
   );
 }
 
+function ActionCell({
+  resumeUrl,
+  userName,
+  resumeMarkdown,
+  coverLetterMarkdown,
+}: {
+  resumeUrl: string | null | undefined;
+  userName: string;
+  resumeMarkdown: ReactNode | null;
+  coverLetterMarkdown: ReactNode | null;
+}) {
+  const [openModal, setOpenModal] = useState<"resume" | "coverLetter" | null>(
+    null,
+  );
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"} size={"icon"}>
+            <span className="sr-only">Open Menu</span>
+            <MoreHorizontalIcon className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+      </DropdownMenu>
+    </>
+  );
+}
+
 function RatingCell({
   isOwnerAndApplicantManager,
   rating,
@@ -206,12 +256,12 @@ function RatingCell({
   userId: string;
   isOwnerAndApplicantManager: boolean;
 }) {
-  const [optimisticRating, setOptimisticRating] = useOptimistic(rating);
+  const [optimisticRating, setOptimisticRating] = useOptimistic(
+    rating,
+    (_prev, next) => next as number,
+  );
   const [isPending, startTransition] = useTransition();
-  const {
-    updateJobListingApplicationStage,
-    updateJobListingApplicationRating,
-  } = useJobListings();
+  const { updateJobListingApplicationRating } = useJobListings();
 
   if (!isOwnerAndApplicantManager) {
     return <RatingIcons rating={optimisticRating} />;
