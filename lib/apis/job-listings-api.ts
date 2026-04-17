@@ -169,4 +169,22 @@ export const jobListingsApi = {
     );
     return responseData;
   },
+
+  // Update job listing application rating
+  updateJobListingApplicationRating: async ({
+    jobId,
+    userId,
+    rating,
+  }: {
+    jobId: string;
+    userId: string;
+    rating: number | null;
+  }) => {
+    assertApiUrl();
+    const { data: responseData } = await api.put(
+      `/job-listings/application/${jobId}/rating`,
+      { userId, rating },
+    );
+    return responseData;
+  },
 };

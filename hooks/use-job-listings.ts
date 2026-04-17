@@ -333,7 +333,7 @@ export function useJobListings(params?: UseJobListingsParams) {
     }: {
       jobId: string;
       stageValue: ApplicationStage;
-      userId: string
+      userId: string;
     }) => {
       const result = await jobListingsApi.updateJobListingApplicationStage({
         jobId,
@@ -345,6 +345,33 @@ export function useJobListings(params?: UseJobListingsParams) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
       toast.success(successT("updateJobListingApplicationStageSuccess"));
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Update job listing application rating
+  const updateJobListingApplicationRatingMutation = useMutation({
+    mutationFn: async ({
+      jobId,
+      userId,
+      rating,
+    }: {
+      jobId: string;
+      userId: string;
+      rating: number | null;
+    }) => {
+      const result = await jobListingsApi.updateJobListingApplicationRating({
+        jobId,
+        userId,
+        rating,
+      });
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast.success(successT("updateJobListingApplicationRatingSuccess"));
     },
     onError: (error: AxiosError) => {
       toast(extractErrorMessage(error, errorT));
@@ -393,5 +420,8 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     updateJobListingApplicationStage:
       updateJobListingApplicationStageMutation.mutateAsync,
+
+    updateJobListingApplicationRating:
+      updateJobListingApplicationRatingMutation.mutateAsync,
   };
 }

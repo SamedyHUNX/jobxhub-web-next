@@ -21,6 +21,8 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { useJobListings } from "@/hooks/use-job-listings";
+import { RatingIcons } from "../RatingIcons";
+import { RATING_OPTIONS } from "@/constants/constants";
 
 export type ApplicationCol = Pick<
   Application,
@@ -87,6 +89,23 @@ function getColumns({
         />
       ),
     },
+    {
+      accessorKey: "rating",
+      header: ({ column }) => (
+        <DataTableSortableColumnHeader title="Rating" column={column} />
+      ),
+      filterFn: ({ original }, _, value) => {
+        return value.include(original.rating);
+      },
+      cell: ({ row }) => (
+        <RatingCell
+          isOwnerAndApplicantManager={isOwnerAndApplicantManager}
+          rating={row.original.rating}
+          jobId={row.original.jobListingId}
+          userId={row.original.user.id}
+        />
+      ),
+    },
   ];
 }
 
@@ -122,7 +141,10 @@ function StageCell({
 }) {
   const [optimisticStage, setOptimisticStage] = useOptimistic(stage);
   const [isPending, startTransition] = useTransition();
-  const { updateJobListingApplicationStage } = useJobListings();
+  const {
+    updateJobListingApplicationStage,
+    updateJobListingApplicationRating,
+  } = useJobListings();
 
   if (!isOwnerAndApplicantManager) {
     return <StageDetails stage={optimisticStage} />;
@@ -170,5 +192,61 @@ function StageDetails({ stage }: { stage: ApplicationStage }) {
       <StageIcon stage={stage} className="size-5 text-inherit" />
       <div>{formatJobListingApplicationStage(stage)}</div>
     </div>
+  );
+}
+
+function RatingCell({
+  isOwnerAndApplicantManager,
+  rating,
+  jobId,
+  userId,
+}: {
+  rating: number | null;
+  jobId: string;
+  userId: string;
+  isOwnerAndApplicantManager: boolean;
+}) {
+  const [optimisticRating, setOptimisticRating] = useOptimistic(rating);
+  const [isPending, startTransition] = useTransition();
+  const {
+    updateJobListingApplicationStage,
+    updateJobListingApplicationRating,
+  } = useJobListings();
+
+  if (!isOwnerAndApplicantManager) {
+    return <RatingIcons rating={optimisticRating} />;
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant={"ghost"}
+          className={cn("-ml-3", isPending && "opacity-50")}
+        >
+          <RatingIcons rating={optimisticRating} />
+          <ChevronDownIcon />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {RATING_OPTIONS.map((ratingValue) => (
+          <DropdownMenuItem
+            key={ratingValue ?? "none"}
+            onClick={() => {
+              startTransition(async () => {
+                setOptimisticRating(ratingValue);
+                await updateJobListingApplicationRating({
+                  jobId,
+                  userId,
+                  rating: ratingValue,
+                });
+              });
+            }}
+          >
+            <RatingIcons rating={ratingValue} className="text-inherit" />
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
