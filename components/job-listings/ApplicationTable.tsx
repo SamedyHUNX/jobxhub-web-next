@@ -2,7 +2,7 @@
 
 import type { Application } from "@/types/application.types";
 import type { Resume, User } from "@/types/user.types";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Table } from "@tanstack/react-table";
 import { ReactNode, useOptimistic, useState, useTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DataTable } from "../data-table/DataTable";
@@ -34,6 +34,7 @@ import {
 import Link from "next/link";
 import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { MarkdownRenderer } from "../markdown/MarkdownRenderer";
+import { DataTableFacetedFilter } from "../data-table/DataTableFacetedFilter";
 
 export type ApplicationCol = Pick<
   Application,
@@ -142,14 +143,29 @@ function getColumns({
 }
 
 export function SkeletonApplicationTable() {
-  return null;
+  return (
+    <ApplicationTable
+      applications={[]}
+      isOwnerAndApplicantManager={false}
+      disabledToolbar={true}
+      noResultsMessage="Loading applications..."
+    />
+  );
+}
+
+function ToolbarWrapper<T>({ table }: { table: Table<T> }) {
+  return <Toolbar table={table} disabled={false} />;
 }
 
 export function ApplicationTable({
   applications,
+  disabledToolbar = false,
+  noResultsMessage = "No applications found.",
   isOwnerAndApplicantManager,
 }: {
   applications: ApplicationCol[];
+  disabledToolbar?: boolean;
+  noResultsMessage?: ReactNode;
   isOwnerAndApplicantManager: boolean;
 }) {
   if (applications.length === 0) {
@@ -164,8 +180,60 @@ export function ApplicationTable({
     <DataTable
       data={applications}
       columns={getColumns({ isOwnerAndApplicantManager })}
+      noResultsMessage={noResultsMessage}
+      ToolbarComponent={disabledToolbar ? DisabledToolbar : ToolbarWrapper}
     />
   );
+}
+
+function Toolbar<T>({
+  table,
+  disabled,
+}: {
+  table: Table<T>;
+  disabled: boolean;
+}) {
+  const hiddenRows = table.getCoreRowModel().rows.length - table.getRowCount();
+
+  return (
+    <div className="flex items-center gap-2">
+      {table.getColumn("stage") && (
+        <DataTableFacetedFilter
+          column={table.getColumn("stage")}
+          title="Stage"
+          disabled={disabled}
+          options={applicationStages
+            .toSorted(sortApplicationsByStage)
+            .map((stage) => ({
+              label: <StageDetails stage={stage} />,
+              value: stage,
+              key: stage,
+            }))}
+        />
+      )}
+      {table.getColumn("rating") && (
+        <DataTableFacetedFilter
+          column={table.getColumn("rating")}
+          title="Rating"
+          disabled={disabled}
+          options={RATING_OPTIONS.map((rating, i) => ({
+            label: <RatingIcons rating={rating} />,
+            value: rating,
+            key: rating ?? `none-${i}`,
+          }))}
+        />
+      )}
+      {hiddenRows > 0 && (
+        <span className="text-sm text-muted-foreground ml-2">
+          {hiddenRows} {hiddenRows > 1 ? "rows" : "row"} not shown.
+        </span>
+      )}
+    </div>
+  );
+}
+
+function DisabledToolbar<T>({ table }: { table: Table<T> }) {
+  return <Toolbar table={table} disabled={true} />;
 }
 
 function StageCell({
