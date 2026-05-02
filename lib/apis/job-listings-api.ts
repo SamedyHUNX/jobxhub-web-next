@@ -1,4 +1,5 @@
 import {
+  ApplicationStage,
   JobListingAiSearch,
   JobListingFormData,
   NewJobListingApplication,
@@ -97,6 +98,13 @@ export const jobListingsApi = {
     return data;
   },
 
+  // Get all job listing application
+  getAllJobListingApplications: async (jobId: string) => {
+    assertApiUrl();
+    const { data } = await api.get(`/job-listings/applications/${jobId}`);
+    return data;
+  },
+
   // Get user resume
   getUserResume: async (userId: string) => {
     assertApiUrl();
@@ -140,6 +148,42 @@ export const jobListingsApi = {
     const { data: responseData } = await api.post(
       `/job-listings/ai-search`,
       data,
+    );
+    return responseData;
+  },
+
+  // Update job listing application stage
+  updateJobListingApplicationStage: async ({
+    jobId,
+    userId,
+    stageValue,
+  }: {
+    jobId: string;
+    userId: string;
+    stageValue: ApplicationStage;
+  }) => {
+    assertApiUrl();
+    const { data: responseData } = await await api.put(
+      `/job-listings/application/${jobId}/stage`,
+      { userId, stage: stageValue },
+    );
+    return responseData;
+  },
+
+  // Update job listing application rating
+  updateJobListingApplicationRating: async ({
+    jobId,
+    userId,
+    rating,
+  }: {
+    jobId: string;
+    userId: string;
+    rating: number | null;
+  }) => {
+    assertApiUrl();
+    const { data: responseData } = await api.put(
+      `/job-listings/application/${jobId}/rating`,
+      { userId, rating },
     );
     return responseData;
   },

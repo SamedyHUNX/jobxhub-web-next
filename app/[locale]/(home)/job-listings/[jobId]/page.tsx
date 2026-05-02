@@ -15,7 +15,7 @@ import Link from "next/link";
 import { XIcon } from "lucide-react";
 import { JobListingBadges } from "@/components/job-listings/JobListingBadges";
 import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
-import ApplyButton from "@/components/job-listings/_ApplyButton";
+import { ApplyButton } from "@/components/job-listings/_ApplyButton";
 import type { JobListing } from "@/types/job-listing.types";
 import { getNameInitial } from "@/lib/utils";
 

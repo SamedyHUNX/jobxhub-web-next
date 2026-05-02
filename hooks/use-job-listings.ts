@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { jobListingsApi } from "@/lib/apis/job-listings-api";
 import {
+  ApplicationStage,
   JobListingAiSearch,
   JobListingFormData,
   NewJobListingApplication,
@@ -16,6 +17,7 @@ import Cookies from "js-cookie";
 import { setSelectedJobListing } from "@/stores/slices/job-listings.slice";
 import type { Application } from "@/types/application.types";
 import { JobListing, JobListingFormResponse } from "@/types/job-listing.types";
+import { ApplicationCol } from "@/components/job-listings/ApplicationTable";
 
 interface UseJobListingsParams {
   search?: string;
@@ -200,7 +202,7 @@ export function useJobListings(params?: UseJobListingsParams) {
     (job: JobListing) => job.isFeatured,
   );
 
-  // Get job listing application
+  // Get own job listing application
   const getOwnJobListingApplicationMutation = useMutation<
     Application,
     AxiosError,
@@ -209,6 +211,24 @@ export function useJobListings(params?: UseJobListingsParams) {
     mutationFn: async ({ jobId }: { jobId: string }) => {
       const result = await jobListingsApi.getOwnJobListingApplication(jobId);
       return result.data[0];
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
+  // Get all job listing application
+  const getAllJobListingApplicationForOrgIdMutation = useMutation<
+    ApplicationCol[],
+    AxiosError,
+    { jobId: string }
+  >({
+    mutationFn: async ({ jobId }: { jobId: string }) => {
+      const result = await jobListingsApi.getAllJobListingApplications(jobId);
+      return result.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
@@ -233,7 +253,7 @@ export function useJobListings(params?: UseJobListingsParams) {
       );
       return response.data[0];
     },
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       toast.success(successT("createJobListingApplicationSuccess"));
       queryClient.invalidateQueries({ queryKey: ["jobListings"] });
     },
@@ -304,6 +324,54 @@ export function useJobListings(params?: UseJobListingsParams) {
     },
   });
 
+  // Update job listing application stage
+  const updateJobListingApplicationStageMutation = useMutation({
+    mutationKey: ["stage"],
+    mutationFn: async ({
+      jobId,
+      userId,
+      stageValue,
+    }: {
+      jobId: string;
+      stageValue: ApplicationStage;
+      userId: string;
+    }) => {
+      const result = await jobListingsApi.updateJobListingApplicationStage({
+        jobId,
+        userId,
+        stageValue,
+      });
+      return result;
+    },
+  });
+
+  // Update job listing application rating
+  const updateJobListingApplicationRatingMutation = useMutation({
+    mutationFn: async ({
+      jobId,
+      userId,
+      rating,
+    }: {
+      jobId: string;
+      userId: string;
+      rating: number | null;
+    }) => {
+      const result = await jobListingsApi.updateJobListingApplicationRating({
+        jobId,
+        userId,
+        rating,
+      });
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
+      toast.success(successT("updateJobListingApplicationRatingSuccess"));
+    },
+    onError: (error: AxiosError) => {
+      toast(extractErrorMessage(error, errorT));
+    },
+  });
+
   return {
     jobListings,
     count,
@@ -316,6 +384,8 @@ export function useJobListings(params?: UseJobListingsParams) {
     getOwnJobListingApplicationMutation,
     getUserResumeMutation,
     createJobListingApplicationMutation,
+
+    getAllJobListingApplicationForOrgIdMutation,
 
     // Create or Update job listing
     saveJobListing,
@@ -341,5 +411,11 @@ export function useJobListings(params?: UseJobListingsParams) {
 
     getAiJobListingSearchResults:
       getAiJobListingSearchResultsMutation.mutateAsync,
+
+    updateJobListingApplicationStage:
+      updateJobListingApplicationStageMutation.mutateAsync,
+
+    updateJobListingApplicationRating:
+      updateJobListingApplicationRatingMutation.mutateAsync,
   };
 }

@@ -57,7 +57,7 @@ const InternalMarkdownEditor = forwardRef<MDXEditorMethods, MDXEditorProps>(
         ]}
       />
     );
-  }
+  },
 );
 
 export default InternalMarkdownEditor;
