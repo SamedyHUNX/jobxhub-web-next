@@ -182,6 +182,12 @@ export function ApplicationTable({
       columns={getColumns({ isOwnerAndApplicantManager })}
       noResultsMessage={noResultsMessage}
       ToolbarComponent={disabledToolbar ? DisabledToolbar : ToolbarWrapper}
+      initialFilters={[
+        {
+          id: "stage",
+          value: applicationStages.filter((stage) => stage !== "denied"),
+        },
+      ]}
     />
   );
 }
@@ -225,7 +231,7 @@ function Toolbar<T>({
       )}
       {hiddenRows > 0 && (
         <span className="text-sm text-muted-foreground ml-2">
-          {hiddenRows} {hiddenRows > 1 ? "rows" : "row"} not shown.
+          {hiddenRows} {hiddenRows > 1 ? "rows" : "row"} hidden
         </span>
       )}
     </div>
