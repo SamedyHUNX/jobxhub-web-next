@@ -33,6 +33,7 @@ import {
 } from "../ui/dialog";
 import Link from "next/link";
 import { useIsMutating, useQueryClient } from "@tanstack/react-query";
+import { MarkdownRenderer } from "../markdown/MarkdownRenderer";
 
 export type ApplicationCol = Pick<
   Application,
@@ -233,8 +234,8 @@ function ActionCell({
 }: {
   resumeFileUrl: string | null | undefined;
   userName: string;
-  resumeMarkdown: ReactNode | null;
-  coverLetterMarkdown: ReactNode | null;
+  resumeMarkdown: string | null | undefined;
+  coverLetterMarkdown: ReactNode | string | null | undefined;
 }) {
   const [openModal, setOpenModal] = useState<"resume" | "coverLetter" | null>(
     null,
@@ -274,7 +275,7 @@ function ActionCell({
           open={openModal === "coverLetter"}
           onOpenChange={(o) => setOpenModal(o ? "coverLetter" : null)}
         >
-          <DialogContent className="lg:max-w-5xl md:max-w-3xl max-h[calc(100%-2rem)] overflow-hidden flex flex-col">
+          <DialogContent className="lg:max-w-5xl md:max-w-3xl max-h-[calc(100%-2rem)] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle>Cover Letter</DialogTitle>
               <DialogDescription>{userName}</DialogDescription>
@@ -288,7 +289,7 @@ function ActionCell({
           open={openModal === "resume"}
           onOpenChange={(o) => setOpenModal(o ? "resume" : null)}
         >
-          <DialogContent className="lg:max-w-5xl md:max-w-3xl max-h[calc(100%-2rem)] overflow-hidden flex flex-col">
+          <DialogContent className="lg:max-w-5xl md:max-w-3xl max-h-[calc(100vh-2rem)] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle>Resume</DialogTitle>
               <DialogDescription>{userName}</DialogDescription>
@@ -307,7 +308,9 @@ function ActionCell({
                 This is a generated summary of the resume.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex-1 overflow-y-auto">{resumeMarkdown}</div>
+            <div className="flex-1 overflow-y-auto">
+              <MarkdownRenderer source={resumeMarkdown} />
+            </div>
           </DialogContent>
         </Dialog>
       )}
