@@ -326,6 +326,7 @@ export function useJobListings(params?: UseJobListingsParams) {
 
   // Update job listing application stage
   const updateJobListingApplicationStageMutation = useMutation({
+    mutationKey: ["stage"],
     mutationFn: async ({
       jobId,
       userId,
@@ -341,13 +342,6 @@ export function useJobListings(params?: UseJobListingsParams) {
         stageValue,
       });
       return result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobListings"] });
-      toast.success(successT("updateJobListingApplicationStageSuccess"));
-    },
-    onError: (error: AxiosError) => {
-      toast(extractErrorMessage(error, errorT));
     },
   });
 

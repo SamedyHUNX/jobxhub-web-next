@@ -32,17 +32,15 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import Link from "next/link";
+import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 
 export type ApplicationCol = Pick<
   Application,
   "coverLetter" | "createdAt" | "stage" | "rating" | "jobListingId"
 > & {
   coverLetterMarkdown: ReactNode | null;
-  user: Pick<User, "id" | "username" | "imageUrl"> & {
-    resume: Pick<Resume, "resumeFileUrl"> & {
-      aiSummary: ReactNode | null;
-    };
-  };
+  user: Pick<User, "id" | "username" | "imageUrl">;
+  resume: Pick<Resume, "resumeFileUrl" | "aiSummary"> | null;
 };
 
 function getColumns({
@@ -127,13 +125,13 @@ function getColumns({
       id: "actions",
       cell: ({ row }) => {
         const jobListing = row.original;
-        const resume = jobListing.user.resume;
+        const resume = jobListing.resume;
 
         return (
           <ActionCell
             coverLetterMarkdown={jobListing?.coverLetterMarkdown}
             resumeMarkdown={resume?.aiSummary}
-            resumeUrl={resume?.resumeFileUrl}
+            resumeFileUrl={resume?.resumeFileUrl}
             userName={jobListing?.user.username}
           />
         );
@@ -180,9 +178,10 @@ function StageCell({
   userId: string;
   isOwnerAndApplicantManager: boolean;
 }) {
-  const [optimisticStage, setOptimisticStage] = useOptimistic(stage);
-  const [isPending, startTransition] = useTransition();
   const { updateJobListingApplicationStage } = useJobListings();
+  const queryClient = useQueryClient();
+  const isMutating = useIsMutating({ mutationKey: ["stage", jobId, userId] });
+  const optimisticStage = stage;
 
   if (!isOwnerAndApplicantManager) {
     return <StageDetails stage={optimisticStage} />;
@@ -192,10 +191,10 @@ function StageCell({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant={"ghost"}
-          className={cn("-ml-3", isPending && "opacity-50")}
+          variant="ghost"
+          className={cn("-ml-3", isMutating > 0 && "opacity-50")}
         >
-          <StageDetails stage={optimisticStage} />
+          <StageDetails stage={stage} />
           <ChevronDownIcon />
         </Button>
       </DropdownMenuTrigger>
@@ -205,16 +204,9 @@ function StageCell({
           .map((stageValue) => (
             <DropdownMenuItem
               key={stageValue}
-              onClick={() => {
-                startTransition(async () => {
-                  setOptimisticStage(stageValue);
-                  await updateJobListingApplicationStage({
-                    jobId,
-                    userId,
-                    stageValue,
-                  });
-                });
-              }}
+              onClick={() =>
+                updateJobListingApplicationStage({ jobId, userId, stageValue })
+              }
             >
               <StageDetails stage={stageValue} />
             </DropdownMenuItem>
@@ -234,12 +226,12 @@ function StageDetails({ stage }: { stage: ApplicationStage }) {
 }
 
 function ActionCell({
-  resumeUrl,
+  resumeFileUrl,
   userName,
   resumeMarkdown,
   coverLetterMarkdown,
 }: {
-  resumeUrl: string | null | undefined;
+  resumeFileUrl: string | null | undefined;
   userName: string;
   resumeMarkdown: ReactNode | null;
   coverLetterMarkdown: ReactNode | null;
@@ -247,7 +239,6 @@ function ActionCell({
   const [openModal, setOpenModal] = useState<"resume" | "coverLetter" | null>(
     null,
   );
-
   return (
     <>
       <DropdownMenu>
@@ -258,7 +249,7 @@ function ActionCell({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {resumeUrl != null || resumeMarkdown != null ? (
+          {resumeFileUrl != null || resumeMarkdown != null ? (
             <DropdownMenuItem onClick={() => setOpenModal("resume")}>
               View Resume
             </DropdownMenuItem>
@@ -301,10 +292,10 @@ function ActionCell({
             <DialogHeader>
               <DialogTitle>Resume</DialogTitle>
               <DialogDescription>{userName}</DialogDescription>
-              {resumeUrl && (
+              {resumeFileUrl && (
                 <Button asChild className="self-start">
                   <Link
-                    href={resumeUrl}
+                    href={resumeFileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
