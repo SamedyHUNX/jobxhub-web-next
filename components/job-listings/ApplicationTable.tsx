@@ -87,7 +87,7 @@ function getColumns({
         return sortApplicationsByStage(a.stage, b.stage);
       },
       filterFn: ({ original }, _, value) => {
-        return value.include(original.stage);
+        return value.includes(original.stage);
       },
       cell: ({ row }) => (
         <StageCell
@@ -104,7 +104,7 @@ function getColumns({
         <DataTableSortableColumnHeader title="Rating" column={column} />
       ),
       filterFn: ({ original }, _, value) => {
-        return value.include(original.rating);
+        return value.includes(original.rating);
       },
       cell: ({ row }) => (
         <RatingCell
@@ -335,9 +335,8 @@ function RatingCell({
   userId: string;
   isOwnerAndApplicantManager: boolean;
 }) {
-  const [optimisticRating, setOptimisticRating] = useOptimistic(
+  const [optimisticRating, setOptimisticRating] = useOptimistic<number | null>(
     rating,
-    (_prev, next) => next as number,
   );
   const [isPending, startTransition] = useTransition();
   const { updateJobListingApplicationRating } = useJobListings();
