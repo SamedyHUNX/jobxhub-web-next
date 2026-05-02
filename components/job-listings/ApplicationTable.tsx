@@ -15,6 +15,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
@@ -23,6 +24,14 @@ import { ChevronDownIcon, MoreHorizontalIcon } from "lucide-react";
 import { useJobListings } from "@/hooks/use-job-listings";
 import { RatingIcons } from "../RatingIcons";
 import { RATING_OPTIONS } from "@/constants/constants";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import Link from "next/link";
 
 export type ApplicationCol = Pick<
   Application,
@@ -31,7 +40,7 @@ export type ApplicationCol = Pick<
   coverLetterMarkdown: ReactNode | null;
   user: Pick<User, "id" | "username" | "imageUrl"> & {
     resume: Pick<Resume, "resumeFileUrl"> & {
-      markdownSummary: ReactNode | null;
+      aiSummary: ReactNode | null;
     };
   };
 };
@@ -123,7 +132,7 @@ function getColumns({
         return (
           <ActionCell
             coverLetterMarkdown={jobListing?.coverLetterMarkdown}
-            resumeMarkdown={resume?.markdownSummary}
+            resumeMarkdown={resume?.aiSummary}
             resumeUrl={resume?.resumeFileUrl}
             userName={jobListing?.user.username}
           />
@@ -144,6 +153,14 @@ export function ApplicationTable({
   applications: ApplicationCol[];
   isOwnerAndApplicantManager: boolean;
 }) {
+  if (applications.length === 0) {
+    return (
+      <div className="p-4 text-center text-muted-foreground">
+        No applications found.
+      </div>
+    );
+  }
+
   return (
     <DataTable
       data={applications}
@@ -240,7 +257,69 @@ function ActionCell({
             <MoreHorizontalIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {resumeUrl != null || resumeMarkdown != null ? (
+            <DropdownMenuItem onClick={() => setOpenModal("resume")}>
+              View Resume
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuLabel className="text-muted-foreground">
+              No Resume
+            </DropdownMenuLabel>
+          )}
+          {coverLetterMarkdown != null ? (
+            <DropdownMenuItem onClick={() => setOpenModal("coverLetter")}>
+              View Cover Letter
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuLabel className="text-muted-foreground">
+              No Cover Letter
+            </DropdownMenuLabel>
+          )}
+        </DropdownMenuContent>
       </DropdownMenu>
+      {coverLetterMarkdown && (
+        <Dialog
+          open={openModal === "coverLetter"}
+          onOpenChange={(o) => setOpenModal(o ? "coverLetter" : null)}
+        >
+          <DialogContent className="lg:max-w-5xl md:max-w-3xl max-h[calc(100%-2rem)] overflow-hidden flex flex-col">
+            <DialogHeader>
+              <DialogTitle>Cover Letter</DialogTitle>
+              <DialogDescription>{userName}</DialogDescription>
+            </DialogHeader>
+            <div className="flex-1 overflow-y-auto">{coverLetterMarkdown}</div>
+          </DialogContent>
+        </Dialog>
+      )}
+      {resumeMarkdown && (
+        <Dialog
+          open={openModal === "resume"}
+          onOpenChange={(o) => setOpenModal(o ? "resume" : null)}
+        >
+          <DialogContent className="lg:max-w-5xl md:max-w-3xl max-h[calc(100%-2rem)] overflow-hidden flex flex-col">
+            <DialogHeader>
+              <DialogTitle>Resume</DialogTitle>
+              <DialogDescription>{userName}</DialogDescription>
+              {resumeUrl && (
+                <Button asChild className="self-start">
+                  <Link
+                    href={resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View Resume
+                  </Link>
+                </Button>
+              )}
+              <DialogDescription className="mt-2">
+                This is a generated summary of the resume.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex-1 overflow-y-auto">{resumeMarkdown}</div>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

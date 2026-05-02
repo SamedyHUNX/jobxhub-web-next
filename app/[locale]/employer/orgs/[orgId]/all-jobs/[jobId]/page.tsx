@@ -413,7 +413,20 @@ function Applications({
 
   return (
     <ApplicationTable
-      applications={applications}
+      applications={applications.map((app) => ({
+        ...app,
+        user: {
+          ...app.user,
+          resume: app.user.resume
+            ? {
+                resumeFileUrl: app.user.resume.resumeFileUrl,
+                aiSummary: app.user.resume.aiSummary ? (
+                  <MarkdownRenderer source={app.user.resume.aiSummary} />
+                ) : null,
+              }
+            : null,
+        },
+      }))}
       isOwnerAndApplicantManager={isOwnerAndApplicantManager}
     />
   );
