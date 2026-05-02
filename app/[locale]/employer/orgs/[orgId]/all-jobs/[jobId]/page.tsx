@@ -32,7 +32,6 @@ import {
   ApplicationTable,
   SkeletonApplicationTable,
 } from "@/components/job-listings/ApplicationTable";
-import { Application } from "@/types/application.types";
 
 export default function JobIdPage() {
   const {
