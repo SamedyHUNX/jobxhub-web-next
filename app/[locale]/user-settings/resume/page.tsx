@@ -47,7 +47,7 @@ export default function UserResumePage() {
         setResumeLoading(false);
       },
     });
-  }, [currentUser?.id, getUserResumeMutation]);
+  }, [currentUser?.id]);
 
   if (resumeLoading) return <PageLoader />;
 
