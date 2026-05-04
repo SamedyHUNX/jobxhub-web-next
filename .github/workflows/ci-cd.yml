@@ -1,4 +1,4 @@
-name: Next.js Web CI/CD
+name: JobXHub CI/CD
 
 on:
   push:
