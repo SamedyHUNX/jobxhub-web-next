@@ -25,7 +25,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SignOutButton } from "@/components/SignOutButton";
 import { BackHomeButton } from "@/components/BackHomeButton";
-import { Organization, User } from "@/types";
+import { Organization } from "@/types/organization.types";
+import { User } from "@/types/user.types";
 
 export default function SidebarOrganizationButton({
   currentOrg,
