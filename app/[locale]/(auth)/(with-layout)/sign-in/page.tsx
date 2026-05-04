@@ -11,7 +11,6 @@ import { useCustomForm } from "@/hooks/use-custom-form";
 import type { SignInFormData } from "@/types/auth.types";
 
 export default function SignInPage() {
-  // Translations
   const t = useTranslations();
   const authT = (key: string) => t(`auth.${key}`);
   const validationT = (key: string) => t(`validations.${key}`);
