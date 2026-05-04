@@ -1,9 +1,9 @@
-import type { Organization } from "@/types";
 import { defaultTranslations } from "./_DefaultTranslation";
 import OrgBadges from "./_OrgBadges";
 import OrgStats from "./_OrgStats";
 import { ArrowRight } from "lucide-react";
 import { OrgAvatar } from "./_OrgAvatar";
+import { Organization } from "@/types/organization.types";
 
 export default function OrganizationItem({
   org,

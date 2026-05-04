@@ -1,4 +1,4 @@
-import type { User } from "@/types";
+import { User } from "@/types/user.types";
 import { ArrowRight } from "lucide-react";
 
 export default function OrgPersonalAccountItem({

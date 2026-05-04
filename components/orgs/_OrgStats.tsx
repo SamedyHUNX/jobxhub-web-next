@@ -1,4 +1,4 @@
-import type { Organization } from "@/types";
+import { Organization } from "@/types/organization.types";
 import { defaultTranslations } from "./_DefaultTranslation";
 
 export default function OrgStats({

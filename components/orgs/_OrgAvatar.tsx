@@ -1,4 +1,4 @@
-import type { Organization } from "@/types";
+import { Organization } from "@/types/organization.types";
 
 export function OrgAvatar({
   org,
@@ -33,7 +33,7 @@ export function OrgAvatar({
       ) : (
         <div
           className={`w-14 h-14 ${getOrgColor(
-            index
+            index,
           )} rounded-full flex items-center justify-center text-2xl text-white font-bold`}
         >
           {getOrgInitial(org.orgName)}

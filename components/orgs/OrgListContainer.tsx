@@ -1,9 +1,10 @@
 import { useOrgs } from "@/hooks/use-orgs";
 import { useProfile } from "@/hooks/use-profile";
 import OrgsList from "./OrgList";
-import type { Organization, User } from "@/types";
 import { ReactNode } from "react";
 import { OrgListTranslations } from "./_DefaultTranslation";
+import { Organization } from "@/types/organization.types";
+import { User } from "@/types/user.types";
 
 interface OrgListContainerProps {
   // Navigation callbacks (optional)
