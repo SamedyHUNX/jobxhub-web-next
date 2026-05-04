@@ -1,11 +1,12 @@
 import { useState } from "react";
 import FormFooter from "../FormFooter";
-import type { Organization, User } from "@/types";
 import { defaultTranslations } from "./_DefaultTranslation";
 import OrgListHeader from "./_OrgListHeader";
 import { OrgListModal } from "./_OrgListModal";
 import CreateOrgButton from "./_CreateOrgButton";
 import OrganizationItem from "./_OrganizationItem";
+import { Organization } from "@/types/organization.types";
+import { User } from "@/types/user.types";
 
 export interface OrgListProps {
   // Required data - passed from parent
