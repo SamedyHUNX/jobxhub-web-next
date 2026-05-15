@@ -119,6 +119,6 @@ jobs:
             docker pull ghcr.io/samedyhunx/jobxhub-web-next:latest
             docker stop jobxhub || true
             docker rm jobxhub || true
-            docker run -d -p 80:3000 --name jobxhub --restart unless-stopped \
-            -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+            docker run -d -p 127.0.0.1:3000:3000 --name jobxhub --restart unless-stopped \
+            -e NEXT_PUBLIC_API_URL=https://jobxhub.com/api \
               ghcr.io/samedyhunx/jobxhub-web-next:latest
