@@ -108,7 +108,7 @@ jobs:
             echo "✓ EC2_SSH_KEY is SET"
           fi
 
-      - name: Deploy to EC2
+      - name: Deploy to EC2 Instance
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
