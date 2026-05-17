@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { extractErrorMessage } from "@/lib/utils";
 import failedImg from "@/public/assets/images/failed.webp";
@@ -23,6 +23,7 @@ export default function VerifyEmailPage() {
   const token = searchParams.get("token");
 
   const { verifyEmailMutation } = useAuth();
+  const mutateRef = useRef(verifyEmailMutation.mutate);
 
   // Trigger verification on mount
   useEffect(() => {
@@ -32,8 +33,8 @@ export default function VerifyEmailPage() {
       return;
     }
 
-    verifyEmailMutation.mutate(token);
-  }, [token, verifyEmailMutation, router, locale]);
+    mutateRef.current(token);
+  }, [token, router, locale]);
 
   if (verifyEmailMutation.isSuccess) {
     return (
