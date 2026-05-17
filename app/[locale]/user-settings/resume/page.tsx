@@ -32,13 +32,14 @@ export default function UserResumePage() {
   const [resumeLoading, setResumeLoading] = useState(true);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { mutate: fetchResume } = getUserResumeMutation;
 
   useEffect(() => {
     if (!currentUser?.id) return;
 
     setResumeLoading(true);
 
-    getUserResumeMutation.mutate(currentUser.id, {
+    fetchResume(currentUser.id, {
       onSuccess: (data) => {
         setResume(data ?? null);
         setResumeLoading(false);
@@ -47,7 +48,7 @@ export default function UserResumePage() {
         setResumeLoading(false);
       },
     });
-  }, [currentUser?.id]);
+  }, [currentUser?.id, fetchResume]);
 
   if (resumeLoading) return <PageLoader />;
 
