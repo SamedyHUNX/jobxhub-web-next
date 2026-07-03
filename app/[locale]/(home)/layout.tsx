@@ -11,7 +11,9 @@ import {
   BanknoteIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { toast } from "sonner";
 
 export default function JobSeekerLayout({
   children,
@@ -20,9 +22,14 @@ export default function JobSeekerLayout({
   sidebar: ReactNode;
   children: ReactNode;
 }) {
+  const router = useRouter();
   const { user: currentUser, isLoading } = useProfile();
   const isSuperAdmin = currentUser?.userRole === "SUPER-ADMIN";
   const sidebarT = useTranslations("sidebar");
+
+  if (!currentUser) {
+    router.push("/sign-in");
+  }
 
   return (
     <AppSidebar
