@@ -13,7 +13,6 @@ import {
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
-import { toast } from "sonner";
 
 export default function JobSeekerLayout({
   children,
